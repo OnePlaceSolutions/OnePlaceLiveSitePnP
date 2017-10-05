@@ -1,7 +1,7 @@
  <#
         This script prompt creates a new site collection in your Office 365 tenant
         The user is prompted for the SharePoint Site Collection url, Site Owner and TimeZone of the newly created
-        Site Collection  
+        Site Collection and the template used is the team site  
 #>
 
 try {    
@@ -14,25 +14,12 @@ try {
     $SiteOwner = Read-Host -Prompt 'Enter the site owner of your new OnePlaceLive Site Collection'
 
     #Prompt for timezone of newly created site collection (enter id number)
-    #Get-PnPTimeZoneId | Out-Host
-    #$TZone = Read-Host -Prompt 'Choose timezone id based on values above'
+    Get-PnPTimeZoneId | Out-Host
+    $TZone = Read-Host -Prompt 'Choose timezone id based on values above'
 
     #Create site collection based on team site template
-    New-PnPTenantSite -Owner $SiteOwner -Title 'OnePlace Solutions Live Site' -Url $SharePointUrl -Template 'STS#0' -TimeZone 4
-
-    #Connect to newly created site collection
-    Connect-pnpOnline -url $SharePointUrl
-    Set-ExecutionPolicy unrestricted
-    #Download OnePlaceLive site provisioning template      
-    $WebClient = New-Object System.Net.WebClient   
-    $Url = "https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/master/livesitepnp-template.xml"    
-    $Path = "$env:temp\livesitepnp-template.xml"
-    Write-Host "Downloading provisioning xml template:" $Path -ForegroundColor Green 
-    $WebClient.DownloadFile( $Url, $Path )   
-
-    #Apply provisioning xml to new site collection
-    Apply-PnPProvisioningTemplate -path $Path
-   
+    New-PnPTenantSite -Owner $SiteOwner -Title 'OnePlace Solutions Live Site' -Url $SharePointUrl -Template 'STS#0' -TimeZone $TZone  
+    
 }
 catch {
     Write-Host $error[0].Message
