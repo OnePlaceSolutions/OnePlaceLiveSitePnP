@@ -22,9 +22,8 @@ try {
 
     #Connect to newly created site collection
     Connect-pnpOnline -url $SharePointUrl
-
-    #Download OnePlaceLive site provisioning template
-      
+    Set-ExecutionPolicy unrestricted
+    #Download OnePlaceLive site provisioning template      
     $WebClient = New-Object System.Net.WebClient   
     $Url = "https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/master/livesitepnp-template.xml"    
     $Path = "$env:temp\livesitepnp-template.xml"
