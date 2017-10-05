@@ -7,7 +7,10 @@
 try {    
     Set-ExecutionPolicy Bypass -Scope Process
 
-   
+    #Prompt for SharePoint Url     
+    $SharePointUrl = Read-Host -Prompt 'Enter the url of your OnePlaceLive Site Collection'
+    #Connect to newly created site collection
+    Connect-pnpOnline -url $SharePointUrl
     Write-Host "Downloading provisioning xml template:" $Path -ForegroundColor Green 
     #Download OnePlaceLive site provisioning template
     $WebClient = New-Object System.Net.WebClient   
