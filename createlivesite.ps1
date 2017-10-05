@@ -1,8 +1,7 @@
  <#
-        This script prompts you to install the SharePoint PnP commands. Hit enter for SharePoint Online,
-        6 for SharePoint 2016,3 for SharePoint 2013
-        The script then prompts for the site collectiuon url you wish to install the Email Columns to
-        and then applies the email columns template to this site collection        
+        This script prompt creates a new site collection in your Office 365 tenant
+        The user is prompted for the SharePoint Site Collection url, Site Owner and TimeZone of the newly created
+        Site Collection  
 #>
 
 try {    
@@ -15,7 +14,7 @@ try {
     $SiteOwner = Read-Host -Prompt 'Enter the site owner of your new OnePlaceLive Site Collection'
 
     #Prompt for timezone of newly created site collection (enter id number)
-    Get-PnPTimeZone
+    Get-PnPTimeZoneId
     $TZone = Read-Host -Prompt 'Choose timezone id based on values above'
 
     #Create site collection based on team site template
