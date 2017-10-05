@@ -14,11 +14,11 @@ try {
     $SiteOwner = Read-Host -Prompt 'Enter the site owner of your new OnePlaceLive Site Collection'
 
     #Prompt for timezone of newly created site collection (enter id number)
-    Get-PnPTimeZoneId | Out-Host
-    $TZone = Read-Host -Prompt 'Choose timezone id based on values above'
+    #Get-PnPTimeZoneId | Out-Host
+    #$TZone = Read-Host -Prompt 'Choose timezone id based on values above'
 
     #Create site collection based on team site template
-    New-PnPTenantSite -Owner $SiteOwner -Title 'OnePlace Solutions Live Site' -Url $SharePointUrl -Template 'STS#0' -TimeZone $TZone
+    New-PnPTenantSite -Owner $SiteOwner -Title 'OnePlace Solutions Live Site' -Url $SharePointUrl -Template 'STS#0' -TimeZone 4
 
     #Connect to newly created site collection
     Connect-pnpOnline -url $SharePointUrl
