@@ -24,11 +24,12 @@ try {
     Connect-pnpOnline -url $SharePointUrl
 
     #Download OnePlaceLive site provisioning template
+    Write-Host "Downloading provisioning xml template:" $Path -ForegroundColor Green 
+    Set-ExecutionPolicy Bypass -Scope Process
     $WebClient = New-Object System.Net.WebClient   
     $Url = "https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/master/livesitepnp-template.xml"    
     $Path = "$env:temp\livesitepnp-template.xml"
-
-    Write-Host "Downloading provisioning xml template:" $Path -ForegroundColor Green 
+    
     $WebClient.DownloadFile( $Url, $Path )   
 
     #Apply provisioning xml to new site collection
