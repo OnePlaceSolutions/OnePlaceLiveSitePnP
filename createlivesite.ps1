@@ -14,7 +14,7 @@ try {
     $SiteOwner = Read-Host -Prompt 'Enter the site owner of your new OnePlaceLive Site Collection'
 
     #Prompt for timezone of newly created site collection (enter id number)
-    Get-PnPTimeZoneId
+    Get-PnPTimeZoneId | Out-Host 
     $TZone = Read-Host -Prompt 'Choose timezone id based on values above'
 
     #Create site collection based on team site template
