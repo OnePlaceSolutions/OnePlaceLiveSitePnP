@@ -8,7 +8,10 @@
       <pnp:SupportedUILanguages>
         <pnp:SupportedUILanguage LCID="1033" />
       </pnp:SupportedUILanguages>
-      <pnp:Security>       
+       <pnp:Security>        
+        <pnp:AdditionalMembers>
+          <pnp:User Name="c:0(.s|true" />
+        </pnp:AdditionalMembers>
         <pnp:Permissions />
       </pnp:Security>
       <pnp:Navigation>
@@ -58,8 +61,7 @@
                 <FieldRef Name="ProfileCategory" />
                 <FieldRef Name="RestrictedTo" />
                 <FieldRef Name="ProfilePriority" />
-                <FieldRef Name="ProfileLiveClientBuildNumber" />
-                <FieldRef Name="ProfileCobra" />
+                <FieldRef Name="ProfileLiveClientBuildNumber" />               
               </ViewFields>
               <RowLimit Paged="TRUE">30</RowLimit>
               <JSLink>clienttemplates.js</JSLink>
@@ -67,8 +69,7 @@
           </pnp:Views>
           <pnp:Fields>
             <Field Type="Number" DisplayName="VersionNo" Required="FALSE" EnforceUniqueValues="FALSE" Indexed="FALSE" ID="{9cd5c801-7699-4a09-81c7-487383d518f1}" SourceID="{cfd074d8-2653-4ac4-8664-8a9c60c5a9a2}" StaticName="VersionNo" Name="VersionNo" ColName="float1" RowOrdinal="0" Percentage="FALSE" />
-            <Field Type="Text" DisplayName="ProfileId" Required="FALSE" EnforceUniqueValues="FALSE" Indexed="FALSE" MaxLength="255" ID="{ae09efcf-3ec7-41a9-ba0d-c88771266569}" SourceID="{cfd074d8-2653-4ac4-8664-8a9c60c5a9a2}" StaticName="ProfileId" Name="ProfileId" ColName="nvarchar3" RowOrdinal="0" />
-            <Field Type="Text" DisplayName="ProfileCobra" Required="FALSE" EnforceUniqueValues="FALSE" Indexed="FALSE" MaxLength="255" ID="{b24fca98-22b1-4c31-ab93-8a47ebeb99e7}" SourceID="{cfd074d8-2653-4ac4-8664-8a9c60c5a9a2}" StaticName="Profilecobra" Name="ProfileCobra" ColName="nvarchar3" RowOrdinal="0" />
+            <Field Type="Text" DisplayName="ProfileId" Required="FALSE" EnforceUniqueValues="FALSE" Indexed="FALSE" MaxLength="255" ID="{ae09efcf-3ec7-41a9-ba0d-c88771266569}" SourceID="{cfd074d8-2653-4ac4-8664-8a9c60c5a9a2}" StaticName="ProfileId" Name="ProfileId" ColName="nvarchar3" RowOrdinal="0" />           
             <Field Type="Note" DisplayName="Comments" Required="FALSE" EnforceUniqueValues="FALSE" Indexed="FALSE" NumLines="6" RichText="FALSE" Sortable="FALSE" ID="{677a686e-58cf-4bd9-8421-57d0cca198bd}" SourceID="{cfd074d8-2653-4ac4-8664-8a9c60c5a9a2}" StaticName="Comments" Name="Comments" ColName="ntext2" RowOrdinal="0" RestrictedMode="TRUE" RichTextMode="Compatible" IsolateStyles="FALSE" AppendOnly="FALSE" />
             <Field Type="Text" DisplayName="ProfileStatus" Required="FALSE" EnforceUniqueValues="FALSE" Indexed="FALSE" MaxLength="255" ID="{36c2b196-24fb-468c-ba3b-edfb7e03f0ae}" SourceID="{cfd074d8-2653-4ac4-8664-8a9c60c5a9a2}" StaticName="ProfileStatus" Name="ProfileStatus" ColName="nvarchar4" RowOrdinal="0" />
             <Field Type="Text" DisplayName="ProfileCategory" Required="FALSE" EnforceUniqueValues="FALSE" Indexed="FALSE" MaxLength="255" ID="{941d66b3-b85f-43bd-80b5-2bb296d57cea}" SourceID="{cfd074d8-2653-4ac4-8664-8a9c60c5a9a2}" StaticName="ProfileCategory" Name="ProfileCategory" ColName="nvarchar5" RowOrdinal="0" />
@@ -145,35 +146,7 @@
             <pnp:FieldRef ID="3a6b296c-3f50-445c-a13f-9c679ea9dda3" Name="ComplianceAssetId" DisplayName="Compliance Asset Id" />
             <pnp:FieldRef ID="8382d247-72a9-44b1-9794-7b177edc89f3" Name="_IsRecord" DisplayName="Item is a Record" />
           </pnp:FieldRefs>
-        </pnp:ListInstance>
-        <pnp:ListInstance Title="newlist" Description="" DocumentTemplate="" TemplateType="100" Url="Lists/newlist" MinorVersionLimit="0" MaxVersionLimit="0" DraftVersionVisibility="0" TemplateFeatureID="00bfea71-de22-43b2-a848-c05709900100" EnableFolderCreation="false" DefaultDisplayFormUrl="{site}/Lists/newlist/DispForm.aspx" DefaultEditFormUrl="{site}/Lists/newlist/EditForm.aspx" DefaultNewFormUrl="{site}/Lists/newlist/NewForm.aspx" ImageUrl="/_layouts/15/images/itgen.png?rev=44" ValidationFormula="" ValidationMessage="">
-          <pnp:ContentTypeBindings>
-            <pnp:ContentTypeBinding ContentTypeID="0x01" Default="true" />
-            <pnp:ContentTypeBinding ContentTypeID="0x0120" />
-          </pnp:ContentTypeBindings>
-          <pnp:Views>
-            <View Name="{E2F702D1-FF10-49DC-8197-8A85076DB133}" DefaultView="TRUE" MobileView="TRUE" MobileDefaultView="TRUE" Type="HTML" DisplayName="All Items" Url="/sites/livepnp/Lists/newlist/AllItems.aspx" Level="1" BaseViewID="1" ContentTypeID="0x" ImageUrl="/_layouts/15/images/generic.png?rev=44">
-              <Query>
-                <OrderBy>
-                  <FieldRef Name="ID" />
-                </OrderBy>
-              </Query>
-              <ViewFields>
-                <FieldRef Name="LinkTitle" />
-              </ViewFields>
-              <RowLimit Paged="TRUE">30</RowLimit>
-              <JSLink>clienttemplates.js</JSLink>
-            </View>
-          </pnp:Views>
-          <pnp:FieldRefs>
-            <pnp:FieldRef ID="3a6b296c-3f50-445c-a13f-9c679ea9dda3" Name="ComplianceAssetId" DisplayName="Compliance Asset Id" />
-            <pnp:FieldRef ID="ccc1037f-f65e-434a-868e-8c98af31fe29" Name="_ComplianceFlags" DisplayName="Label setting" />
-            <pnp:FieldRef ID="d4b6480a-4bed-4094-9a52-30181ea38f1d" Name="_ComplianceTag" DisplayName="Labels" />
-            <pnp:FieldRef ID="92be610e-ddbb-49f4-b3b1-5c2bc768df8f" Name="_ComplianceTagWrittenTime" DisplayName="Label Applied" />
-            <pnp:FieldRef ID="418d7676-2d6f-42cf-a16a-e43d2971252a" Name="_ComplianceTagUserId" DisplayName="Label applied by" />
-            <pnp:FieldRef ID="8382d247-72a9-44b1-9794-7b177edc89f3" Name="_IsRecord" DisplayName="Item is a Record" />
-          </pnp:FieldRefs>
-        </pnp:ListInstance>        
+        </pnp:ListInstance>                
         <pnp:ListInstance Title="Site Assets" Description="Use this library to store files which are included on pages within this site, such as images on Wiki pages." DocumentTemplate="{site}/SiteAssets/Forms/template.doc" TemplateType="101" Url="SiteAssets" MinorVersionLimit="0" MaxVersionLimit="0" DraftVersionVisibility="0" TemplateFeatureID="00bfea71-e717-4e80-aa17-d0c71b360101" EnableAttachments="false" DefaultDisplayFormUrl="{site}/SiteAssets/Forms/DispForm.aspx" DefaultEditFormUrl="{site}/SiteAssets/Forms/EditForm.aspx" DefaultNewFormUrl="{site}/SiteAssets/Forms/Upload.aspx" ImageUrl="/_layouts/15/images/itdl.png?rev=44" ValidationFormula="" ValidationMessage="">
           <pnp:ContentTypeBindings>
             <pnp:ContentTypeBinding ContentTypeID="0x0101" Default="true" />
