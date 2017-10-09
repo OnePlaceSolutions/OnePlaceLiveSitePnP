@@ -18,10 +18,11 @@ try {
     $WebClient = New-Object System.Net.WebClient   
     $Url = "https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/ColinLiveSite-FixPowershell/livesitepnp-template.xml"    
     $Path = "$env:temp\livesitepnp-template.xml"   
-    $WebClient.DownloadFile( $Url, $Path )   
-    Write-Host "Downloading site branding:" $Path -ForegroundColor Green
-    $Url = https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/ColinLiveSite-FixPowershell/oneplacesolutions-logo.png
-    $Path = ".\oneplacesolutions-logo.png"   
+    $WebClient.DownloadFile( $Url, $Path )      
+    $UrlSiteImage = https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/ColinLiveSite-FixPowershell/oneplacesolutions-logo.png
+    $PathImage = ".\oneplacesolutions-logo.png" 
+    $WebClient.DownloadFile( $UrlSiteImage, $PathImage )
+    Write-Host "Downloading site branding:" $PathImage -ForegroundColor Green   
     #Apply provisioning xml to new site collection
     Write-Host "Applying configuration changes..." -ForegroundColor Green
     Apply-PnPProvisioningTemplate -path $Path    
