@@ -59,6 +59,7 @@
                 <FieldRef Name="RestrictedTo" />
                 <FieldRef Name="ProfilePriority" />
                 <FieldRef Name="ProfileLiveClientBuildNumber" />
+                <FieldRef Name="ProfileCobra" />
               </ViewFields>
               <RowLimit Paged="TRUE">30</RowLimit>
               <JSLink>clienttemplates.js</JSLink>
@@ -67,6 +68,7 @@
           <pnp:Fields>
             <Field Type="Number" DisplayName="VersionNo" Required="FALSE" EnforceUniqueValues="FALSE" Indexed="FALSE" ID="{9cd5c801-7699-4a09-81c7-487383d518f1}" SourceID="{cfd074d8-2653-4ac4-8664-8a9c60c5a9a2}" StaticName="VersionNo" Name="VersionNo" ColName="float1" RowOrdinal="0" Percentage="FALSE" />
             <Field Type="Text" DisplayName="ProfileId" Required="FALSE" EnforceUniqueValues="FALSE" Indexed="FALSE" MaxLength="255" ID="{ae09efcf-3ec7-41a9-ba0d-c88771266569}" SourceID="{cfd074d8-2653-4ac4-8664-8a9c60c5a9a2}" StaticName="ProfileId" Name="ProfileId" ColName="nvarchar3" RowOrdinal="0" />
+            <Field Type="Text" DisplayName="ProfileCobra" Required="FALSE" EnforceUniqueValues="FALSE" Indexed="FALSE" MaxLength="255" ID="{b24fca98-22b1-4c31-ab93-8a47ebeb99e7}" SourceID="{cfd074d8-2653-4ac4-8664-8a9c60c5a9a2}" StaticName="Profilecobra" Name="ProfileCobra" ColName="nvarchar3" RowOrdinal="0" />
             <Field Type="Note" DisplayName="Comments" Required="FALSE" EnforceUniqueValues="FALSE" Indexed="FALSE" NumLines="6" RichText="FALSE" Sortable="FALSE" ID="{677a686e-58cf-4bd9-8421-57d0cca198bd}" SourceID="{cfd074d8-2653-4ac4-8664-8a9c60c5a9a2}" StaticName="Comments" Name="Comments" ColName="ntext2" RowOrdinal="0" RestrictedMode="TRUE" RichTextMode="Compatible" IsolateStyles="FALSE" AppendOnly="FALSE" />
             <Field Type="Text" DisplayName="ProfileStatus" Required="FALSE" EnforceUniqueValues="FALSE" Indexed="FALSE" MaxLength="255" ID="{36c2b196-24fb-468c-ba3b-edfb7e03f0ae}" SourceID="{cfd074d8-2653-4ac4-8664-8a9c60c5a9a2}" StaticName="ProfileStatus" Name="ProfileStatus" ColName="nvarchar4" RowOrdinal="0" />
             <Field Type="Text" DisplayName="ProfileCategory" Required="FALSE" EnforceUniqueValues="FALSE" Indexed="FALSE" MaxLength="255" ID="{941d66b3-b85f-43bd-80b5-2bb296d57cea}" SourceID="{cfd074d8-2653-4ac4-8664-8a9c60c5a9a2}" StaticName="ProfileCategory" Name="ProfileCategory" ColName="nvarchar5" RowOrdinal="0" />
