@@ -467,46 +467,7 @@
         </pnp:WebFeatures>
       </pnp:Features>
       <pnp:Pages>
-        <pnp:Page Url="{site}/SitePages/Home.aspx" Overwrite="true" Layout="Custom">
-          <pnp:WebParts>
-            <pnp:WebPart Title="Image Viewer" Row="1" Column="1">
-              <pnp:Contents>
-                <WebPart xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.microsoft.com/WebPart/v2">
-                  <Title>Image Viewer</Title>
-                  <FrameType>None</FrameType>
-                  <Description>Displays a specified image.</Description>
-                  <IsIncluded>true</IsIncluded>
-                  <ZoneID>wpz</ZoneID>
-                  <PartOrder>0</PartOrder>
-                  <FrameState>Normal</FrameState>
-                  <Height />
-                  <Width />
-                  <AllowRemove>true</AllowRemove>
-                  <AllowZoneChange>true</AllowZoneChange>
-                  <AllowMinimize>true</AllowMinimize>
-                  <AllowConnect>true</AllowConnect>
-                  <AllowEdit>true</AllowEdit>
-                  <AllowHide>true</AllowHide>
-                  <IsVisible>true</IsVisible>
-                  <DetailLink />
-                  <HelpLink />
-                  <HelpMode>Modeless</HelpMode>
-                  <Dir>Default</Dir>
-                  <PartImageSmall />
-                  <MissingAssembly>Cannot import this Web Part.</MissingAssembly>
-                  <PartImageLarge>/_layouts/15/images/msimagel.gif</PartImageLarge>
-                  <IsIncludedFilter />
-                  <Assembly>Microsoft.SharePoint, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c</Assembly>
-                  <TypeName>Microsoft.SharePoint.WebPartPages.ImageWebPart</TypeName>
-                  <ImageLink xmlns="http://schemas.microsoft.com/WebPart/v2/Image">../SiteImages/ops-logo.png</ImageLink>
-                  <AlternativeText xmlns="http://schemas.microsoft.com/WebPart/v2/Image" />
-                  <VerticalAlignment xmlns="http://schemas.microsoft.com/WebPart/v2/Image">Middle</VerticalAlignment>
-                  <HorizontalAlignment xmlns="http://schemas.microsoft.com/WebPart/v2/Image">Left</HorizontalAlignment>
-                  <BackgroundColor xmlns="http://schemas.microsoft.com/WebPart/v2/Image">transparent</BackgroundColor>
-                </WebPart>
-              </pnp:Contents>
-            </pnp:WebPart>
-          </pnp:WebParts>
+        <pnp:Page Url="{site}/SitePages/Home.aspx" Overwrite="true" Layout="Custom">         
           <pnp:Fields>
             <pnp:Field FieldName="WikiField">&lt;div class="ExternalClass4B6088D6997C41CB958880A720B64131"&gt;
                 &lt;table id="layoutsTable" style="width&amp;#58;100%;"&gt;&lt;tbody&gt;&lt;tr style="vertical-align&amp;#58;top;"&gt;&lt;td style="padding&amp;#58;0px;width&amp;#58;100%;"&gt;&lt;div class="ms-rte-layoutszone-outer" style="width&amp;#58;100%;"&gt;&lt;div class="ms-rte-layoutszone-inner" role="textbox" aria-autocomplete="both" aria-haspopup="true" aria-multiline="true"&gt;&lt;div class="ms-rtestate-read ms-rte-wpbox"&gt;&lt;div class="ms-rtestate-notify  ms-rtestate-read {webpartid:Image Viewer}" id="div_{webpartid:Image Viewer}" unselectable="on"&gt;&lt;/div&gt;&lt;div id="vid_{webpartid:Image Viewer}" unselectable="on" style="display&amp;#58;none;"&gt;&lt;/div&gt;&lt;/div&gt;
