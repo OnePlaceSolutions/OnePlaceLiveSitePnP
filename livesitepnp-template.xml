@@ -9,14 +9,13 @@
         <pnp:SupportedUILanguage LCID="1033" />
       </pnp:SupportedUILanguages>
       <pnp:Security>
-        <pnp:AdditionalAdministrators>
-          <pnp:User Name="i:0#.f|membership|cwood@oneplace365.com" />
+        <pnp:AdditionalAdministrators>         
         </pnp:AdditionalAdministrators>
         <pnp:Permissions />
       </pnp:Security>
       <pnp:Navigation>
         <pnp:GlobalNavigation NavigationType="Structural">
-          <pnp:StructuralNavigation RemoveExistingNodes="false">
+          <pnp:StructuralNavigation RemoveExistingNodes="true">
             <pnp:NavigationNode Title="OnePlace Solutions Site" Url="{site}" />
           </pnp:StructuralNavigation>
         </pnp:GlobalNavigation>
