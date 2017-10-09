@@ -20,7 +20,7 @@ try {
     $Path = "$env:temp\livesitepnp-template.xml"   
     $WebClient.DownloadFile( $Url, $Path )      
     $UrlSiteImage = "https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/ColinLiveSite-FixPowershell/oneplacesolutions-logo.png"
-    $PathImage = ".\oneplacesolutions-logo.png" 
+    $PathImage = "$env:temp\oneplacesolutions-logo.png" 
     $WebClient.DownloadFile( $UrlSiteImage, $PathImage )
     Write-Host "Downloading site branding:" $PathImage -ForegroundColor Green   
     #Apply provisioning xml to new site collection
