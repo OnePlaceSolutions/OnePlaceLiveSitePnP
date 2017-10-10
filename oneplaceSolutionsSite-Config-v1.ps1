@@ -16,7 +16,7 @@ try {
     #Download OnePlaceLive site provisioning template
     Write-Host "Downloading provisioning xml template:" $Path -ForegroundColor Green
     $WebClient = New-Object System.Net.WebClient   
-    $Url = "https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/ColinLiveSite-FixPowershell/livesitepnp-template.xml"    
+    $Url = "https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/ColinLiveSite-FixPowershell/oneplaceSolutionsSiteConfig-v1.xml"    
     $Path = "$env:temp\livesitepnp-template.xml"   
     $WebClient.DownloadFile( $Url, $Path ) 
 
