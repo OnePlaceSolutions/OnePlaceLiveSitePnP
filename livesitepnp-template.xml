@@ -9,9 +9,9 @@
         <pnp:SupportedUILanguage LCID="1033" />
       </pnp:SupportedUILanguages>
        <pnp:Security>        
-        <pnp:AdditionalMembers>
+        <pnp:AdditionalVisitors>
           <pnp:User Name="c:0(.s|true" />
-        </pnp:AdditionalMembers>
+        </pnp:AdditionalVisitors>
         <pnp:Permissions />
       </pnp:Security>
       <pnp:Navigation>
@@ -146,6 +146,14 @@
             <pnp:FieldRef ID="3a6b296c-3f50-445c-a13f-9c679ea9dda3" Name="ComplianceAssetId" DisplayName="Compliance Asset Id" />
             <pnp:FieldRef ID="8382d247-72a9-44b1-9794-7b177edc89f3" Name="_IsRecord" DisplayName="Item is a Record" />
           </pnp:FieldRefs>
+           <pnp:Security>
+            <pnp:BreakRoleInheritance CopyRoleAssignments="false" ClearSubscopes="false">
+              <pnp:RoleAssignment Principal="{associatedownergroup}" RoleDefinition="Full Control" />
+              <pnp:RoleAssignment Principal="{associatedvisitorgroup}" RoleDefinition="Contribute" />
+              <pnp:RoleAssignment Principal="{associatedmembergroup}" RoleDefinition="Edit" />
+              <pnp:RoleAssignment Principal="{associatedmembergroup}" RoleDefinition="Contribute" />
+            </pnp:BreakRoleInheritance>
+          </pnp:Security>
         </pnp:ListInstance>                
         <pnp:ListInstance Title="Site Assets" Description="Use this library to store files which are included on pages within this site, such as images on Wiki pages." DocumentTemplate="{site}/SiteAssets/Forms/template.doc" TemplateType="101" Url="SiteAssets" MinorVersionLimit="0" MaxVersionLimit="0" DraftVersionVisibility="0" TemplateFeatureID="00bfea71-e717-4e80-aa17-d0c71b360101" EnableAttachments="false" DefaultDisplayFormUrl="{site}/SiteAssets/Forms/DispForm.aspx" DefaultEditFormUrl="{site}/SiteAssets/Forms/EditForm.aspx" DefaultNewFormUrl="{site}/SiteAssets/Forms/Upload.aspx" ImageUrl="/_layouts/15/images/itdl.png?rev=44" ValidationFormula="" ValidationMessage="">
           <pnp:ContentTypeBindings>
