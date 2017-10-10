@@ -16,8 +16,8 @@ try {
     #Download OnePlaceLive site provisioning template
     Write-Host "Downloading provisioning xml template:" $Path -ForegroundColor Green
     $WebClient = New-Object System.Net.WebClient   
-    $Url = "https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/ColinLiveSite-FixPowershell/oneplaceSolutionsSiteConfig-v1.xml"    
-    $Path = "$env:temp\livesitepnp-template.xml"   
+    $Url = "https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/ColinLiveSite-FixPowershell/oneplaceSolutionsSite-template-v1.xml"    
+    $Path = "$env:temp\oneplaceSolutionsSite-template-v1.xml"   
     $WebClient.DownloadFile( $Url, $Path ) 
 
     #Download OnePlace Solutions Company logo to be used as Site logo    
