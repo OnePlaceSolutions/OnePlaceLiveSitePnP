@@ -14,8 +14,7 @@ try {
     Write-Host "Enter SharePoint credentials(your email address if SharePoint Online or domain\username if on-premise):" -ForegroundColor Green  
     Connect-pnpOnline -url $SharePointUrl    
 
-    #Download OnePlaceLive site provisioning template
-   
+    #Download OnePlace Solutions Site provisioning template   
     $WebClient = New-Object System.Net.WebClient   
     $Url = "https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/ColinLiveSite-FixPowershell/oneplaceSolutionsSite-template-v1.xml"    
     $Path = "$env:temp\oneplaceSolutionsSite-template-v1.xml" 
