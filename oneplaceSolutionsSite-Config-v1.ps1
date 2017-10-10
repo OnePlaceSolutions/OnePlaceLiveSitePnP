@@ -8,10 +8,10 @@ try {
     Set-ExecutionPolicy Bypass -Scope Process
 
     #Prompt for SharePoint Url     
-    $SharePointUrl = Read-Host -Prompt 'Enter the url of your OnePlaceLive Site Collection'
+    $SharePointUrl = Read-Host -Prompt 'Enter the url of your OnePlace Solutions Site'
         
     #Connect to newly created site collection
-    Write-Host "Enter SharePoint credentials(email address if SharePoint Online or domain\username if on-premise):" $Path -ForegroundColor Green  
+    Write-Host "Enter SharePoint credentials(your email address if SharePoint Online or domain\username if on-premise):" -ForegroundColor Green  
     Connect-pnpOnline -url $SharePointUrl    
 
     #Download OnePlaceLive site provisioning template
@@ -25,8 +25,7 @@ try {
     #Download OnePlace Solutions Company logo to be used as Site logo    
     $UrlSiteImage = "https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/ColinLiveSite-FixPowershell/oneplacesolutions-logo.png"
     $PathImage = "$env:temp\oneplacesolutions-logo.png" 
-    $WebClient.DownloadFile( $UrlSiteImage, $PathImage )
-    Write-Host "Downloading site branding:" $PathImage -ForegroundColor Green
+    $WebClient.DownloadFile( $UrlSiteImage, $PathImage )  
        
     #Apply provisioning xml to new site collection
     Write-Host "Applying configuration changes..." -ForegroundColor Green
