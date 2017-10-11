@@ -40,7 +40,7 @@
         <pnp:File Src="oneplacesolutions-logo.png" Folder="SiteAssets" Overwrite="true" />
       </pnp:Files>  
       <pnp:Lists>
-        <pnp:ListInstance Title="Configuration Profiles" Description="" DocumentTemplate="" TemplateType="100" Url="Lists/Configuration Profiles" MinorVersionLimit="0" MaxVersionLimit="0" DraftVersionVisibility="0" TemplateFeatureID="00bfea71-de22-43b2-a848-c05709900100" EnableFolderCreation="false" DefaultDisplayFormUrl="{site}/Lists/Configuration Profiles/DispForm.aspx" DefaultEditFormUrl="{site}/Lists/Configuration Profiles/EditForm.aspx" DefaultNewFormUrl="{site}/Lists/Configuration Profiles/NewForm.aspx" ImageUrl="/_layouts/15/images/itgen.png?rev=44" ValidationFormula="" ValidationMessage="">
+        <pnp:ListInstance Title="Configuration Profiles" Description="" DocumentTemplate="" ListExperience="ClassicExperience" TemplateType="100" Url="Lists/Configuration Profiles" MinorVersionLimit="0" MaxVersionLimit="0" DraftVersionVisibility="0" TemplateFeatureID="00bfea71-de22-43b2-a848-c05709900100" EnableFolderCreation="false" DefaultDisplayFormUrl="{site}/Lists/Configuration Profiles/DispForm.aspx" DefaultEditFormUrl="{site}/Lists/Configuration Profiles/EditForm.aspx" DefaultNewFormUrl="{site}/Lists/Configuration Profiles/NewForm.aspx" ImageUrl="/_layouts/15/images/itgen.png?rev=44" ValidationFormula="" ValidationMessage="">
           <pnp:ContentTypeBindings>
             <pnp:ContentTypeBinding ContentTypeID="0x01" Default="true" />
             <pnp:ContentTypeBinding ContentTypeID="0x0120" />
@@ -86,7 +86,7 @@
             <pnp:FieldRef ID="8382d247-72a9-44b1-9794-7b177edc89f3" Name="_IsRecord" DisplayName="Item is a Record" />
           </pnp:FieldRefs>
         </pnp:ListInstance>
-        <pnp:ListInstance Title="Documents" Description="" DocumentTemplate="{site}/Shared Documents/Forms/template.dotx" TemplateType="101" Url="Shared Documents" MinorVersionLimit="0" MaxVersionLimit="0" DraftVersionVisibility="0" TemplateFeatureID="00bfea71-e717-4e80-aa17-d0c71b360101" EnableAttachments="false" DefaultDisplayFormUrl="{site}/Shared Documents/Forms/DispForm.aspx" DefaultEditFormUrl="{site}/Shared Documents/Forms/EditForm.aspx" DefaultNewFormUrl="{site}/Shared Documents/Forms/Upload.aspx" ImageUrl="/_layouts/15/images/itdl.png?rev=44" ValidationFormula="" ValidationMessage="">
+        <pnp:ListInstance Title="Documents" Description="" DocumentTemplate="{site}/Shared Documents/Forms/template.dotx" ListExperience="ClassicExperience" TemplateType="101" Url="Shared Documents" MinorVersionLimit="0" MaxVersionLimit="0" DraftVersionVisibility="0" TemplateFeatureID="00bfea71-e717-4e80-aa17-d0c71b360101" EnableAttachments="false" DefaultDisplayFormUrl="{site}/Shared Documents/Forms/DispForm.aspx" DefaultEditFormUrl="{site}/Shared Documents/Forms/EditForm.aspx" DefaultNewFormUrl="{site}/Shared Documents/Forms/Upload.aspx" ImageUrl="/_layouts/15/images/itdl.png?rev=44" ValidationFormula="" ValidationMessage="">
           <pnp:ContentTypeBindings>
             <pnp:ContentTypeBinding ContentTypeID="0x0101" Default="true" />
             <pnp:ContentTypeBinding ContentTypeID="0x0120" />
@@ -119,7 +119,7 @@
             <pnp:FieldRef ID="8382d247-72a9-44b1-9794-7b177edc89f3" Name="_IsRecord" DisplayName="Item is a Record" />
           </pnp:FieldRefs>
         </pnp:ListInstance>
-        <pnp:ListInstance Title="Licenses" Description="" DocumentTemplate="" TemplateType="100" Url="Lists/Licenses" MinorVersionLimit="0" MaxVersionLimit="0" DraftVersionVisibility="0" TemplateFeatureID="00bfea71-de22-43b2-a848-c05709900100" EnableFolderCreation="false" DefaultDisplayFormUrl="{site}/Lists/Licenses/DispForm.aspx" DefaultEditFormUrl="{site}/Lists/Licenses/EditForm.aspx" DefaultNewFormUrl="{site}/Lists/Licenses/NewForm.aspx" ImageUrl="/_layouts/15/images/itgen.png?rev=44" ValidationFormula="" ValidationMessage="">
+        <pnp:ListInstance Title="Licenses" Description="" DocumentTemplate="" ListExperience="ClassicExperience" TemplateType="100" Url="Lists/Licenses" MinorVersionLimit="0" MaxVersionLimit="0" DraftVersionVisibility="0" TemplateFeatureID="00bfea71-de22-43b2-a848-c05709900100" EnableFolderCreation="false" DefaultDisplayFormUrl="{site}/Lists/Licenses/DispForm.aspx" DefaultEditFormUrl="{site}/Lists/Licenses/EditForm.aspx" DefaultNewFormUrl="{site}/Lists/Licenses/NewForm.aspx" ImageUrl="/_layouts/15/images/itgen.png?rev=44" ValidationFormula="" ValidationMessage="">
           <pnp:ContentTypeBindings>
             <pnp:ContentTypeBinding ContentTypeID="0x01" Default="true" />
             <pnp:ContentTypeBinding ContentTypeID="0x0120" />
@@ -299,7 +299,7 @@
             <pnp:FieldRef ID="c33527b4-d920-4587-b791-45024d00068a" Name="WikiField" DisplayName="Wiki Content" />
           </pnp:FieldRefs>
         </pnp:ListInstance>        
-        <pnp:ListInstance Title="Solution Profiles" Description="" DocumentTemplate="" TemplateType="100" Url="Lists/Solution Profiles" MinorVersionLimit="0" MaxVersionLimit="0" DraftVersionVisibility="0" TemplateFeatureID="00bfea71-de22-43b2-a848-c05709900100" EnableFolderCreation="false" DefaultDisplayFormUrl="{site}/Lists/Solution Profiles/DispForm.aspx" DefaultEditFormUrl="{site}/Lists/Solution Profiles/EditForm.aspx" DefaultNewFormUrl="{site}/Lists/Solution Profiles/NewForm.aspx" ImageUrl="/_layouts/15/images/itgen.png?rev=44" ValidationFormula="" ValidationMessage="">
+        <pnp:ListInstance Title="Solution Profiles" Description="" DocumentTemplate="" ListExperience="ClassicExperience" TemplateType="100" Url="Lists/Solution Profiles" MinorVersionLimit="0" MaxVersionLimit="0" DraftVersionVisibility="0" TemplateFeatureID="00bfea71-de22-43b2-a848-c05709900100" EnableFolderCreation="false" DefaultDisplayFormUrl="{site}/Lists/Solution Profiles/DispForm.aspx" DefaultEditFormUrl="{site}/Lists/Solution Profiles/EditForm.aspx" DefaultNewFormUrl="{site}/Lists/Solution Profiles/NewForm.aspx" ImageUrl="/_layouts/15/images/itgen.png?rev=44" ValidationFormula="" ValidationMessage="">
           <pnp:ContentTypeBindings>
             <pnp:ContentTypeBinding ContentTypeID="0x01" Default="true" />
             <pnp:ContentTypeBinding ContentTypeID="0x0120" />
