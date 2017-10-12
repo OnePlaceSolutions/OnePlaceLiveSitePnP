@@ -32,6 +32,6 @@ try {
 
 }
 catch {
-    $error = $_.Exception.Message
+    $error = $_.Exception
     Write-Host $error[0].Message
 }
