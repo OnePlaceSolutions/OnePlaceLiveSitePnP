@@ -32,6 +32,7 @@ try {
 
 }
 catch {
-    $error = $_.Exception
-    Write-Host $error[0].Message
+    write-host "Caught an exception:" -ForegroundColor Red
+    write-host "Exception Type: $($_.Exception.GetType().FullName)" -ForegroundColor Red
+    write-host "Exception Message: $($_.Exception.Message)" -ForegroundColor Red
 }
