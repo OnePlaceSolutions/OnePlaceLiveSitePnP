@@ -31,7 +31,7 @@ try {
     Apply-PnPProvisioningTemplate -path $Path    
 
 }
-catch[System.Reflection.ReflectionTypeLoadException]
+catch [System.Reflection.ReflectionTypeLoadException]
 {
   Write-Host "Message: $($_.Exception.Message)" -ForegroundColor Green
   Write-Host "StackTrace: $($_.Exception.StackTrace)" -ForegroundColor Yellow
