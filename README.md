@@ -27,3 +27,44 @@ install the msi file:
 ![](./README-Images/image2.png)
 
 ![](./README-Images/image3.png)
+
+Installing Email Columns to SharePoint
+--------------------------------------
+
+1.  Start PowerShell on your machine:
+
+    ![](./README-Images/image4.png)
+
+2.  Copy and paste the following command into your PowerShell command
+    window and hit enter:
+
+> **Invoke-Expression (New-Object
+> Net.WebClient).DownloadString(‘https://raw.githubusercontent.com/OnePlaceSolutions/EmailColumnsPnP/master/.ps1’)**
+>
+> Copy the text above, then in the PowerShell window right click at the
+> cursor and the command will be pasted into the window, then hit the
+> enter key to execute the command:
+
+![](./README-Images/image5.png)
+
+3.  The PowerShell script will execute and prompt you to enter the Site
+    Collection Url for the Site Collection you wish to deploy the Email
+    columns to. You can either type it in or copy and paste the url into
+    the command window and hit enter:
+
+    ![](./README-Images/image6.png)
+
+    ![](./README-Images/image7.png)
+
+4.  You will be asked to enter your credentials for SharePoint. For
+    SharePoint Online it will be your email address, for on-premise it
+    will your domain\\username:
+
+    ![](./README-Images/image8.png)
+
+5.  The email columns template will then be downloaded and applied to
+    your site collection:
+
+    ![](./README-Images/image9.png)
+
+    ![](./README-Images/image10.png)
