@@ -31,15 +31,9 @@ try {
     Apply-PnPProvisioningTemplate -path $Path    
 
 }
-catch [System.Reflection.ReflectionTypeLoadException]
-{
-  Write-Host "Message: $($_.Exception.Message)" -ForegroundColor Green
-  Write-Host "StackTrace: $($_.Exception.StackTrace)" -ForegroundColor Yellow
-  Write-Host "LoaderExceptions: $($_.Exception.LoaderExceptions)" -ForegroundColor Cyan
-}
 
-#catch {
- #   write-host "Caught an exception:" -ForegroundColor Red
- #   write-host "Exception Type: $($_.Exception.GetType().FullName)" -ForegroundColor Red
- #   write-host "Exception Message: $($_.Exception.Message)" -ForegroundColor Red
-#}
+catch {
+  write-host "Caught an exception:" -ForegroundColor Red
+  write-host "Exception Type: $($_.Exception.GetType().FullName)" -ForegroundColor Red
+  write-host "Exception Message: $($_.Exception.Message)" -ForegroundColor Red
+}
