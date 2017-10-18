@@ -28,7 +28,16 @@ install the msi file:
 
 ![](./README-Images/image3.png)
 
-Installing Email Columns to SharePoint
+
+Manually create a SharePoint Site Collection
+--------------------------------------------
+
+On-Premise - Go to Central Administration and create a site collection based on the Team Site template:
+![](./README-Images/createsitecollection-onpremise.jpg)
+
+SharePoint Online - Go to SharePoint Administration in your tenant and create a site collection based on the Team Site template:
+
+Applying the OnePlace Solution Site configurations to your site collection
 --------------------------------------
 
 1.  Start PowerShell on your machine:
