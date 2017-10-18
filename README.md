@@ -33,7 +33,7 @@ Manually create a SharePoint Site Collection
 --------------------------------------------
 
 On-Premise - Go to Central Administration and create a site collection based on the Team Site template:
-![](./README-Images/createsitecollection-onpremise.jpg)
+![](./README-Images/createsitecollection-onpremise.png)
 
 SharePoint Online - Go to SharePoint Administration in your tenant and create a site collection based on the Team Site template:
 
