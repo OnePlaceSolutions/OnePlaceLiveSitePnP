@@ -1,5 +1,8 @@
 Pre-requisites
 --------------
+If you already have the PnP Powershell cmdlets installed make sure you are on the most recent version by upgrading them by uninstalling the old version and installing the new version from here:
+
+<https://github.com/SharePoint/PnP-PowerShell/releases>
 
 1.  SharePoint Online, SharePoint 2016 on-premise, SharePoint 2013
     on-premise.
@@ -48,34 +51,26 @@ Applying the OnePlace Solution Site configurations to your site collection
 2.  Copy and paste the following command into your PowerShell command
     window and hit enter:
 
-> **Invoke-Expression (New-Object
-> Net.WebClient).DownloadString('https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/master/oneplaceSolutionsSite-Config-v1.ps1')**
->
-> Copy the text above, then in the PowerShell window right click at the
-> cursor and the command will be pasted into the window, then hit the
-> enter key to execute the command:
+    > **Invoke-Expression (New-Object
+    > Net.WebClient).DownloadString('https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/master/oneplaceSolutionsSite-Config-v1.ps1')**
+    >
+    > Copy the text above, then in the PowerShell window right click at the
+    > cursor and the command will be pasted into the window, then hit the
+    > enter key to execute the command:
 
- ![](./README-Images/ps1command.png)
+    ![](./README-Images/ps1command.png)
 
 
-3.  The PowerShell script will execute and prompt you to enter the Site
-    Collection Url for the Site Collection you wish to deploy the Email
-    columns to. You can either type it in or copy and paste the url into
-    the command window and hit enter:
+3.  The PowerShell script will execute and prompt you to enter the Site Collection Url of the site collection you manually created in the previous step. You can either type it in       or copy and paste the url into the command window and hit enter:
 
-    ![](./README-Images/image6.png)
+    ![](./README-Images/enterurl.png)
 
-    ![](./README-Images/image7.png)
+4.  You will be asked to enter your credentials for SharePoint. For SharePoint Online it will be your email address, for on-premise it will your domain\\username:
 
-4.  You will be asked to enter your credentials for SharePoint. For
-    SharePoint Online it will be your email address, for on-premise it
-    will your domain\\username:
+    ![](./README-Images/credentials.png)
 
-    ![](./README-Images/image8.png)
+5.  The OnePlace Solutions site template template will then be downloaded and applied to your site collection:
 
-5.  The email columns template will then be downloaded and applied to
-    your site collection:
+    ![](./README-Images/applychanges.png)
 
-    ![](./README-Images/image9.png)
-
-    ![](./README-Images/image10.png)
+    ![](./README-Images/applyingchangestosite.png)
