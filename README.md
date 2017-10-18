@@ -36,6 +36,7 @@ On-Premise - Go to Central Administration and create a site collection based on 
 ![](./README-Images/createsitecollection-onpremise.png)
 
 SharePoint Online - Go to SharePoint Administration in your tenant and create a site collection based on the Team Site template:
+![](./README-Images/createsitecollection-online.png)
 
 Applying the OnePlace Solution Site configurations to your site collection
 --------------------------------------
@@ -48,13 +49,14 @@ Applying the OnePlace Solution Site configurations to your site collection
     window and hit enter:
 
 > **Invoke-Expression (New-Object
-> Net.WebClient).DownloadString(‘https://raw.githubusercontent.com/OnePlaceSolutions/EmailColumnsPnP/master/.ps1’)**
+> Net.WebClient).DownloadString('https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/master/oneplaceSolutionsSite-Config-v1.ps1')**
 >
 > Copy the text above, then in the PowerShell window right click at the
 > cursor and the command will be pasted into the window, then hit the
 > enter key to execute the command:
 
-![](./README-Images/image5.png)
+ ![](./README-Images/ps1command.png)
+
 
 3.  The PowerShell script will execute and prompt you to enter the Site
     Collection Url for the Site Collection you wish to deploy the Email
