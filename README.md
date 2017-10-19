@@ -24,21 +24,22 @@ If you already have the PnP Powershell cmdlets installed make sure you are on th
     files from here (new updates are applied monthly to the msi files):
     <https://github.com/SharePoint/PnP-PowerShell/releases>.
 
-You will need to logon as a local Administrator to your machine to
-install the msi file:
+    You will need to logon as a local Administrator to your machine to install the msi file:
 
-![](./README-Images/image2.png)
+    ![](./README-Images/image2.png)
 
-![](./README-Images/image3.png)
+    ![](./README-Images/image3.png)
 
 
 Manually create a SharePoint Site Collection
 --------------------------------------------
 
 On-Premise - Go to Central Administration and create a site collection based on the Team Site template:
+
 ![](./README-Images/createsitecollection-onpremise.png)
 
 SharePoint Online - Go to SharePoint Administration in your tenant and create a site collection based on the Team Site template:
+
 ![](./README-Images/createsitecollection-online.png)
 
 Applying the OnePlace Solution Site configurations to your site collection
