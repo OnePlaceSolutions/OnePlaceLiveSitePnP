@@ -70,7 +70,7 @@ Applying the OnePlace Solution Site configurations to your site collection
 
     ![](./README-Images/credentials.png)
 
-5.  The OnePlace Solutions site template template will then be downloaded and applied to your site collection:
+5.  The OnePlace Solutions site template will then be downloaded and applied to your site collection:
 
     ![](./README-Images/applychanges.png)
 
