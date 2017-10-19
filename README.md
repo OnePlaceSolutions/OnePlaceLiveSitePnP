@@ -1,5 +1,8 @@
 Pre-requisites
 --------------
+If you already have the PnP Powershell cmdlets installed make sure you are on the most recent version by upgrading them by uninstalling the old version and installing the new version from here:
+
+<https://github.com/SharePoint/PnP-PowerShell/releases>
 
 1.  SharePoint Online, SharePoint 2016 on-premise, SharePoint 2013
     on-premise.
@@ -28,7 +31,17 @@ install the msi file:
 
 ![](./README-Images/image3.png)
 
-Installing Email Columns to SharePoint
+
+Manually create a SharePoint Site Collection
+--------------------------------------------
+
+On-Premise - Go to Central Administration and create a site collection based on the Team Site template:
+![](./README-Images/createsitecollection-onpremise.png)
+
+SharePoint Online - Go to SharePoint Administration in your tenant and create a site collection based on the Team Site template:
+![](./README-Images/createsitecollection-online.png)
+
+Applying the OnePlace Solution Site configurations to your site collection
 --------------------------------------
 
 1.  Start PowerShell on your machine:
@@ -38,33 +51,26 @@ Installing Email Columns to SharePoint
 2.  Copy and paste the following command into your PowerShell command
     window and hit enter:
 
-> **Invoke-Expression (New-Object
-> Net.WebClient).DownloadString(‘https://raw.githubusercontent.com/OnePlaceSolutions/EmailColumnsPnP/master/.ps1’)**
->
-> Copy the text above, then in the PowerShell window right click at the
-> cursor and the command will be pasted into the window, then hit the
-> enter key to execute the command:
+    > **Invoke-Expression (New-Object
+    > Net.WebClient).DownloadString('https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/master/oneplaceSolutionsSite-Config-v1.ps1')**
+    >
+    > Copy the text above, then in the PowerShell window right click at the
+    > cursor and the command will be pasted into the window, then hit the
+    > enter key to execute the command:
 
-![](./README-Images/image5.png)
+    ![](./README-Images/ps1command.png)
 
-3.  The PowerShell script will execute and prompt you to enter the Site
-    Collection Url for the Site Collection you wish to deploy the Email
-    columns to. You can either type it in or copy and paste the url into
-    the command window and hit enter:
 
-    ![](./README-Images/image6.png)
+3.  The PowerShell script will execute and prompt you to enter the Site Collection Url of the site collection you manually created in the previous step. You can either type it in       or copy and paste the url into the command window and hit enter:
 
-    ![](./README-Images/image7.png)
+    ![](./README-Images/enterurl.png)
 
-4.  You will be asked to enter your credentials for SharePoint. For
-    SharePoint Online it will be your email address, for on-premise it
-    will your domain\\username:
+4.  You will be asked to enter your credentials for SharePoint. For SharePoint Online it will be your email address, for on-premise it will your domain\\username:
 
-    ![](./README-Images/image8.png)
+    ![](./README-Images/credentials.png)
 
-5.  The email columns template will then be downloaded and applied to
-    your site collection:
+5.  The OnePlace Solutions site template template will then be downloaded and applied to your site collection:
 
-    ![](./README-Images/image9.png)
+    ![](./README-Images/applychanges.png)
 
-    ![](./README-Images/image10.png)
+    ![](./README-Images/applyingchangestosite.png)
