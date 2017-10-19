@@ -1,6 +1,6 @@
  <#
-        This script prompt applies the configuration changes for the OnePLace Solutions site to an existing site collection
-        A new site collection based on the Team Site template should be created manually before running this script
+        This script applies the configuration changes for the OnePlace Solutions site to an existing site collection.
+        A new site collection based on the Team Site template should be created manually before running this script.
 #>
 
 try {    
