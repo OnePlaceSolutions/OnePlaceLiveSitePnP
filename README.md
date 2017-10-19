@@ -66,7 +66,7 @@ Applying the OnePlace Solution Site configurations to your site collection
 
     ![](./README-Images/enterurl.png)
 
-4.  You will be asked to enter your credentials for SharePoint. For SharePoint Online it will be your email address, for on-premise it will your domain\\username:
+4.  You will be asked to enter your credentials for SharePoint. For SharePoint Online it will be your email address, for on-premise it will be your domain\\username:
 
     ![](./README-Images/credentials.png)
 
