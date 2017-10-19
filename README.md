@@ -62,7 +62,7 @@ Applying the OnePlace Solution Site configurations to your site collection
     ![](./README-Images/ps1command.png)
 
 
-3.  The PowerShell script will execute and prompt you to enter the Site Collection Url of the site collection you manually created in the previous step. You can either type it in       or copy and paste the url into the command window and hit enter:
+3.  The PowerShell script will execute and prompt you to enter the Site Collection Url of the site collection you manually created in the earlier step. You can either type it in        or copy and paste the url into the command window and hit enter:
 
     ![](./README-Images/enterurl.png)
 
