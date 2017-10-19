@@ -1,7 +1,6 @@
  <#
-        This script prompt creates a new site collection in your Office 365 tenant
-        The user is prompted for the SharePoint Site Collection url, Site Owner and TimeZone of the newly created
-        Site Collection  
+        This script prompt applies the configuration changes for the OnePLace Solutions site to an existing site collection
+        A new site collection based on the Team Site template should be created manually before running this script
 #>
 
 try {    
@@ -16,13 +15,13 @@ try {
 
     #Download OnePlace Solutions Site provisioning template   
     $WebClient = New-Object System.Net.WebClient   
-    $Url = "https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/ColinLiveSite-FixPowershell/oneplaceSolutionsSite-template-v1.xml"    
+    $Url = "https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/master/oneplaceSolutionsSite-template-v1.xml"    
     $Path = "$env:temp\oneplaceSolutionsSite-template-v1.xml" 
     Write-Host "Downloading provisioning xml template:" $Path -ForegroundColor Green  
     $WebClient.DownloadFile( $Url, $Path ) 
 
     #Download OnePlace Solutions Company logo to be used as Site logo    
-    $UrlSiteImage = "https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/ColinLiveSite-FixPowershell/oneplacesolutions-logo.png"
+    $UrlSiteImage = "https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/master/oneplacesolutions-logo.png"
     $PathImage = "$env:temp\oneplacesolutions-logo.png" 
     $WebClient.DownloadFile( $UrlSiteImage, $PathImage )  
        
