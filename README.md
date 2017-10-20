@@ -1,6 +1,6 @@
 ## Pre-requisites
 
-1.  Either of the SharePoint Online, SharePoint 2016 on-premise, SharePoint 2013 on-premise.
+1.  Either SharePoint Online, SharePoint 2016 on-premise, or SharePoint 2013 on-premise.
 
 2.  PowerShell v3.0 or greater installed on your work environment. 
 
