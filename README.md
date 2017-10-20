@@ -37,12 +37,12 @@ Applying the OnePlace Solution Site configurations to your site collection
 2.  Copy and paste the following command into your PowerShell command
     window and hit enter:
 
-    > **Invoke-Expression (New-Object
-    > Net.WebClient).DownloadString('https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/master/oneplaceSolutionsSite-Config-v1.ps1')**
-    >
-    > Copy the text above, then in the PowerShell window right click at the
-    > cursor and the command will be pasted into the window, then hit the
-    > enter key to execute the command:
+    ```PowerShell
+    Invoke-Expression (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/master/oneplaceSolutionsSite-Config-v1.ps1')
+    ```
+    
+    Copy the text above, then in the PowerShell window right click at the
+    cursor and the command will be pasted into the window, then hit the enter key to execute the command:
 
     ![](./README-Images/ps1command.png)
 
