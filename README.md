@@ -1,19 +1,20 @@
 ## Pre-requisites
-If you already have the PnP Powershell cmdlets installed, make sure you are on the most recent version by upgrading them by uninstalling the old version and [installing the new version](https://github.com/SharePoint/PnP-PowerShell/releases).
 
-1.  Have either of the following SharePoint environments: SharePoint Online, SharePoint 2016 on-premise, SharePoint 2013 on-premise.
+1.  Either of the SharePoint Online, SharePoint 2016 on-premise, SharePoint 2013 on-premise.
 
-2.  PowerShell v3.0 or greater installed on the machine. Windows 10/8.1 and Windows Server 2012 and greater are all ready to go. 
+2.  PowerShell v3.0 or greater installed on your work environment. 
 
-    Windows 7 is preinstalled with v2.0 of PowerShell and will need to be  upgraded. This can be done by [downloading and installing the Windows Management Framework 4.0](https://www.microsoft.com/en-au/download/details.aspx?id=40855). Download and install either the x64 or x86 version based on your version of Windows 7:
+    Windows 10/8.1 and Windows Server 2012 and greater are all ready to go, but Windows 7 is preinstalled with v2.0 of PowerShell and will need to be  upgraded. This can be done by [downloading and installing the Windows Management Framework 4.0](https://www.microsoft.com/en-au/download/details.aspx?id=40855). Download and install either the x64 or x86 version based on your version of Windows 7:
 
     ![](./README-Images/image1.png)
 
-3.  Install the SharePoint PnP PowerShell cmdlets installed on the machine. You need to install the correct version of the cmdlets to target your version of SharePoint. Install the [latest release msi files](https://github.com/SharePoint/PnP-PowerShell/releases) from here (new updates are applied monthly to the msi files).
-
-    You will need to logon as a local Administrator to your machine to install the msi file:
+3.  The latest [SharePoint PnP PowerShell cmdlets](https://github.com/SharePoint/PnP-PowerShell/releases). You will need to install the the cmdlets that target your version of SharePoint.
 
     ![](./README-Images/image2.png)
+
+    If you already have the PnP Powershell cmdlets installed, make sure you are on the most recent version by upgrading them by uninstalling the old version and [installing the new version](https://github.com/SharePoint/PnP-PowerShell/releases).
+
+    You will need to logon as a local Administrator to your machine to install the msi file.
 
     ![](./README-Images/image3.png)
 
@@ -27,8 +28,7 @@ SharePoint Online - Go to SharePoint Administration in your tenant and create a 
 
 ![](./README-Images/createsitecollection-online.png)
 
-Applying the OnePlace Solution Site configurations to your site collection
---------------------------------------
+## Applying the OnePlace Solution Site configurations to your site collection
 
 1.  Start PowerShell on your machine:
 
@@ -40,14 +40,14 @@ Applying the OnePlace Solution Site configurations to your site collection
     ```PowerShell
     Invoke-Expression (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/master/oneplaceSolutionsSite-Config-v1.ps1')
     ```
-    
+
     Copy the text above, then in the PowerShell window right click at the
     cursor and the command will be pasted into the window, then hit the enter key to execute the command:
 
     ![](./README-Images/ps1command.png)
 
 
-3.  The PowerShell script will execute and prompt you to enter the Site Collection Url of the site collection you manually created in the earlier step. You can either type it in        or copy and paste the url into the command window and hit enter:
+3.  The PowerShell script will execute and prompt you to enter the Site Collection Url of the site collection you manually created in the earlier step. You can either type it in or copy and paste the url into the command window and hit enter:
 
     ![](./README-Images/enterurl.png)
 
