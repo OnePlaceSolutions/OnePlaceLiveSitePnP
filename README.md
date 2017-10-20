@@ -4,7 +4,7 @@
 
 2.  PowerShell v3.0 or greater installed on your work environment. 
 
-    Windows 10/8.1 and Windows Server 2012 and greater are all ready to go, but Windows 7 is preinstalled with v2.0 of PowerShell and will need to be  upgraded. This can be done by [downloading and installing the Windows Management Framework 4.0](https://www.microsoft.com/en-au/download/details.aspx?id=40855). Download and install either the x64 or x86 version based on your version of Windows 7.
+    Windows 10/8.1 and Windows Server 2012 and greater are all ready to go, but Windows 7 is preinstalled with PowerShell v2.0 and will need to be  upgraded. This can be done by [downloading and installing the Windows Management Framework 4.0](https://www.microsoft.com/en-au/download/details.aspx?id=40855). Download and install either the x64 or x86 version based on your version of Windows 7.
 
     ![](./README-Images/image1.png)
 
@@ -18,17 +18,16 @@
 
     ![](./README-Images/image3.png)
 
-
 ## Manually create a SharePoint Site Collection
 ### On-Premise
-In Central Administration, create a site collection based on the Team Site template:
+In Central Administration, create a site collection based on the Team Site template
 
-    ![](./README-Images/createsitecollection-onpremise.png)
+![](./README-Images/createsitecollection-onpremise.png)
 
 ### SharePoint Online
 In SharePoint Administration in your tenant, create a site collection based on the Team Site template:
 
-    ![](./README-Images/createsitecollection-online.png)
+![](./README-Images/createsitecollection-online.png)
 
 ## Apply the OnePlace Solutions Site configurations to your site collection
 
