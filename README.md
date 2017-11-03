@@ -22,7 +22,7 @@
 ### On-Premise
 In Central Administration, create a site collection based on the Team Site template
 
-![](./README-Images/createsitecollection-onpremise.png)
+![](./README-Images/createsitecollection-onpremise-v2.png)
 
 ### SharePoint Online
 In SharePoint Administration in your tenant, create a site collection based on the Team Site template:
