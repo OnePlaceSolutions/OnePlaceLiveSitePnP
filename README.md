@@ -2,7 +2,7 @@
 
 
 1.  Have either of the following SharePoint environments: SharePoint Online, SharePoint 2019 on-premises, SharePoint 2016 on-premises, SharePoint 2013
-    on-premise.
+    on-premises.
 
 2.  PowerShell v3.0 or greater installed on your work environment. 
 
