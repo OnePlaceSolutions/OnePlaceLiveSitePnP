@@ -4,7 +4,7 @@ If you already have the PnP Powershell cmdlets installed make sure you are on th
 
 <https://github.com/SharePoint/PnP-PowerShell/releases>
 
-1.  Have either of the following SharePoint environments: SharePoint Online, SharePoint 2016 on-premise, SharePoint 2013
+1.  Have either of the following SharePoint environments: SharePoint Online, SharePoint 2019 on-premise, SharePoint 2016 on-premise, SharePoint 2013
     on-premise.
 
 2.  PowerShell v3.0 or greater installed on the machine. Windows 10/8.1
