@@ -6,16 +6,16 @@
 try {    
     Set-ExecutionPolicy Bypass -Scope Process
 
-    #Prompt for SharePoint Url     
-    $SharePointUrl = Read-Host -Prompt 'Enter the url of your OnePlace Solutions Site'
+    #Prompt for SharePoint URL     
+    $SharePointUrl = Read-Host -Prompt 'Enter the URL of your OnePlace Solutions Site'
         
     #Connect to newly created site collection
     If($SharePointUrl -match ".sharepoint.com/"){
-        Write-Host "Enter SharePoint credentials(your email address for SharePoint Online):" -ForegroundColor Green  
+        Write-Host "Enter SharePoint credentials (your email address for SharePoint Online):" -ForegroundColor Green  
         Connect-pnpOnline -url $SharePointUrl -UseWebLogin
     }
     Else{
-        Write-Host "Enter SharePoint credentials(domain\username for on-premise):" -ForegroundColor Green  
+        Write-Host "Enter SharePoint credentials (domain\username for on-premises):" -ForegroundColor Green  
         Connect-pnpOnline -url $SharePointUrl 
     }
 
