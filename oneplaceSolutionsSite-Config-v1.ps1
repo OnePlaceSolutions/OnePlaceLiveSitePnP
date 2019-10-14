@@ -10,8 +10,14 @@ try {
     $SharePointUrl = Read-Host -Prompt 'Enter the url of your OnePlace Solutions Site'
         
     #Connect to newly created site collection
-    Write-Host "Enter SharePoint credentials(your email address if SharePoint Online or domain\username if on-premise):" -ForegroundColor Green  
-    Connect-pnpOnline -url $SharePointUrl    
+    If($SharePointUrl -match ".sharepoint.com/"){
+        Write-Host "Enter SharePoint credentials(your email address for SharePoint Online):" -ForegroundColor Green  
+        Connect-pnpOnline -url $SharePointUrl -UseWebLogin
+    }
+    Else{
+        Write-Host "Enter SharePoint credentials(domain\username for on-premise):" -ForegroundColor Green  
+        Connect-pnpOnline -url $SharePointUrl 
+    }
 
     #Download OnePlace Solutions Site provisioning template   
     $WebClient = New-Object System.Net.WebClient   
