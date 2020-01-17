@@ -102,7 +102,7 @@ Try {
     $LicenseListUrl = $SolutionsSiteUrl + '/lists/Licenses'
     $ownerEmail = Read-Host "Please enter the email address of the owner for this site."
 
-    $filler = "Creating site with URL '$SolutionsSiteUrl', and owner '$ownerEmail'. Please wait..."
+    $filler = "Creating Solutions Site / site collection with URL '$SolutionsSiteUrl', and owner '$ownerEmail'. Please wait..."
     Write-Host $filler -ForegroundColor Yellow
     Write-Log -Level Info -Message $filler
     $timeStartCreate = Get-Date
@@ -146,7 +146,7 @@ Try {
     Write-Host $filler -ForegroundColor Yellow
     Write-Log -Level Info -Message $filler
     Add-PnPListItem -List "Licenses" -Values @{"Title" = "License"} 
-    $licenseItem = Get-PnPListItem -List "Licenses" -Query "<View><Query><Where><Eq><FieldRef Name='Title'/><Value Type='Text'>License</Value></Eq></Where></Query></View>"
+    $licenseItem = Get-PnPListItem -List "Licenses" -Query "<View><Query><Where><Eq><FieldRef Name='Title'/><Value Type='Text'>License</Value></Eq></Where></Query></View>" | Out-Null
     $licenseListId = ((Get-PnPList -Identity "Licenses").Id).ToString()
 
     If($null -ne $licenseItem){
@@ -169,7 +169,7 @@ Try {
     
     Write-Host "Solutions Site URL = $SolutionsSiteUrl"
     Write-Host "License List URL = $LicenseListUrl"
-    Write-Host "License List Id = $licenseListId"
+    Write-Host "License List ID = $licenseListId"
     
     Write-Host "-------------------" -ForegroundColor Red
     Write-Host "Opening Solutions Site at $SolutionsSiteUrl..." -ForegroundColor Yellow
