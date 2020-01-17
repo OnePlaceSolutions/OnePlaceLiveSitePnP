@@ -109,7 +109,9 @@ Try {
     Try{
         Write-Log -Level Info -Message "Testing if a Site at $SolutionsSiteUrl already exists"
         Get-PnPTenantSite -url $SolutionsSiteUrl | Out-Null
-        Write-Log -Level Info -Message "Site already exists, skipping creation"
+        $filler = "Site already exists, skipping creation"
+        Write-Host $filler -ForegroundColor Yellow
+        Write-Log -Level Info -Message $filler
     }
     Catch{
         Write-Log -Level Info -Message "Site does not exist, continuing with creation"
@@ -158,28 +160,31 @@ Try {
     Write-Host $filler -ForeGroundColor Green
     Write-Log -Level Info -Message $filler
 
-    $filler = "Creating License List..."
-    Write-Host $filler -ForegroundColor Yellow
-    Write-Log -Level Info -Message $filler
-    Add-PnPListItem -List "Licenses" -Values @{"Title" = "License"} 
-
-    $filler = "Creating License Item..."
-    Write-Host $filler -ForegroundColor Yellow
-    Write-Log -Level Info -Message $filler
-
-    $licenseItem = (Get-PnPListItem -List "Licenses" -Query "<View><Query><Where><Eq><FieldRef Name='Title'/><Value Type='Text'>License</Value></Eq></Where></Query></View>").Count
-    $licenseListId = ((Get-PnPList -Identity "Licenses").Id).ToString()
-
-    If(1 -eq $licenseItem){
-        $filler = "License Item created!"
-        Write-Host "`n$filler" -ForegroundColor Green
+    
+    If((Get-PnPListItem -List "Licenses" -Query "<View><Query><Where><Eq><FieldRef Name='Title'/><Value Type='Text'>License</Value></Eq></Where></Query></View>").Count -eq 0){
+        $filler = "Creating License Item..."
+        Write-Host $filler -ForegroundColor Yellow
         Write-Log -Level Info -Message $filler
+        Add-PnPListItem -List "Licenses" -Values @{"Title" = "License"} 
+
+        If((Get-PnPListItem -List "Licenses" -Query "<View><Query><Where><Eq><FieldRef Name='Title'/><Value Type='Text'>License</Value></Eq></Where></Query></View>").Count -eq 1){
+            $filler = "License Item created!"
+            Write-Host "`n$filler" -ForegroundColor Green
+            Write-Log -Level Info -Message $filler
+        }
+        Else{
+            $filler = "License Item not created!"
+            Write-Host "`n$filler" -ForegroundColor Red
+            Write-Log -Level Info -Message $filler
+        }
     }
     Else{
-        $filler = "License Item was not created"
-        Write-Host "`n$filler" -ForegroundColor Red
-        Write-Log -Level Error -Message $filler
+        $filler = "License Item already exists, skipping creation."
+        Write-Host $filler -ForegroundColor Yellow
+        Write-Log -Level Info -Message $filler
     }
+    
+    $licenseListId = ((Get-PnPList -Identity "Licenses").Id).ToString()
     
     Write-Log -Level Info -Message "Solutions Site URL = $SolutionsSiteUrl"
     Write-Log -Level Info -Message "License List URL = $LicenseListUrl"
