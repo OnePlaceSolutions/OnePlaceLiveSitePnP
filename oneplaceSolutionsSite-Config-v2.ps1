@@ -2,6 +2,7 @@
     This script creates a new Site collection (Team Site (Classic)), and applies the configuration changes for the OnePlace Solutions site.
 #>
 $ErrorActionPreference = 'Stop'
+$script:logPath = "$env:userprofile\Documents\OPSScriptLog.txt"
 function Write-Log { 
     <#
     .NOTES 
@@ -20,11 +21,11 @@ function Write-Log {
  
         [Parameter(Mandatory=$false)] 
         [Alias('LogPath')] 
-        [string]$Path="$env:userprofile\Documents\OPSScriptLog.txt", 
+        [string]$Path = $script:logPath, 
          
         [Parameter(Mandatory=$false)] 
         [ValidateSet("Error","Warn","Info")] 
-        [string]$Level="Info", 
+        [string]$Level = "Info", 
          
         [Parameter(Mandatory=$false)] 
         [switch]$NoClobber 
@@ -163,7 +164,7 @@ Try {
     Write-Log -Level Info -Message "License List URL = $LicenseListUrl"
     Write-Log -Level Info -Message "License List ID = $licenseListId"
 
-    Write-Host "`nPlease record the OnePlace Solutions Site URL and License Location / License List URL for usage in the OnePlaceMail Desktop and OnePlaceDocs clients, and the License List Id for the licensing process. These have also been written to a log file on your Documents folder called 'OPSScriptLog.txt'" -ForegroundColor Yellow
+    Write-Host "`nPlease record the OnePlace Solutions Site URL and License Location / License List URL for usage in the OnePlaceMail Desktop and OnePlaceDocs clients, and the License List Id for the licensing process. `nThese have also been written to a log file at '$script:logPath'" -ForegroundColor Yellow
     Write-Host "-------------------" -ForegroundColor Red
     
     Write-Host "Solutions Site URL = $SolutionsSiteUrl"
