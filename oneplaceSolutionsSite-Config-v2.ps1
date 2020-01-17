@@ -82,6 +82,10 @@ function Write-Log {
 
 Try { 
     Set-ExecutionPolicy Bypass -Scope Process
+
+    #Check PnP installed
+    Get-InstalledModule SharePointPnPPowerShellOnline | Out-Null
+
     $tenant = Read-Host "Please enter the name of your Office 365 Tenant, eg for 'https://contoso.sharepoint.com/' just enter 'contoso'."
     $adminSharePoint = "https://$tenant-admin.sharepoint.com"
     $rootSharePoint = "https://$tenant.sharepoint.com"
@@ -101,18 +105,27 @@ Try {
 
     $SolutionsSiteUrl = $rootSharePoint + '/sites/' + $solutionsSite
     $LicenseListUrl = $SolutionsSiteUrl + '/lists/Licenses'
-    $ownerEmail = Read-Host "Please enter the email address of the owner for this site."
 
-    $filler = "Creating Solutions Site / site collection with URL '$SolutionsSiteUrl', and owner '$ownerEmail'. Please wait..."
-    Write-Host $filler -ForegroundColor Yellow
-    Write-Log -Level Info -Message $filler
-    $timeStartCreate = Get-Date
-    New-PnPTenantSite -Title 'OnePlace Solutions Admin Site' -Url $SolutionsSiteUrl -Template STS#0 -Owner $ownerEmail -Timezone 0 -Wait
-    $timeEndCreate = Get-Date
-    $timeToCreate = New-TimeSpan -Start $timeStartCreate -End $timeEndCreate
-    Write-Host "`n`nSite created! Please authenticate against the newly created Site Collection`n" -ForegroundColor Green
-    Write-Log -Level Info -Message "Site Created. Took $timeToCreate"
-    Start-Sleep -Seconds 3
+    Try{
+        Write-Log -Level Info -Message "Testing if a Site at $SolutionsSiteUrl already exists"
+        Get-PnPTenantSite -url $SolutionsSiteUrl | Out-Null
+        Write-Log -Level Info -Message "Site already exists, skipping creation"
+    }
+    Catch{
+        Write-Log -Level Info -Message "Site does not exist, continuing with creation"
+        #Site does not exist
+        $ownerEmail = Read-Host "Please enter the email address of the owner for this site."
+        $filler = "Creating Solutions Site / site collection with URL '$SolutionsSiteUrl', and owner '$ownerEmail'. This may take up to 15 minutes for SharePoint Online to provision. Please wait..."
+        Write-Host $filler -ForegroundColor Yellow
+        Write-Log -Level Info -Message $filler
+        $timeStartCreate = Get-Date
+        New-PnPTenantSite -Title 'OnePlace Solutions Admin Site' -Url $SolutionsSiteUrl -Template STS#0 -Owner $ownerEmail -Timezone 0 -Wait
+        $timeEndCreate = Get-Date
+        $timeToCreate = New-TimeSpan -Start $timeStartCreate -End $timeEndCreate
+        Write-Host "`n`nSite created! Please authenticate against the newly created Site Collection`n" -ForegroundColor Green
+        Write-Log -Level Info -Message "Site Created. Took $timeToCreate"
+        Start-Sleep -Seconds 3
+    }
 
     Connect-pnpOnline -url $SolutionsSiteUrl -UseWebLogin
 
