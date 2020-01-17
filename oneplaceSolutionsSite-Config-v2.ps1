@@ -2,7 +2,8 @@
     This script creates a new Site collection (Team Site (Classic)), and applies the configuration changes for the OnePlace Solutions site.
 #>
 $ErrorActionPreference = 'Stop'
-$script:logPath = "$env:userprofile\Documents\OPSScriptLog.txt"
+$script:logFile = "OPSScriptLog.txt"
+$script:logPath = "$env:userprofile\Documents\$script:logFile"
 function Write-Log { 
     <#
     .NOTES 
@@ -117,8 +118,8 @@ Try {
 
     #Download OnePlace Solutions Site provisioning template
     $WebClient = New-Object System.Net.WebClient   
-    $Url = "https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/master/oneplaceSolutionsSite-template-v1.xml"    
-    $Path = "$env:temp\oneplaceSolutionsSite-template-v1.xml" 
+    $Url = "https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/master/oneplaceSolutionsSite-template-v2.xml"    
+    $Path = "$env:temp\oneplaceSolutionsSite-template-v2.xml" 
 
     $filler = "Downloading provisioning xml template to: $Path"
     Write-Host $filler -ForegroundColor Yellow  
@@ -163,15 +164,18 @@ Try {
     Write-Log -Level Info -Message "Solutions Site URL = $SolutionsSiteUrl"
     Write-Log -Level Info -Message "License List URL = $LicenseListUrl"
     Write-Log -Level Info -Message "License List ID = $licenseListId"
+    Write-Log -Level Info -Message "Uploading log file to $SolutionsSiteUrl/Shared%20Documents"
+    Add-PnPfile -Path $script:LogPath -Folder "Shared Documents"
 
-    Write-Host "`nPlease record the OnePlace Solutions Site URL and License Location / License List URL for usage in the OnePlaceMail Desktop and OnePlaceDocs clients, and the License List Id for the licensing process. `nThese have also been written to a log file at '$script:logPath'" -ForegroundColor Yellow
-    Write-Host "-------------------" -ForegroundColor Red
+    Write-Host "`nPlease record the OnePlace Solutions Site URL and License Location / License List URL for usage in the OnePlaceMail Desktop and OnePlaceDocs clients, and the License List Id for the licensing process. " -ForegroundColor Yellow
+    Write-Host "`nThese have also been written to a log file at '$script:logPath', and '$SolutionsSiteUrl/Shared%20Documents/$script:logFile'." -ForegroundColor Yellow
+    Write-Host "`n-------------------`n" -ForegroundColor Red
     
     Write-Host "Solutions Site URL = $SolutionsSiteUrl"
-    Write-Host "License List URL = $LicenseListUrl"
-    Write-Host "License List ID = $licenseListId"
+    Write-Host "License List URL   = $LicenseListUrl"
+    Write-Host "License List ID    = $licenseListId"
     
-    Write-Host "-------------------" -ForegroundColor Red
+    Write-Host "`n-------------------`n" -ForegroundColor Red
     Write-Host "Opening Solutions Site at $SolutionsSiteUrl..." -ForegroundColor Yellow
 
     Pause
