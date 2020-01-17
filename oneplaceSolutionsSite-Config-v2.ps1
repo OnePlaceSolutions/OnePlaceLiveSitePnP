@@ -131,7 +131,7 @@ Try {
 
     #Download OnePlace Solutions Site provisioning template
     $WebClient = New-Object System.Net.WebClient   
-    $Url = "https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/master/oneplaceSolutionsSite-template-v2.xml"    
+    $Url = "https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/ash-dev-createsite/oneplaceSolutionsSite-template-v2.xml"    
     $Path = "$env:temp\oneplaceSolutionsSite-template-v2.xml" 
 
     $filler = "Downloading provisioning xml template to: $Path"
