@@ -131,6 +131,8 @@ Try {
 
     #Download OnePlace Solutions Site provisioning template
     $WebClient = New-Object System.Net.WebClient   
+
+    #Fix this URL before merging to Master
     $Url = "https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/ash-dev-createsite/oneplaceSolutionsSite-template-v2.xml"    
     $Path = "$env:temp\oneplaceSolutionsSite-template-v2.xml" 
 
@@ -156,14 +158,19 @@ Try {
     Write-Host $filler -ForeGroundColor Green
     Write-Log -Level Info -Message $filler
 
-    $filler = "Creating License item in License List..."
+    $filler = "Creating License List..."
     Write-Host $filler -ForegroundColor Yellow
     Write-Log -Level Info -Message $filler
     Add-PnPListItem -List "Licenses" -Values @{"Title" = "License"} 
-    $licenseItem = Get-PnPListItem -List "Licenses" -Query "<View><Query><Where><Eq><FieldRef Name='Title'/><Value Type='Text'>License</Value></Eq></Where></Query></View>" | Out-Null
+
+    $filler = "Creating License Item..."
+    Write-Host $filler -ForegroundColor Yellow
+    Write-Log -Level Info -Message $filler
+
+    $licenseItem = (Get-PnPListItem -List "Licenses" -Query "<View><Query><Where><Eq><FieldRef Name='Title'/><Value Type='Text'>License</Value></Eq></Where></Query></View>").Count
     $licenseListId = ((Get-PnPList -Identity "Licenses").Id).ToString()
 
-    If($null -ne $licenseItem){
+    If(1 -eq $licenseItem){
         $filler = "License Item created!"
         Write-Host "`n$filler" -ForegroundColor Green
         Write-Log -Level Info -Message $filler
