@@ -204,7 +204,7 @@ Try {
     Write-Host "Opening Solutions Site at $SolutionsSiteUrl..." -ForegroundColor Yellow
 
     Pause
-    Start $SolutionsSiteUrl
+    Start $SolutionsSiteUrl | Out-Null
 }
 
 Catch {
