@@ -192,7 +192,9 @@ Try {
     Write-Log -Level Info -Message "License List URL = $LicenseListUrl"
     Write-Log -Level Info -Message "License List ID = $licenseListId"
     Write-Log -Level Info -Message "Uploading log file to $SolutionsSiteUrl/Shared%20Documents"
-    Add-PnPfile -Path $script:LogPath -Folder "Shared Documents"
+
+    #workaround for a PnP bug
+    $log = Add-PnPfile -Path $script:LogPath -Folder "Shared Documents"
 
     Write-Host "`nPlease record the OnePlace Solutions Site URL and License Location / License List URL for usage in the OnePlaceMail Desktop and OnePlaceDocs clients, and the License List Id for the licensing process. " -ForegroundColor Yellow
     Write-Host "`nThese have also been written to a log file at '$script:logPath', and '$SolutionsSiteUrl/Shared%20Documents/$script:logFile'." -ForegroundColor Yellow
