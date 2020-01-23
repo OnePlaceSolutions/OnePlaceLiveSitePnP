@@ -161,24 +161,24 @@ Try {
     Write-Log -Level Info -Message $filler
 
     
-    If((Get-PnPListItem -List "Licenses" -Query "<View><Query><Where><Eq><FieldRef Name='Title'/><Value Type='Text'>License</Value></Eq></Where></Query></View>").Count -eq 0){
+    If ((Get-PnPListItem -List "Licenses" -Query "<View><Query><Where><Eq><FieldRef Name='Title'/><Value Type='Text'>License</Value></Eq></Where></Query></View>").Count -eq 0){
         $filler = "Creating License Item..."
         Write-Host $filler -ForegroundColor Yellow
         Write-Log -Level Info -Message $filler
         Add-PnPListItem -List "Licenses" -Values @{"Title" = "License"} 
 
-        If((Get-PnPListItem -List "Licenses" -Query "<View><Query><Where><Eq><FieldRef Name='Title'/><Value Type='Text'>License</Value></Eq></Where></Query></View>").Count -eq 1){
+        If ((Get-PnPListItem -List "Licenses" -Query "<View><Query><Where><Eq><FieldRef Name='Title'/><Value Type='Text'>License</Value></Eq></Where></Query></View>").Count -eq 1){
             $filler = "License Item created!"
             Write-Host "`n$filler" -ForegroundColor Green
             Write-Log -Level Info -Message $filler
         }
-        Else{
+        Else {
             $filler = "License Item not created!"
             Write-Host "`n$filler" -ForegroundColor Red
             Write-Log -Level Info -Message $filler
         }
     }
-    Else{
+    Else {
         $filler = "License Item already exists, skipping creation."
         Write-Host $filler -ForegroundColor Yellow
         Write-Log -Level Info -Message $filler
@@ -194,8 +194,18 @@ Try {
     Write-Log -Level Info -Message "Uploading log file to $SolutionsSiteUrl/Shared%20Documents"
 
     #workaround for a PnP bug
-    $log = Add-PnPfile -Path $script:LogPath -Folder "Shared Documents"
-
+    Try {
+        $log = Add-PnPfile -Path $script:LogPath -Folder "Shared Documents"
+    }
+    Catch {
+        $exType = $($_.Exception.GetType().FullName)
+        $exMessage = $($_.Exception.Message)
+        write-host "Caught an exception:" -ForegroundColor Red
+        write-host "Exception Type: $exType" -ForegroundColor Red
+        write-host "Exception Message: $exMessage" -ForegroundColor Red
+        Write-Log -Level Error -Message "Caught an exception. Exception Type: $exType"
+        Write-Log -Level Error -Message $exMessage
+    }
     Write-Host "`nPlease record the OnePlace Solutions Site URL and License Location / License List URL for usage in the OnePlaceMail Desktop and OnePlaceDocs clients, and the License List Id for the licensing process. " -ForegroundColor Yellow
     Write-Host "`nThese have also been written to a log file at '$script:logPath', and '$SolutionsSiteUrl/Shared%20Documents/$script:logFile'." -ForegroundColor Yellow
     Write-Host "`n-------------------`n" -ForegroundColor Red
@@ -208,7 +218,7 @@ Try {
     Write-Host "Opening Solutions Site at $SolutionsSiteUrl..." -ForegroundColor Yellow
 
     Pause
-    Start $SolutionsSiteUrl | Out-Null
+    Start-Process $SolutionsSiteUrl | Out-Null
 }
 
 Catch {
