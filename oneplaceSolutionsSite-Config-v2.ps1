@@ -184,7 +184,9 @@ Try {
         Write-Log -Level Info -Message $filler
     }
     
-    $licenseListId = ((Get-PnPList -Identity "Licenses").Id).ToString()
+    $licenseList = Get-PnPList -Identity "Licenses"
+    $licenseListId = $licenseList.ID
+    $licenseListId = $licenseListId.ToString()
     
     Write-Log -Level Info -Message "Solutions Site URL = $SolutionsSiteUrl"
     Write-Log -Level Info -Message "License List URL = $LicenseListUrl"
