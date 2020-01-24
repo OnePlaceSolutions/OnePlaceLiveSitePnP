@@ -1,5 +1,6 @@
 ﻿ <#
     This script creates a new Site collection (Team Site (Classic)), and applies the configuration changes for the OnePlace Solutions site.
+    All major actions are logged to 'OPSScriptLog.txt' in the user's Documents folder, and it is uploaded to the Solutions Site at the end of provisioning.
 #>
 $ErrorActionPreference = 'Stop'
 $script:logFile = "OPSScriptLog.txt"
@@ -32,24 +33,24 @@ function Write-Log {
         [switch]$NoClobber 
     ) 
  
-    Begin{
+    Begin {
         $VerbosePreference = 'SilentlyContinue' 
         $ErrorActionPreference = 'Continue'
     } 
-    Process{
+    Process {
         # If the file already exists and NoClobber was specified, do not write to the log. 
-        if((Test-Path $Path) -AND $NoClobber){ 
+        If ((Test-Path $Path) -AND $NoClobber){ 
             Write-Error "Log file $Path already exists, and you specified NoClobber. Either delete the file or specify a different name." 
             Return 
         } 
  
         # If attempting to write to a log file in a folder/path that doesn't exist create the file including the path. 
-        elseif(!(Test-Path $Path)){ 
+        ElseIf (!(Test-Path $Path)){ 
             Write-Verbose "Creating $Path." 
             $NewLogFile = New-Item $Path -Force -ItemType File 
         } 
  
-        else{ 
+        Else { 
             # Nothing to see here yet. 
         } 
  
@@ -57,16 +58,16 @@ function Write-Log {
         $FormattedDate = Get-Date -Format "yyyy-MM-dd HH:mm:ss" 
  
         # Write message to error, warning, or verbose pipeline and specify $LevelText 
-        switch($Level){ 
-            'Error'{ 
+        Switch($Level) { 
+            'Error' { 
                 Write-Error $Message 
                 $LevelText = 'ERROR:' 
              } 
-            'Warn'{ 
+            'Warn' { 
                 Write-Warning $Message 
                 $LevelText = 'WARNING:' 
              } 
-            'Info'{ 
+            'Info' { 
                 Write-Verbose $Message 
                 $LevelText = 'INFO:' 
              } 
@@ -75,7 +76,7 @@ function Write-Log {
         # Write log entry to $Path 
         "$FormattedDate $LevelText $Message" | Out-File -FilePath $Path -Append 
     }
-    End{
+    End {
         $ErrorActionPreference = 'Stop'
     } 
 }
@@ -97,7 +98,7 @@ Try {
     Connect-PnPOnline -Url $adminSharePoint -useweblogin
 
     $solutionsSite = Read-Host "Please enter the URL suffix for the Solutions Site you wish to provision, eg to create 'https://contoso.sharepoint.com/sites/oneplacesolutions', just enter 'oneplacesolutions'. Leave blank to use 'oneplacesolutions'."
-    If($solutionsSite.Length -eq 0){
+    If ($solutionsSite.Length -eq 0){
         Write-Log -Level Warnn -Message "No URL suffix entered, defaulting to 'oneplacesolutions'"
         $solutionsSite = 'oneplacesolutions'
     }
@@ -106,14 +107,14 @@ Try {
     $SolutionsSiteUrl = $rootSharePoint + '/sites/' + $solutionsSite
     $LicenseListUrl = $SolutionsSiteUrl + '/lists/Licenses'
 
-    Try{
+    Try {
         Write-Log -Level Info -Message "Testing if a Site at $SolutionsSiteUrl already exists"
         Get-PnPTenantSite -url $SolutionsSiteUrl | Out-Null
         $filler = "Site already exists, skipping creation"
         Write-Host $filler -ForegroundColor Yellow
         Write-Log -Level Info -Message $filler
     }
-    Catch{
+    Catch {
         Write-Log -Level Info -Message "Site does not exist, continuing with creation"
         #Site does not exist
         $ownerEmail = Read-Host "Please enter the email address of the owner for this site."
