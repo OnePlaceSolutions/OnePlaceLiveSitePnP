@@ -118,7 +118,7 @@ Try {
         Write-Log -Level Info -Message "Site does not exist, continuing with creation"
         #Site does not exist
         $ownerEmail = Read-Host "Please enter the email address of the owner for this site."
-        $filler = "Creating Solutions Site / site collection with URL '$SolutionsSiteUrl', and owner '$ownerEmail'. This may take up to 15 minutes for SharePoint Online to provision. Please wait..."
+        $filler = "Creating site collection with URL '$SolutionsSiteUrl' for the Solutions Site, and owner '$ownerEmail'. This may take up to 15 minutes for SharePoint Online to provision. Please wait..."
         Write-Host $filler -ForegroundColor Yellow
         Write-Log -Level Info -Message $filler
         $timeStartCreate = Get-Date
