@@ -121,6 +121,9 @@
                 <FieldRef Name="LinkTitle" />
               </ViewFields>
               <RowLimit Paged="TRUE">30</RowLimit>
+			  <Aggregations Value="On">
+                <FieldRef Name="LinkTitle" Type="COUNT" />
+              </Aggregations>
               <JSLink>clienttemplates.js</JSLink>
             </View>
           </pnp:Views>         
