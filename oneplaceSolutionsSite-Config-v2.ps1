@@ -88,6 +88,13 @@ Try {
     Get-InstalledModule SharePointPnPPowerShellOnline | Out-Null
 
     $tenant = Read-Host "Please enter the name of your Office 365 Tenant, eg for 'https://contoso.sharepoint.com/' just enter 'contoso'."
+    $tenant = $tenant.Trim()
+    If($tenant.Length -eq 0){
+        Write-Host "No tenant entered. Exiting script."
+        Write-Log -Level Error -Message "No tenant entered. Exiting script."
+        Exit
+    }
+    
     $adminSharePoint = "https://$tenant-admin.sharepoint.com"
     $rootSharePoint = "https://$tenant.sharepoint.com"
 
@@ -98,8 +105,9 @@ Try {
     Connect-PnPOnline -Url $adminSharePoint -useweblogin
 
     $solutionsSite = Read-Host "Please enter the URL suffix for the Solutions Site you wish to provision, eg to create 'https://contoso.sharepoint.com/sites/oneplacesolutions', just enter 'oneplacesolutions'. Leave blank to use 'oneplacesolutions'."
+    $solutionsSite = $solutionsSite.Trim()
     If ($solutionsSite.Length -eq 0){
-        Write-Log -Level Warnn -Message "No URL suffix entered, defaulting to 'oneplacesolutions'"
+        Write-Log -Level Warn -Message "No URL suffix entered, defaulting to 'oneplacesolutions'"
         $solutionsSite = 'oneplacesolutions'
     }
     Write-Log -Level Info -Message "Solutions Site URL suffix set to $solutionsSite"
@@ -118,6 +126,13 @@ Try {
         Write-Log -Level Info -Message "Site does not exist, continuing with creation"
         #Site does not exist
         $ownerEmail = Read-Host "Please enter the email address of the owner for this site."
+        $ownerEmail = $ownerEmail.Trim()
+        If($ownerEmail.Length -eq 0){
+            Write-Host 'No Site Collection owner has been entered. Exiting script.'
+            Write-Log -Level Error -Message "No Site Collection owner has been entered. Exiting script."
+            Exit
+        }
+
         $filler = "Creating site collection with URL '$SolutionsSiteUrl' for the Solutions Site, and owner '$ownerEmail'. This may take up to 15 minutes for SharePoint Online to provision. Please wait..."
         Write-Host $filler -ForegroundColor Yellow
         Write-Log -Level Info -Message $filler
@@ -194,9 +209,9 @@ Try {
     Write-Log -Level Info -Message "License List ID = $licenseListId"
     Write-Log -Level Info -Message "Uploading log file to $SolutionsSiteUrl/Shared%20Documents"
 
-    #workaround for a PnP bug
     Try {
-        $log = Add-PnPfile -Path $script:LogPath -Folder "Shared Documents"
+        #workaround for a PnP bug
+        $logToSharePoint = Add-PnPfile -Path $script:LogPath -Folder "Shared Documents"
     }
     Catch {
         $exType = $($_.Exception.GetType().FullName)
