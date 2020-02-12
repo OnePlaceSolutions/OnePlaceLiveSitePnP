@@ -1,6 +1,6 @@
 ﻿ <#
-    This script creates a new Site collection (Team Site (Classic)), and applies the configuration changes for the OnePlace Solutions site.
-    All major actions are logged to 'OPSScriptLog.txt' in the user's Documents folder, and it is uploaded to the Solutions Site at the end of provisioning.
+    This script creates a new Site collection ('Team Site (Classic)'), and applies the configuration changes for the OnePlace Solutions site.
+    All major actions are logged to 'OPSScriptLog.txt' in the user's or Administrators Documents folder, and it is uploaded to the Solutions Site at the end of provisioning.
 #>
 $ErrorActionPreference = 'Stop'
 $script:logFile = "OPSScriptLog.txt"
@@ -81,6 +81,28 @@ function Write-Log {
     } 
 }
 
+function Toast-Notification ([String]$notificationTitle, [String]$notificationContent){
+    Try{
+        [Windows.UI.Notifications.ToastNotificationManager, Windows.UI.Notifications, ContentType = WindowsRuntime] > $null
+
+        $template = "<toast><visual><binding template=`"ToastGeneric`"><text id=`"1`">$($notificationTitle)</text><text id=`"2`">$($notificationContent)</text></binding></visual></toast>"
+
+        $xml = New-Object Windows.Data.Xml.Dom.XmlDocument
+        $xml.LoadXml($template)
+
+        $toast = [Windows.UI.Notifications.ToastNotification]::new($xml)
+        $toast.Tag = "PowerShell"
+        $toast.Group = "PowerShell"
+        $toast.ExpirationTime = [DateTimeOffset]::Now.AddMinutes(5)
+
+        $notifier = [Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier("PowerShell")
+        $notifier.Show($toast)
+    }
+    Catch{
+        #If this doesn't work, not an issue, just won't show Toast Notification
+    }
+}
+
 Try { 
     Set-ExecutionPolicy Bypass -Scope Process
 
@@ -128,19 +150,25 @@ Try {
         $ownerEmail = Read-Host "Please enter the email address of the owner for this site."
         $ownerEmail = $ownerEmail.Trim()
         If($ownerEmail.Length -eq 0){
-            Write-Host 'No Site Collection owner has been entered. Exiting script.'
-            Write-Log -Level Error -Message "No Site Collection owner has been entered. Exiting script."
+            $filler = 'No Site Collection owner has been entered. Exiting script.'
+            Write-Host $filler
+            Write-Log -Level Error -Message $filler
             Exit
         }
 
-        $filler = "Creating site collection with URL '$SolutionsSiteUrl' for the Solutions Site, and owner '$ownerEmail'. This may take up to 15 minutes for SharePoint Online to provision. Please wait..."
+        $filler = "Creating site collection with URL '$SolutionsSiteUrl' for the Solutions Site, and owner '$ownerEmail'. This may take a while, feel free to minimize the PowerShell window and wait for a login prompt, or check it in 10 minutes."
         Write-Host $filler -ForegroundColor Yellow
         Write-Log -Level Info -Message $filler
         $timeStartCreate = Get-Date
+        Toast-Notification -notificationTitle "Site Collection creation in progress" -notificationContent "This may take a while, feel free to minimize the PowerShell window and wait for a login prompt, or check it in 10 minutes."
         New-PnPTenantSite -Title 'OnePlace Solutions Admin Site' -Url $SolutionsSiteUrl -Template STS#0 -Owner $ownerEmail -Timezone 0 -Wait
+        
         $timeEndCreate = Get-Date
         $timeToCreate = New-TimeSpan -Start $timeStartCreate -End $timeEndCreate
-        Write-Host "`n`nSite created! Please authenticate against the newly created Site Collection`n" -ForegroundColor Green
+        $filler = "Site created! Please authenticate against the newly created Site Collection"
+        Toast-Notification -notificationTitle "Site Collection creation completed" -notificationContent $filler
+        Write-Host "`n"
+        Write-Host $filler "`n" -ForegroundColor Green
         Write-Log -Level Info -Message "Site Created. Took $timeToCreate"
         Start-Sleep -Seconds 3
     }
@@ -204,6 +232,8 @@ Try {
     $licenseListId = $licenseList.ID
     $licenseListId = $licenseListId.ToString()
     
+    Toast-Notification -notificationTitle "Solutions Site creation completed" -notificationContent " Please check PowerShell window for further details"
+
     Write-Log -Level Info -Message "Solutions Site URL = $SolutionsSiteUrl"
     Write-Log -Level Info -Message "License List URL = $LicenseListUrl"
     Write-Log -Level Info -Message "License List ID = $licenseListId"
@@ -238,6 +268,7 @@ Try {
 }
 
 Catch {
+    Toast-Notification -notificationTitle "Something went wrong with the script" -notificationContent "Please check the PowerShell window for more information"
     $exType = $($_.Exception.GetType().FullName)
     $exMessage = $($_.Exception.Message)
     write-host "Caught an exception:" -ForegroundColor Red
