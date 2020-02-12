@@ -85,7 +85,7 @@ Try {
     Set-ExecutionPolicy Bypass -Scope Process
 
     #Check PnP installed
-    Get-InstalledModule SharePointPnPPowerShellOnline | Out-Null
+    #Get-InstalledModule SharePointPnPPowerShellOnline | Out-Null
 
     $tenant = Read-Host "Please enter the name of your Office 365 Tenant, eg for 'https://contoso.sharepoint.com/' just enter 'contoso'."
     $tenant = $tenant.Trim()
