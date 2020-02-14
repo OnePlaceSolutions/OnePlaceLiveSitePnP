@@ -1,4 +1,6 @@
-﻿ <#
+﻿param ([String]$solutionsSite = 'oneplacesolutions')
+
+<#
     This script creates a new Site collection ('Team Site (Classic)'), and applies the configuration changes for the OnePlace Solutions site.
     All major actions are logged to 'OPSScriptLog.txt' in the user's or AdministratorsDocuments folder, and it is uploaded to the Solutions Site at the end of provisioning.
 #>
@@ -82,28 +84,6 @@ function Write-Log {
     } 
 }
 
-function Toast-Notification ([String]$notificationTitle, [String]$notificationContent){
-    Try{
-        [Windows.UI.Notifications.ToastNotificationManager, Windows.UI.Notifications, ContentType = WindowsRuntime] > $null
-
-        $template = "<toast><visual><binding template=`"ToastText02`"><text id=`"1`">$($notificationTitle)</text><text id=`"2`">$($notificationContent)</text></binding></visual></toast>"
-
-        $xml = New-Object Windows.Data.Xml.Dom.XmlDocument
-        $xml.LoadXml($template)
-
-        $toast = [Windows.UI.Notifications.ToastNotification]::new($xml)
-        $toast.Tag = "PowerShell"
-        $toast.Group = "PowerShell"
-        $toast.ExpirationTime = [DateTimeOffset]::Now.AddMinutes(5)
-
-        $notifier = [Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier("PowerShell")
-        $notifier.Show($toast)
-    }
-    Catch{
-        #If this doesn't work, not an issue, just won't show Toast Notification
-    }
-}
-
 function Send-OutlookEmail ($attachment,$body){
     Try{
         #create COM object named Outlook
@@ -118,6 +98,7 @@ function Send-OutlookEmail ($attachment,$body){
         $Mail.Body = "Hello Customer Success Team`n`nPlease find our Solutions Site and License List details below:`n`n$body"
     
         $mail.Attachments.Add($attachment) | Out-Null
+        Write-Host "Please open the new email being composed in Outlook and add information as necessary." -ForegroundColor Yellow
         $mail.Display()
         [System.Runtime.Interopservices.Marshal]::ReleaseComObject($Outlook) | Out-Null
     }
@@ -130,8 +111,9 @@ function Send-OutlookEmail ($attachment,$body){
 Try { 
     Set-ExecutionPolicy Bypass -Scope Process
 
-    #Check PnP installed
-    #Get-InstalledModule SharePointPnPPowerShell* | Out-Null
+    If($solutionsSite -ne 'oneplacesolutions'){
+        Write-Log -Level Info -Message "Script has been passed $solutionsSite for the Solutions Site URL"
+    }
 
     $tenant = Read-Host "Please enter the name of your Office 365 Tenant, eg for 'https://contoso.sharepoint.com/' just enter 'contoso'."
     $tenant = $tenant.Trim()
@@ -149,12 +131,14 @@ Try {
     Write-Log -Level Info -Message "Root SharePoint set to $rootSharePoint"
 
     Connect-PnPOnline -Url $adminSharePoint -useweblogin
-
-    $solutionsSite = Read-Host "Please enter the URL suffix for the Solutions Site you wish to provision, eg to create 'https://contoso.sharepoint.com/sites/oneplacesolutions', just enter 'oneplacesolutions'. Leave blank to use 'oneplacesolutions'."
+    
     $solutionsSite = $solutionsSite.Trim()
     If ($solutionsSite.Length -eq 0){
-        Write-Log -Level Warn -Message "No URL suffix entered, defaulting to 'oneplacesolutions'"
-        $solutionsSite = 'oneplacesolutions'
+        $solutionsSite = Read-Host "Please enter the URL suffix for the Solutions Site you wish to provision, eg to create 'https://contoso.sharepoint.com/sites/oneplacesolutions', just enter 'oneplacesolutions'."
+        $solutionsSite = $solutionsSite.Trim()
+        If ($solutionsSite.Length -eq 0){
+            Write-Host "Can't have an empty URL. Exiting script"
+        }
     }
     Write-Log -Level Info -Message "Solutions Site URL suffix set to $solutionsSite"
 
@@ -174,19 +158,19 @@ Try {
         $filler = "Creating site collection with URL '$SolutionsSiteUrl' for the Solutions Site, and owner '$ownerEmail'. This may take a while, feel free to minimize the PowerShell window and wait for a login prompt, or check it in 10 minutes."
         Write-Host $filler -ForegroundColor Yellow
         Write-Log -Level Info -Message $filler
+        Pause
+
         $timeStartCreate = Get-Date
-        Toast-Notification -notificationTitle "Site Collection creation in progress" -notificationContent $filler
+        Write-Log -Level Info -Message "Starting site creation at $timeStartCreate."
         New-PnPTenantSite -Title 'OnePlace Solutions Admin Site' -Url $SolutionsSiteUrl -Template STS#0 -Owner $ownerEmail -Timezone 0 -Wait
-        
         $timeEndCreate = Get-Date
+
         $timeToCreate = New-TimeSpan -Start $timeStartCreate -End $timeEndCreate
         $filler = "Site created! Please authenticate against the newly created Site Collection"
-        Toast-Notification -notificationTitle "Site Collection creation completed" -notificationContent $filler
         Write-Host "`n"
         Write-Host $filler "`n" -ForegroundColor Green
-        Write-Log -Level Info -Message "Site Created. Took $timeToCreate"
+        Write-Log -Level Info -Message "Site Created. Finished at $timeEndCreate. Took $timeToCreate"
         Start-Sleep -Seconds 3
-    
 
         Connect-pnpOnline -url $SolutionsSiteUrl -UseWebLogin
 
@@ -247,8 +231,6 @@ Try {
         $licenseListId = $licenseList.ID
         $licenseListId = $licenseListId.ToString()
     
-        Toast-Notification -notificationTitle "Solutions Site creation completed" -notificationContent " Please check PowerShell window for further details"
-
         Write-Log -Level Info -Message "Solutions Site URL = $SolutionsSiteUrl"
         Write-Log -Level Info -Message "License List URL = $LicenseListUrl"
         Write-Log -Level Info -Message "License List ID = $licenseListId"
@@ -298,13 +280,22 @@ Try {
         Pause
         Start-Process $SolutionsSiteUrl | Out-Null
     }
+    Catch [Microsoft.SharePoint.Client.ServerException]{
+        $exMessage = $($_.Exception.Message)
+        If($exMessage -match 'A site already exists at url'){
+            Write-Host $exMessage -ForegroundColor Red
+            Write-Log -Level Error -Message $exMessage
+            If($solutionsSite -ne 'oneplacesolutions'){
+                Write-Host "Please run the script again and choose a different Solutions Site suffix." -ForegroundColor Red
+            }
+        }
+    }
     Catch{
         Throw $_
     }
 }
 
 Catch {
-    Toast-Notification -notificationTitle "Something went wrong with the script" -notificationContent "Please check the PowerShell window for more information"
     $exType = $($_.Exception.GetType().FullName)
     $exMessage = $($_.Exception.Message)
     write-host "Caught an exception:" -ForegroundColor Red
@@ -313,5 +304,8 @@ Catch {
     Write-Log -Level Error -Message "Caught an exception. Exception Type: $exType"
     Write-Log -Level Error -Message $exMessage
     Pause
-    Exit
+}
+
+Finally{
+    Write-Log -Level Info -Message "End of script."
 }
