@@ -176,7 +176,7 @@ Try {
         Write-Log -Level Info -Message $filler
         $timeStartCreate = Get-Date
         Toast-Notification -notificationTitle "Site Collection creation in progress" -notificationContent $filler
-        #New-PnPTenantSite -Title 'OnePlace Solutions Admin Site' -Url $SolutionsSiteUrl -Template STS#0 -Owner $ownerEmail -Timezone 0 -Wait
+        New-PnPTenantSite -Title 'OnePlace Solutions Admin Site' -Url $SolutionsSiteUrl -Template STS#0 -Owner $ownerEmail -Timezone 0 -Wait
         
         $timeEndCreate = Get-Date
         $timeToCreate = New-TimeSpan -Start $timeStartCreate -End $timeEndCreate
@@ -213,7 +213,7 @@ Try {
         Write-Host $filler -ForegroundColor Yellow
         Write-Log -Level Info -Message $filler
 
-        #Apply-PnPProvisioningTemplate -path $Path
+        Apply-PnPProvisioningTemplate -path $Path
     
         $filler = "Provisioning complete!"
         Write-Host $filler -ForeGroundColor Green
