@@ -1,5 +1,5 @@
-﻿param ([String]$solutionsSite = 'oneplacesolutions')
-
+﻿param ([String]$solutionsSite = '')
+#set back to 'oneplacesolutions' when published
 <#
     This script creates a new Site collection ('Team Site (Classic)'), and applies the configuration changes for the OnePlace Solutions site.
     All major actions are logged to 'OPSScriptLog.txt' in the user's or AdministratorsDocuments folder, and it is uploaded to the Solutions Site at the end of provisioning.
@@ -7,6 +7,9 @@
 $ErrorActionPreference = 'Stop'
 $script:logFile = "OPSScriptLog.txt"
 $script:logPath = "$env:userprofile\Documents\$script:logFile"
+
+Write-Host "Beginning script. Logging script actions to $script:logPath" -ForegroundColor Cyan
+Start-Sleep -Seconds 3
 
 function Write-Log { 
     <#
@@ -98,7 +101,7 @@ function Send-OutlookEmail ($attachment,$body){
         $Mail.Body = "Hello Customer Success Team`n`nPlease find our Solutions Site and License List details below:`n`n$body"
     
         $mail.Attachments.Add($attachment) | Out-Null
-        Write-Host "Please open the new email being composed in Outlook and add information as necessary." -ForegroundColor Yellow
+        Write-Host "Please open the new email being composed in Outlook, add information as necessary, and send it to the address indicated (success@oneplacesolutions.com)" -ForegroundColor Yellow
         $mail.Display()
         [System.Runtime.Interopservices.Marshal]::ReleaseComObject($Outlook) | Out-Null
     }
@@ -114,6 +117,14 @@ Try {
     If($solutionsSite -ne 'oneplacesolutions'){
         Write-Log -Level Info -Message "Script has been passed $solutionsSite for the Solutions Site URL"
     }
+
+    Write-Host "`n--------------------------------------------------------------------------------`n" -ForegroundColor Red
+    Write-Host 'Welcome to the Solutions Site deployment script for OnePlace Solutions.' -ForegroundColor Green
+    Write-Host "`n--------------------------------------------------------------------------------`n" -ForegroundColor Red
+    
+    $stage = "Stage 1/3 - Team site (classic) creation"
+    Write-Host "`n$stage`n" -ForegroundColor Yellow
+    Write-Progress -Activity "Solutions Site Deployment" -CurrentOperation $stage -PercentComplete (33)
 
     $tenant = Read-Host "Please enter the name of your Office 365 Tenant, eg for 'https://contoso.sharepoint.com/' just enter 'contoso'."
     $tenant = $tenant.Trim()
@@ -155,7 +166,8 @@ Try {
     }
 
     Try {
-        $filler = "Creating site collection with URL '$SolutionsSiteUrl' for the Solutions Site, and owner '$ownerEmail'. This may take a while, feel free to minimize the PowerShell window and wait for a login prompt, or check it in 10 minutes."
+        #Provisioning the site collection
+        $filler = "Creating site collection with URL '$SolutionsSiteUrl' for the Solutions Site, and owner '$ownerEmail'. This may take a while, please do not close this window, but feel free to minimize the PowerShell window and check back in 10 minutes."
         Write-Host $filler -ForegroundColor Yellow
         Write-Log -Level Info -Message $filler
         Pause
@@ -172,6 +184,11 @@ Try {
         Write-Log -Level Info -Message "Site Created. Finished at $timeEndCreate. Took $timeToCreate"
         Start-Sleep -Seconds 3
 
+        $stage = "Stage 2/3 - Apply Solutions Site template"
+        Write-Host "`n$stage`n" -ForegroundColor Yellow
+        Write-Progress -Activity "Solutions Site Deployment" -CurrentOperation $stage -PercentComplete (66)
+
+        #Connecting to the site collection to apply the template
         Connect-pnpOnline -url $SolutionsSiteUrl -UseWebLogin
 
         #Download OnePlace Solutions Site provisioning template
@@ -203,30 +220,27 @@ Try {
         Write-Host $filler -ForeGroundColor Green
         Write-Log -Level Info -Message $filler
 
-    
-        If ((Get-PnPListItem -List "Licenses" -Query "<View><Query><Where><Eq><FieldRef Name='Title'/><Value Type='Text'>License</Value></Eq></Where></Query></View>").Count -eq 0){
-            $filler = "Creating License Item..."
-            Write-Host $filler -ForegroundColor Yellow
-            Write-Log -Level Info -Message $filler
-            Add-PnPListItem -List "Licenses" -Values @{"Title" = "License"} 
+        $stage = "Stage 3/3 - License Item creation"
+        Write-Host "`n$stage`n" -ForegroundColor Yellow
+        Write-Progress -Activity "Solutions Site Deployment" -CurrentOperation $stage -PercentComplete (100)
 
-            If ((Get-PnPListItem -List "Licenses" -Query "<View><Query><Where><Eq><FieldRef Name='Title'/><Value Type='Text'>License</Value></Eq></Where></Query></View>").Count -eq 1){
-                $filler = "License Item created!"
-                Write-Host "`n$filler" -ForegroundColor Green
-                Write-Log -Level Info -Message $filler
-            }
-            Else {
-                $filler = "License Item not created!"
-                Write-Host "`n$filler" -ForegroundColor Red
-                Write-Log -Level Info -Message $filler
-            }
+        $filler = "Creating License Item..."
+        Write-Host $filler -ForegroundColor Yellow
+        Write-Log -Level Info -Message $filler
+        Add-PnPListItem -List "Licenses" -Values @{"Title" = "License"} 
+
+        If ((Get-PnPListItem -List "Licenses" -Query "<View><Query><Where><Eq><FieldRef Name='Title'/><Value Type='Text'>License</Value></Eq></Where></Query></View>").Count -eq 1){
+            $filler = "License Item created!"
+            Write-Host "`n$filler" -ForegroundColor Green
+            Write-Log -Level Info -Message $filler
         }
         Else {
-            $filler = "License Item already exists, skipping creation."
-            Write-Host $filler -ForegroundColor Yellow
-            Write-Log -Level Info -Message $filler
+            $filler = "License Item not created!"
+            Write-Host "`n$filler" -ForegroundColor Red
+            Write-Log -Level Warn -Message $filler
         }
-    
+        
+        
         $licenseList = Get-PnPList -Identity "Licenses"
         $licenseListId = $licenseList.ID
         $licenseListId = $licenseListId.ToString()
@@ -243,12 +257,15 @@ Try {
         Catch {
             $exType = $($_.Exception.GetType().FullName)
             $exMessage = $($_.Exception.Message)
-            write-host "Caught an exception:" -ForegroundColor Red
-            write-host "Exception Type: $exType" -ForegroundColor Red
-            write-host "Exception Message: $exMessage" -ForegroundColor Red
+            Write-Host "Caught an exception:" -ForegroundColor Red
+            Write-Host "Exception Type: $exType" -ForegroundColor Red
+            Write-Host "Exception Message: $exMessage" -ForegroundColor Red
             Write-Log -Level Error -Message "Caught an exception. Exception Type: $exType"
             Write-Log -Level Error -Message $exMessage
         }
+
+        Write-Progress -Activity "Completed" -Completed
+
         Write-Host "`nPlease record the OnePlace Solutions Site URL and License Location / License List URL for usage in the OnePlaceMail Desktop and OnePlaceDocs clients, and the License List Id for the licensing process. " -ForegroundColor Yellow
         Write-Host "`nThese have also been written to a log file at '$script:logPath', and '$SolutionsSiteUrl/Shared%20Documents/$script:logFile'." -ForegroundColor Yellow
         Write-Host "`n-------------------`n" -ForegroundColor Red
@@ -264,12 +281,9 @@ Try {
         If($false -eq $currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)){
             $input = Read-Host "Would you like to email this information and Log file to OnePlace Solutions now? (yes or no)"
             $input = $input[0]
-            Switch($input){
-                'y'{
-                    $file = Get-ChildItem $script:logPath
-                    Send-OutlookEmail -attachment $file.FullName -body $importants
-                }
-                default {}
+            If($input -eq 'y'){
+                $file = Get-ChildItem $script:logPath
+                Send-OutlookEmail -attachment $file.FullName -body $importants
             }
         }
         Else{
