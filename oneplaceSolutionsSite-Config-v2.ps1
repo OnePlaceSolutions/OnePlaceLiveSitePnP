@@ -278,12 +278,10 @@ Try {
         
         
         $currentPrincipal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
-        $currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
         
-        If(-not $currentPrincipal){
+        If($false -eq $currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)){
             $input = Read-Host "Would you like to email this information and Log file to OnePlace Solutions now? (yes or no)"
             $input = $input[0]
-            Write-Host $input
             Switch($input){
                 'y'{
                     $file = Get-ChildItem $script:logPath
