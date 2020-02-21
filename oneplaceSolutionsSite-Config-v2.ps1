@@ -1,8 +1,8 @@
-﻿param ([String]$solutionsSite = '')
+﻿param ([String]$solutionsSite = 'oneplacesolutions')
 #set back to 'oneplacesolutions' when published
 <#
     This script creates a new Site collection ('Team Site (Classic)'), and applies the configuration changes for the OnePlace Solutions site.
-    All major actions are logged to 'OPSScriptLog.txt' in the user's or AdministratorsDocuments folder, and it is uploaded to the Solutions Site at the end of provisioning.
+    All major actions are logged to 'OPSScriptLog.txt' in the user's or Administrators Documents folder, and it is uploaded to the Solutions Site at the end of provisioning.
 #>
 $ErrorActionPreference = 'Stop'
 $script:logFile = "OPSScriptLog.txt"
@@ -149,6 +149,8 @@ Try {
         $solutionsSite = $solutionsSite.Trim()
         If ($solutionsSite.Length -eq 0){
             Write-Host "Can't have an empty URL. Exiting script"
+            Write-Log -Level Error -Message "No URL suffix entered. Exiting script."
+            Exit
         }
     }
     Write-Log -Level Info -Message "Solutions Site URL suffix set to $solutionsSite"
