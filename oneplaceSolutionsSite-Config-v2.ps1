@@ -134,7 +134,7 @@ Try {
         Write-Progress -Activity "Solutions Site Deployment" -CurrentOperation $stage -PercentComplete (66)
 
         #Connecting to the site collection to apply the template
-        #Connect-pnpOnline -url $SolutionsSiteUrl
+        Connect-pnpOnline -url $SolutionsSiteUrl
 
         #Download OnePlace Solutions Site provisioning template
         $WebClient = New-Object System.Net.WebClient   
@@ -159,7 +159,7 @@ Try {
         Write-Host $filler -ForegroundColor Yellow
         Write-Log -Level Info -Message $filler
 
-        Apply-PnPProvisioningTemplate -path $Path
+        Apply-PnPProvisioningTemplate -path $Path -ExcludeHandlers WebSettings
     
         $filler = "Provisioning complete!"
         Write-Host $filler -ForeGroundColor Green
@@ -189,7 +189,8 @@ Try {
         $licenseList = Get-PnPList -Identity "Licenses"
         $licenseListId = $licenseList.ID
         $licenseListId = $licenseListId.ToString()
-    
+        $licenseListUrl = $SolutionsSiteUrl + "/Lists/Licenses"
+
         Write-Log -Level Info -Message "Solutions Site URL = $SolutionsSiteUrl"
         Write-Log -Level Info -Message "License List URL = $LicenseListUrl"
         Write-Log -Level Info -Message "License List ID = $licenseListId"
