@@ -134,7 +134,7 @@ Try {
         Write-Progress -Activity "Solutions Site Deployment" -CurrentOperation $stage -PercentComplete (66)
 
         #Connecting to the site collection to apply the template
-        Connect-pnpOnline -url $SolutionsSiteUrl
+        #Connect-pnpOnline -url $SolutionsSiteUrl
 
         #Download OnePlace Solutions Site provisioning template
         $WebClient = New-Object System.Net.WebClient   
