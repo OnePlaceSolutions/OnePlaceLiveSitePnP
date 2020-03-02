@@ -1,5 +1,4 @@
-﻿param ([String]$solutionsSite = 'oneplacesolutions')
-#set back to 'oneplacesolutions' when published
+﻿#set back to 'oneplacesolutions' when published
 <#
     This script creates a new Site collection ('Team Site (Classic)'), and applies the configuration changes for the OnePlace Solutions site.
     All major actions are logged to 'OPSScriptLog.txt' in the user's or Administrators Documents folder, and it is uploaded to the Solutions Site at the end of provisioning.
@@ -122,76 +121,20 @@ Try {
     Write-Host 'Welcome to the Solutions Site deployment script for OnePlace Solutions.' -ForegroundColor Green
     Write-Host "`n--------------------------------------------------------------------------------`n" -ForegroundColor Red
     
-    $stage = "Stage 1/3 - Team site (classic) creation"
+    $stage = "Stage 1/3 - Connect to Site Collection"
     Write-Host "`n$stage`n" -ForegroundColor Yellow
     Write-Progress -Activity "Solutions Site Deployment" -CurrentOperation $stage -PercentComplete (33)
-
-    $tenant = Read-Host "Please enter the name of your Office 365 Tenant, eg for 'https://contoso.sharepoint.com/' just enter 'contoso'."
-    $tenant = $tenant.Trim()
-    If($tenant.Length -eq 0){
-        Write-Host "No tenant entered. Exiting script."
-        Write-Log -Level Error -Message "No tenant entered. Exiting script."
-        Exit
-    }
+    Write-Host "Please ensure you have created a new Site Collection with the template 'Team Site' (classic if the option is given) and the URL '/oneplacesolutions'"
+    $SolutionsSiteUrl = Read-Host -Prompt "Enter your new Site Collection URl here, eg http://contoso.com/sites/oneplacesolutions"
     
-    $adminSharePoint = "https://$tenant-admin.sharepoint.com"
-    $rootSharePoint = "https://$tenant.sharepoint.com"
-
-    Write-Log -Level Info -Message "Tenant set to $tenant"
-    Write-Log -Level Info -Message "Admin SharePoint set to $adminSharePoint"
-    Write-Log -Level Info -Message "Root SharePoint set to $rootSharePoint"
-
-    Connect-PnPOnline -Url $adminSharePoint -useweblogin
-    
-    $solutionsSite = $solutionsSite.Trim()
-    If ($solutionsSite.Length -eq 0){
-        $solutionsSite = Read-Host "Please enter the URL suffix for the Solutions Site you wish to provision, eg to create 'https://contoso.sharepoint.com/sites/oneplacesolutions', just enter 'oneplacesolutions'."
-        $solutionsSite = $solutionsSite.Trim()
-        If ($solutionsSite.Length -eq 0){
-            Write-Host "Can't have an empty URL. Exiting script"
-            Write-Log -Level Error -Message "No URL suffix entered. Exiting script."
-            Exit
-        }
-    }
-    Write-Log -Level Info -Message "Solutions Site URL suffix set to $solutionsSite"
-
-    $SolutionsSiteUrl = $rootSharePoint + '/sites/' + $solutionsSite
-    $LicenseListUrl = $SolutionsSiteUrl + '/lists/Licenses'
-
-    $ownerEmail = Read-Host "Please enter the email address of the owner for this site."
-    $ownerEmail = $ownerEmail.Trim()
-    If($ownerEmail.Length -eq 0){
-        $filler = 'No Site Collection owner has been entered. Exiting script.'
-        Write-Host $filler
-        Write-Log -Level Error -Message $filler
-        Exit
-    }
-
     Try {
-        #Provisioning the site collection
-        $filler = "Creating site collection with URL '$SolutionsSiteUrl' for the Solutions Site, and owner '$ownerEmail'. This may take a while, please do not close this window, but feel free to minimize the PowerShell window and check back in 10 minutes."
-        Write-Host $filler -ForegroundColor Yellow
-        Write-Log -Level Info -Message $filler
-        Pause
-
-        $timeStartCreate = Get-Date
-        Write-Log -Level Info -Message "Starting site creation at $timeStartCreate."
-        New-PnPTenantSite -Title 'OnePlace Solutions Admin Site' -Url $SolutionsSiteUrl -Template STS#0 -Owner $ownerEmail -Timezone 0 -Wait
-        $timeEndCreate = Get-Date
-
-        $timeToCreate = New-TimeSpan -Start $timeStartCreate -End $timeEndCreate
-        $filler = "Site created! Please authenticate against the newly created Site Collection"
-        Write-Host "`n"
-        Write-Host $filler "`n" -ForegroundColor Green
-        Write-Log -Level Info -Message "Site Created. Finished at $timeEndCreate. Took $timeToCreate"
-        Start-Sleep -Seconds 3
 
         $stage = "Stage 2/3 - Apply Solutions Site template"
         Write-Host "`n$stage`n" -ForegroundColor Yellow
         Write-Progress -Activity "Solutions Site Deployment" -CurrentOperation $stage -PercentComplete (66)
 
         #Connecting to the site collection to apply the template
-        Connect-pnpOnline -url $SolutionsSiteUrl -UseWebLogin
+        Connect-pnpOnline -url $SolutionsSiteUrl
 
         #Download OnePlace Solutions Site provisioning template
         $WebClient = New-Object System.Net.WebClient   
