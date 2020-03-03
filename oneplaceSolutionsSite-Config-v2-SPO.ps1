@@ -229,15 +229,16 @@ Try {
         $filler = "Creating License Item..."
         Write-Host $filler -ForegroundColor Yellow
         Write-Log -Level Info -Message $filler
-        Add-PnPListItem -List "Licenses" -Values @{"Title" = "License"} 
 
-        If ((Get-PnPListItem -List "Licenses" -Query "<View><Query><Where><Eq><FieldRef Name='Title'/><Value Type='Text'>License</Value></Eq></Where></Query></View>").Count -eq 1){
+        $licenseItemCount = ((Get-PnPListItem -List "Licenses" -Query "<View><Query><Where><Eq><FieldRef Name='Title'/><Value Type='Text'>License</Value></Eq></Where></Query></View>").Count)
+        If ($licenseItemCount -eq 0){
+            Add-PnPListItem -List "Licenses" -Values @{"Title" = "License"}
             $filler = "License Item created!"
             Write-Host "`n$filler" -ForegroundColor Green
             Write-Log -Level Info -Message $filler
         }
         Else {
-            $filler = "License Item not created!"
+            $filler = "License Item not created or is duplicate!"
             Write-Host "`n$filler" -ForegroundColor Red
             Write-Log -Level Warn -Message $filler
         }
