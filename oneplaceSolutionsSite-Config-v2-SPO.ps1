@@ -1,4 +1,4 @@
-﻿param ([String]$solutionsSite = 'oneplacesolutions')
+﻿param ([String]$solutionsSite = '')
 #set back to 'oneplacesolutions' when published
 <#
     This script creates a new Site collection ('Team Site (Classic)'), and applies the configuration changes for the OnePlace Solutions site.
