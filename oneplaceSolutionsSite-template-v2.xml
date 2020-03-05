@@ -278,7 +278,7 @@
         </pnp:ListInstance>
       </pnp:Lists>
       <pnp:Pages>
-        <pnp:Page Url="{site}/SitePages/Home.aspx" Overwrite="true" Layout="Custom">         
+        <pnp:Page Url="{site}/SitePages/OPS.aspx" Overwrite="true" Layout="Custom">         
           <pnp:Fields>
             <pnp:Field FieldName="WikiField">&lt;div class="ExternalClass4B6088D6997C41CB958880A720B64131"&gt;
                 &lt;table id="layoutsTable" style="width&amp;#58;100%;"&gt;&lt;tbody&gt;&lt;tr style="vertical-align&amp;#58;top;"&gt;&lt;td style="padding&amp;#58;0px;width&amp;#58;100%;"&gt;&lt;div class="ms-rte-layoutszone-outer" style="width&amp;#58;100%;"&gt;&lt;div class="ms-rte-layoutszone-inner"&gt;&lt;p&gt;​​​​​​​​Welcome to the OnePlace ​​Solutions Site. This site has been provisioned using V2 of the provisoning script, and V2 of the provisioning template. Please use the following link to the OnePlace Solutions Support Site for details and instructions for using this site with OnePlaceLive, managing the License List, and other OnePlace related functions&amp;#58;&lt;br&gt;&lt;/p&gt;&lt;p&gt;

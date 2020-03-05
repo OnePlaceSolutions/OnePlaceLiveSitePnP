@@ -166,6 +166,8 @@ Try {
         Write-Log -Level Info -Message $filler
         Start-Sleep -Seconds 2
         Apply-PnPProvisioningTemplate -path $Path -Handlers SiteSecurity
+
+        Set-PnPHomePage -RootFolderRelativeUrl SitePages/OPS.aspx
     
         $filler = "Provisioning complete!"
         Write-Host $filler -ForeGroundColor Green
