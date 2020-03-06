@@ -167,7 +167,7 @@ Try {
         Start-Sleep -Seconds 2
         Apply-PnPProvisioningTemplate -path $Path -Handlers SiteSecurity
 
-        Set-PnPHomePage -RootFolderRelativeUrl SitePages/OPS.aspx
+        #Set-PnPHomePage -RootFolderRelativeUrl SitePages/OPS.aspx
     
         $filler = "Provisioning complete!"
         Write-Host $filler -ForeGroundColor Green
