@@ -231,8 +231,6 @@ Try {
         Start-Sleep -Seconds 2
 
         Apply-PnPProvisioningTemplate -path $Path -Handlers SiteSecurity, Pages -Parameters @{"licenseListID"=$licenseListId;"site"=$SolutionsSiteUrl}
-
-        #Set-PnPHomePage -RootFolderRelativeUrl SitePages/OPS.aspx
     
         $filler = "Provisioning complete!"
         Write-Host $filler -ForeGroundColor Green
@@ -288,7 +286,6 @@ Try {
         Write-Host $importants
 
         Write-Host "`n-------------------`n" -ForegroundColor Red
-        
         
         $currentPrincipal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
         
