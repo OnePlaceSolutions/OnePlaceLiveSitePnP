@@ -160,17 +160,17 @@ Try {
         Write-Log -Level Info -Message $filler
 
         Apply-PnPProvisioningTemplate -path $Path -ExcludeHandlers SiteSecurity
-
+		
+		$licenseList = Get-PnPList -Identity "Licenses"
+        $licenseListId = $licenseList.ID
+        $licenseListId = $licenseListId.ToString()
+    
         $filler = "Applying Site Security changes separately..."
         Write-Host $filler -ForegroundColor Yellow
         Write-Log -Level Info -Message $filler
         Start-Sleep -Seconds 2
         Apply-PnPProvisioningTemplate -path $Path -Handlers SiteSecurity
-
-        $licenseList = Get-PnPList -Identity "Licenses"
-        $licenseListId = $licenseList.ID
-        $licenseListId = $licenseListId.ToString()
-    
+        
         $filler = "Provisioning complete!"
         Write-Host $filler -ForeGroundColor Green
         Write-Log -Level Info -Message $filler

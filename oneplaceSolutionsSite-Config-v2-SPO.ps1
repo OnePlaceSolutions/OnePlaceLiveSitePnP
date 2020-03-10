@@ -171,13 +171,13 @@ Try {
         $filler = "Creating site collection with URL '$SolutionsSiteUrl' for the Solutions Site, and owner '$ownerEmail'. This may take a while, please do not close this window, but feel free to minimize the PowerShell window and check back in 10 minutes."
         Write-Host $filler -ForegroundColor Yellow
         Write-Log -Level Info -Message $filler
-        Pause
+
 
         $timeStartCreate = Get-Date
         $filler = "Starting site creation at $timeStartCreate...."
         Write-Host $filler -ForegroundColor Yellow
         Write-Log -Level Info -Message $filler
-        New-PnPTenantSite -Title 'OnePlace Solutions Admin Site' -Url $SolutionsSiteUrl -Template STS#0 -Owner $ownerEmail -Timezone 0 -Wait
+        New-PnPTenantSite -Title 'OnePlace Solutions Admin Site' -Url $SolutionsSiteUrl -Template STS#0 -Owner $ownerEmail -Timezone 0 -StorageQuota 110 -Wait
         $timeEndCreate = Get-Date
 
         $timeToCreate = New-TimeSpan -Start $timeStartCreate -End $timeEndCreate
@@ -219,15 +219,14 @@ Try {
 
         Apply-PnPProvisioningTemplate -path $Path -ExcludeHandlers SiteSecurity
 
+		$licenseList = Get-PnPList -Identity "Licenses"
+        $licenseListId = $licenseList.ID
+        $licenseListId = $licenseListId.ToString()											   
         $filler = "Applying Site Security changes separately..."
         Write-Host $filler -ForegroundColor Yellow
         Write-Log -Level Info -Message $filler
         Start-Sleep -Seconds 2
         Apply-PnPProvisioningTemplate -path $Path -Handlers SiteSecurity
-
-        $licenseList = Get-PnPList -Identity "Licenses"
-        $licenseListId = $licenseList.ID
-        $licenseListId = $licenseListId.ToString()
     
         $filler = "Provisioning complete!"
         Write-Host $filler -ForeGroundColor Green
@@ -253,7 +252,7 @@ Try {
             Write-Host "`n$filler" -ForegroundColor Red
             Write-Log -Level Warn -Message $filler
         }
-    
+
         Write-Log -Level Info -Message "Solutions Site URL = $SolutionsSiteUrl"
         Write-Log -Level Info -Message "License List URL = $LicenseListUrl"
         Write-Log -Level Info -Message "License List ID = $licenseListId"
