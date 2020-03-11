@@ -122,7 +122,7 @@ Try {
     Write-Host 'Welcome to the Solutions Site deployment script for OnePlace Solutions.' -ForegroundColor Green
     Write-Host "`n--------------------------------------------------------------------------------`n" -ForegroundColor Red
     
-    $stage = "Stage 1/3 - Team site (classic) creation"
+    $stage = "Stage 1/3 - Team Site (modern) creation"
     Write-Host "`n$stage`n" -ForegroundColor Yellow
     Write-Progress -Activity "Solutions Site Deployment" -CurrentOperation $stage -PercentComplete (33)
 
@@ -230,7 +230,7 @@ Try {
         Write-Log -Level Info -Message $filler
         Start-Sleep -Seconds 2															
 
-        Apply-PnPProvisioningTemplate -path $Path -Handlers SiteSecurity, Pages -Parameters @{"licenseListID"=$licenseListId;"site"=$SolutionsSiteUrl													  
+        Apply-PnPProvisioningTemplate -path $Path -Handlers SiteSecurity, Pages -Parameters @{"licenseListID"=$licenseListId;"site"=$SolutionsSiteUrl}												  
     
         $filler = "Provisioning complete!"
         Write-Host $filler -ForeGroundColor Green
@@ -318,8 +318,8 @@ Try {
     Catch{
         Throw $_
     }
-}
 
+}
 Catch {
     $exType = $($_.Exception.GetType().FullName)
     $exMessage = $($_.Exception.Message)
@@ -330,7 +330,6 @@ Catch {
     Write-Log -Level Error -Message $exMessage
     Pause
 }
-
-Finally{
+Finally {
     Write-Log -Level Info -Message "End of script."
 }
