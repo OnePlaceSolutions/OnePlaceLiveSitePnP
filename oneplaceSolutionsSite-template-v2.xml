@@ -278,13 +278,97 @@
         </pnp:ListInstance>
       </pnp:Lists>
       <pnp:Pages>
-        <pnp:Page Url="{site}/SitePages/home.aspx" Overwrite="true" Layout="Custom">         
+        <pnp:Page Url="{site}/SitePages/Home.aspx" Overwrite="true" Layout="Custom">
+          <pnp:WebParts>
+            <pnp:WebPart Title="​Desktop Suite Production License Usage:" Row="1" Column="1">
+              <pnp:Contents>
+                <webParts>
+                  <webPart xmlns="http://schemas.microsoft.com/WebPart/v3">
+                    <metaData>
+                      <type name="Microsoft.SharePoint.WebPartPages.XsltListViewWebPart, Microsoft.SharePoint, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c" />
+                      <importErrorMessage>Cannot import this Web Part.</importErrorMessage>
+                    </metaData>
+                    <data>
+                      <properties>
+                        <property name="ShowWithSampleData" type="bool">False</property>
+                        <property name="Default" type="string" />
+                        <property name="NoDefaultStyle" type="string" />
+                        <property name="CacheXslStorage" type="bool">True</property>
+                        <property name="ViewContentTypeId" type="string" />
+                        <property name="XmlDefinitionLink" type="string" />
+                        <property name="ManualRefresh" type="bool">False</property>
+                        <property name="ListUrl" type="string" null="true" />
+                        <property name="ListId" type="System.Guid, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">{listid:Licenses}</property>
+                        <property name="TitleUrl" type="string">{site}/Lists/Licenses</property>
+                        <property name="EnableOriginalValue" type="bool">False</property>
+                        <property name="Direction" type="direction">NotSet</property>
+                        <property name="ServerRender" type="bool">False</property>
+                        <property name="ViewFlags" type="Microsoft.SharePoint.SPViewFlags, Microsoft.SharePoint, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c">Html, TabularView, Hidden, Mobile</property>
+                        <property name="AllowConnect" type="bool">False</property>
+                        <property name="ListName" type="string">{{listid:Licenses}}</property>
+                        <property name="ListDisplayName" type="string" null="true" />
+                        <property name="AllowZoneChange" type="bool">True</property>
+                        <property name="ChromeState" type="chromestate">Normal</property>
+                        <property name="DisableSaveAsNewViewButton" type="bool">False</property>
+                        <property name="ViewFlag" type="string" />
+                        <property name="DataSourceID" type="string" />
+                        <property name="ExportMode" type="exportmode">All</property>
+                        <property name="AutoRefresh" type="bool">False</property>
+                        <property name="FireInitialRow" type="bool">True</property>
+                        <property name="AllowEdit" type="bool">False</property>
+                        <property name="Description" type="string" />
+                        <property name="HelpMode" type="helpmode">Modeless</property>
+                        <property name="BaseXsltHashKey" type="string" null="true" />
+                        <property name="AllowMinimize" type="bool">False</property>
+                        <property name="CacheXslTimeOut" type="int">86400</property>
+                        <property name="ChromeType" type="chrometype">Default</property>
+                        <property name="Xsl" type="string" null="true" />
+                        <property name="JSLink" type="string" null="true" />
+                        <property name="CatalogIconImageUrl" type="string">/_layouts/15/images/itgen.png?rev=44</property>
+                        <property name="SampleData" type="string" null="true" />
+                        <property name="UseSQLDataSourcePaging" type="bool">True</property>
+                        <property name="TitleIconImageUrl" type="string" />
+                        <property name="PageSize" type="int">-1</property>
+                        <property name="ShowTimelineIfAvailable" type="bool">True</property>
+                        <property name="Width" type="string" />
+                        <property name="DataFields" type="string" />
+                        <property name="Hidden" type="bool">False</property>
+                        <property name="Title" type="string">​Desktop Suite Production License Usage:</property>
+                        <property name="PageType" type="Microsoft.SharePoint.PAGETYPE, Microsoft.SharePoint, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c">PAGE_NORMALVIEW</property>
+                        <property name="DataSourcesString" type="string" />
+                        <property name="AllowClose" type="bool">True</property>
+                        <property name="InplaceSearchEnabled" type="bool">True</property>
+                        <property name="WebId" type="System.Guid, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">00000000-0000-0000-0000-000000000000</property>
+                        <property name="Height" type="string" />
+                        <property name="GhostedXslLink" type="string">main.xsl</property>
+                        <property name="DisableViewSelectorMenu" type="bool">False</property>
+                        <property name="DisplayName" type="string" />
+                        <property name="IsClientRender" type="bool">False</property>
+                        <property name="XmlDefinition" type="string">&lt;View Name="{645B3A22-C866-4D80-94FF-CE5D58FAB728}" MobileView="TRUE" Type="HTML" Hidden="TRUE" DisplayName="" Url="{site}/SitePages/Home.aspx" Level="1" BaseViewID="1" ContentTypeID="0x" ImageUrl="/_layouts/15/images/generic.png?rev=47" &gt;&lt;Query&gt;&lt;OrderBy&gt;&lt;FieldRef Name="ID"/&gt;&lt;/OrderBy&gt;&lt;Where&gt;&lt;Neq&gt;&lt;FieldRef Name="Title"/&gt;&lt;Value Type="Text"&gt;License&lt;/Value&gt;&lt;/Neq&gt;&lt;/Where&gt;&lt;/Query&gt;&lt;ViewFields&gt;&lt;FieldRef Name="LinkTitle"/&gt;&lt;FieldRef Name="ItemChildCount"/&gt;&lt;/ViewFields&gt;&lt;RowLimit Paged="TRUE"&gt;30&lt;/RowLimit&gt;&lt;Aggregations Value="Off"/&gt;&lt;JSLink&gt;clienttemplates.js&lt;/JSLink&gt;&lt;XslLink Default="TRUE"&gt;main.xsl&lt;/XslLink&gt;&lt;Toolbar Type="None"/&gt;&lt;/View&gt;</property>
+                        <property name="InitialAsyncDataFetch" type="bool">False</property>
+                        <property name="AllowHide" type="bool">True</property>
+                        <property name="ParameterBindings" type="string">&lt;ParameterBinding Name="dvt_sortdir" Location="Postback;Connection" /&gt;&lt;ParameterBinding Name="dvt_sortfield" Location="Postback;Connection" /&gt;&lt;ParameterBinding Name="dvt_startposition" Location="Postback" DefaultValue="" /&gt;&lt;ParameterBinding Name="dvt_firstrow" Location="Postback;Connection" /&gt;&lt;ParameterBinding Name="OpenMenuKeyAccessible" Location="Resource(wss,OpenMenuKeyAccessible)" /&gt;&lt;ParameterBinding Name="open_menu" Location="Resource(wss,open_menu)" /&gt;&lt;ParameterBinding Name="select_deselect_all" Location="Resource(wss,select_deselect_all)" /&gt;&lt;ParameterBinding Name="idPresEnabled" Location="Resource(wss,idPresEnabled)" /&gt;&lt;ParameterBinding Name="NoAnnouncements" Location="Resource(wss,noXinviewofY_LIST)" /&gt;&lt;ParameterBinding Name="NoAnnouncementsHowTo" Location="Resource(wss,noXinviewofY_DEFAULT)" /&gt;</property>
+                        <property name="DataSourceMode" type="Microsoft.SharePoint.WebControls.SPDataSourceMode, Microsoft.SharePoint, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c">List</property>
+                        <property name="AutoRefreshInterval" type="int">60</property>
+                        <property name="AsyncRefresh" type="bool">False</property>
+                        <property name="HelpUrl" type="string" />
+                        <property name="MissingAssembly" type="string">Cannot import this Web Part.</property>
+                        <property name="XslLink" type="string" null="true" />
+                        <property name="SelectParameters" type="string" />
+                        <property name="HasClientDataSource" type="bool">False</property>
+                      </properties>
+                    </data>
+                  </webPart>
+                </webParts>
+              </pnp:Contents>
+            </pnp:WebPart>
+          </pnp:WebParts>
           <pnp:Fields>
             <pnp:Field FieldName="WikiField">&lt;div class="ExternalClass4B6088D6997C41CB958880A720B64131"&gt;
-                &lt;table id="layoutsTable" style="width&amp;#58;100%;"&gt;&lt;tbody&gt;&lt;tr style="vertical-align&amp;#58;top;"&gt;&lt;td style="padding&amp;#58;0px;width&amp;#58;100%;"&gt;&lt;div class="ms-rte-layoutszone-outer" style="width&amp;#58;100%;"&gt;&lt;div class="ms-rte-layoutszone-inner"&gt;&lt;p&gt;​​​​​​​​Welcome to the OnePlace ​​Solutions Site. This site has been provisioned using V2 of the provisoning script, and V2 of the provisioning template. Please use the following link to the OnePlace Solutions Support Site for details and instructions for using this site with OnePlaceLive, managing the License List, and other OnePlace related functions&amp;#58;&lt;br&gt;&lt;/p&gt;&lt;p&gt;
-   &lt;a href="https&amp;#58;//www.oneplacesolutions.com/help"&gt;OnePlace Support​&lt;/a&gt;&lt;br&gt;&lt;/p&gt;&lt;div&gt;​If you have not licensed your OnePlace product(s), this script has performed the following Licensing steps for you&amp;#58;&lt;br&gt;&lt;/div&gt;&lt;ul&gt;&lt;li&gt;Step 1 Create license list&amp;#58;&amp;#160;&lt;br&gt;The '&lt;a href="&#123;site&#125;/Lists/Licenses/AllItems.aspx"&gt;Licenses&lt;/a&gt;' lis​t in Site Navigation has been created for you&lt;/li&gt;&lt;li&gt;Step 2 Locate the list ID&amp;#58;&amp;#160;&lt;br&gt;The List ID for this License List will have been displayed to you at the end of the script, and also recorded in the log file 'OPSScriptLog.txt' that now exists in '&lt;a href="&#123;site&#125;/Shared%20Documents"&gt;Documents&lt;/a&gt;' in this Site. Please use this when requesting a Production License Key from OnePlace Solutions.&lt;a href="&#123;site&#125;/Shared%20Documents/OPSScriptLog.txt"&gt; Click here to open the log file directly.&lt;/a&gt;&lt;br&gt;&lt;/li&gt;&lt;li&gt;Step 4 Attach the license key&amp;#58;&amp;#160;&lt;br&gt;The '&lt;a href="&#123;site&#125;/Lists/Licenses"&gt;Licenses&lt;/a&gt;' list contains a '&lt;a href="&#123;site&#125;/Lists/Licenses/DispForm.aspx?ID=1"&gt;License&lt;/a&gt;​' item for you to edit and ​attach a license key if supplied one by OnePlace Solutions. This step is not required when using the built-in 30 day trial, but is required if you extend your trial and are supplied a Time Expiry Key, or purchase licenses and are supplied a Production License Key. ​&lt;a href="&#123;site&#125;/Lists/Licenses/EditForm.aspx?ID=1"&gt;Click here to go directly to editing the L​icense item&lt;/a&gt;​.&lt;/li&gt;&lt;li&gt;Track licenses&amp;#58;&amp;#160;&lt;br&gt;When browsing a sub-folder of the License List (OnePlaceMail/OnePlaceDocs/OnePlaceLive), a count of your current usage has been added to the top of the corresponding list.&lt;br&gt;&lt;br&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;&lt;/div&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+                &lt;table id="layoutsTable" style="width&amp;#58;100%;"&gt;&lt;tbody&gt;&lt;tr style="vertical-align&amp;#58;top;"&gt;&lt;td style="padding&amp;#58;0px;width&amp;#58;100%;"&gt;&lt;div class="ms-rte-layoutszone-outer" style="width&amp;#58;100%;"&gt;&lt;div class="ms-rte-layoutszone-inner"&gt;&lt;p&gt;&lt;font class="ms-rteFontSize-4"&gt;Solutions Site for Licensing and OnePlaceLive&lt;/font&gt;&lt;/p&gt;&lt;span class="ms-rteFontSize-3"&gt; ​Resources​&amp;#58;​​
+&lt;/span&gt;&lt;ul&gt;&lt;li&gt;&lt;a title="Who we are and what we do" href="https&amp;#58;//www.oneplacesolutions.com/"&gt;OnePlace Solutions Website&lt;/a&gt;&lt;br&gt;&lt;/li&gt;&lt;li&gt; ​&lt;a href="https&amp;#58;//www.oneplacesolutions.com/help" target="_blank"&gt;Submit a Support Request&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a title="Articles for your IT Helpdesk to fix common issues" href="https&amp;#58;//www.oneplacesolutions.com/support/knowledgebase.html"&gt;Online Help&amp;#58; Knowledgebase&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="https&amp;#58;//www.oneplacesolutions.com/help/"&gt;Online Help&amp;#58; Desktop Products&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a title="Guides and support for the Office 365 Modern App" href="https&amp;#58;//www.oneplacesolutions.com/help/app/"&gt;Online Help&amp;#58; OnePlaceMail App&lt;/a&gt;&lt;br&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="https&amp;#58;//www.youtube.com/channel/UCSoBckN7vzEeLsy4_zzJ0Ug"&gt;OnePlace Solutions - Youtube&lt;/a&gt;&lt;br&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="https&amp;#58;//github.com/OnePlaceSolutions/"&gt;OnePlace Solutions Github&lt;/a&gt;&lt;br&gt;&lt;/li&gt;&lt;/ul&gt;&lt;div&gt;&lt;div class="ms-rtestate-read ms-rte-wpbox" unselectable="on"&gt;&lt;div class="ms-rtestate-notify  ms-rtestate-read {webpartid:​Desktop Suite Production License Usage:}" id="div_{webpartid:​Desktop Suite Production License Usage:}" unselectable="on"&gt;&lt;/div&gt;&lt;div id="vid_{webpartid:​Desktop Suite Production License Usage:}" unselectable="on" style="display&amp;#58;none;"&gt;&lt;/div&gt;&lt;/div&gt;​&lt;/div&gt;&lt;div&gt;&lt;span class="ms-rteFontSize-3"&gt;Client Configuration Details and License List ID&amp;#58;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;ul&gt;&lt;li&gt;License List URL&amp;#58; {parameter:site}/Lists/Licenses&lt;br&gt;&lt;/li&gt;&lt;li&gt;License List ID&amp;#58; {parameter:listId}&lt;br&gt;&lt;/li&gt;&lt;li&gt;Solutions Site URL &amp;#58; {parameter:site}​&lt;br&gt;&lt;/li&gt;&lt;/ul&gt;​&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;span class="ms-rteFontSize-3"&gt;Have a Production license or Time Expiry Key?&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;a href="{site}/Lists/Licenses/EditForm.aspx?ID=1"&gt;Attach License or Key here&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
     &lt;span id="layoutsData" style="display&amp;#58;none;"&gt;false,false,1&lt;/span&gt;&lt;/div&gt;</pnp:Field>
-          </pnp:Fields>	
+          </pnp:Fields>
         </pnp:Page>
       </pnp:Pages>
     </pnp:ProvisioningTemplate>
