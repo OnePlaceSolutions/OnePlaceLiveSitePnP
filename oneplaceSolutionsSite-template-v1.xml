@@ -30,12 +30,7 @@
             <pnp:NavigationNode Title="Site Contents" Url="{site}/_layouts/15/viewlsts.aspx" IsExternal="true" />
           </pnp:StructuralNavigation>
         </pnp:CurrentNavigation>
-      </pnp:Navigation>
-      <pnp:SiteFields>
-        <Field ID="{DB8D9D6D-DC9A-4FBD-85F3-4A753BFDC58C}" Name="_LikeCount" SourceID="http://schemas.microsoft.com/sharepoint/v3" StaticName="_LikeCount" ReadOnly="TRUE" Type="Lookup" List="Docs" ShowField="LikeCount" DisplayName="Like count" FromBaseType="TRUE" DisplaceOnUpgrade="TRUE" FieldRef="ID" JoinColName="DoclibRowId" JoinRowOrdinal="0" JoinType="INNER" />
-        <Field ID="{D307DFF3-340F-44A2-9F4B-FBFE1BA07459}" Name="_CommentCount" SourceID="http://schemas.microsoft.com/sharepoint/v3" StaticName="_CommentCount" ReadOnly="TRUE" Type="Lookup" List="Docs" ShowField="CommentCount" DisplayName="Comment count" FromBaseType="TRUE" DisplaceOnUpgrade="TRUE" FieldRef="ID" JoinColName="DoclibRowId" JoinRowOrdinal="0" JoinType="INNER" />
-        <Field ID="{C274CBFD-084A-4017-925F-CCE50C9E3EEC}" Name="_CommentFlags" SourceID="http://schemas.microsoft.com/sharepoint/v3" StaticName="_CommentFlags" Hidden="TRUE" Group="_Hidden" ReadOnly="TRUE" Type="Lookup" List="Docs" ShowField="CommentFlags" DisplayName="Comment settings" FromBaseType="TRUE" DisplaceOnUpgrade="TRUE" FieldRef="ID" JoinColName="DoclibRowId" JoinRowOrdinal="0" JoinType="INNER" />
-      </pnp:SiteFields>      
+      </pnp:Navigation>    
       <pnp:Files>
         <pnp:File Src="oneplacesolutions-logo.png" Folder="SiteAssets" Overwrite="true" />
       </pnp:Files>  
