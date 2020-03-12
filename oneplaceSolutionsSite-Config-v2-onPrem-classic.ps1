@@ -159,7 +159,7 @@ Try {
         Write-Host $filler -ForegroundColor Yellow
         Write-Log -Level Info -Message $filler
 
-        Apply-PnPProvisioningTemplate -path $Path -ExcludeHandlers SiteSecurity
+        Apply-PnPProvisioningTemplate -path $Path -ExcludeHandlers SiteSecurity, Pages
 		
 		$licenseList = Get-PnPList -Identity "Licenses"
         $licenseListId = $licenseList.ID
@@ -169,7 +169,7 @@ Try {
         Write-Host $filler -ForegroundColor Yellow
         Write-Log -Level Info -Message $filler
         Start-Sleep -Seconds 2
-        Apply-PnPProvisioningTemplate -path $Path -Handlers SiteSecurity
+        Apply-PnPProvisioningTemplate -path $Path -Handlers SiteSecurity, Pages
         
         $filler = "Provisioning complete!"
         Write-Host $filler -ForeGroundColor Green
