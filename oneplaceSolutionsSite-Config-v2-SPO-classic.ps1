@@ -222,7 +222,7 @@ Try {
 		$licenseList = Get-PnPList -Identity "Licenses"
         $licenseListId = $licenseList.ID
         $licenseListId = $licenseListId.ToString()											   
-        $filler = "Applying Site Security changes separately..."
+        $filler = "Applying Site Security and Page changes separately..."
         Write-Host $filler -ForegroundColor Yellow
         Write-Log -Level Info -Message $filler
         Start-Sleep -Seconds 2
