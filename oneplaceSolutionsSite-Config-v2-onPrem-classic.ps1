@@ -169,7 +169,7 @@ Try {
         Write-Host $filler -ForegroundColor Yellow
         Write-Log -Level Info -Message $filler
         Start-Sleep -Seconds 2
-        Apply-PnPProvisioningTemplate -path $Path -Handlers SiteSecurity, Pages
+        Apply-PnPProvisioningTemplate -path $Path -Handlers SiteSecurity, Pages -Parameters @{"licenseListID"=$licenseListId;"site"=$SolutionsSiteUrl}	
         
         $filler = "Provisioning complete!"
         Write-Host $filler -ForeGroundColor Green
