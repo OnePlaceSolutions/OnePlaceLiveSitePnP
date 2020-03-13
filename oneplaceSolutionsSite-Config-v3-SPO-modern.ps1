@@ -219,8 +219,27 @@ Try {
         Write-Host $filler -ForegroundColor Yellow
         Write-Log -Level Info -Message $filler
 
-        Apply-PnPProvisioningTemplate -path $Path -ExcludeHandlers Pages, SiteSecurity 
-
+        Try {
+            Apply-PnPProvisioningTemplate -path $Path -ExcludeHandlers Pages, SiteSecurity
+        }
+        Catch [System.Net.WebException]{
+            If($($_.Exception.Message) -contains "(403) Forbidden"){
+                #SPO returning a trigger happy response, sleep for a bit...
+                $filler = "SharePoint Online incorrectly indicated the site is ready, pausing the script to wait for it to catch up. Retrying in 5 minutes."
+                Write-Host $filler -ForegroundColor Yellow
+                Write-Log -Level Info -Message $filler
+                For($i = 0; $i -lt 1; $i++){
+                    Start-Sleep -Seconds 300
+                    Apply-PnPProvisioningTemplate -path $Path -ExcludeHandlers Pages, SiteSecurity
+                }
+            }
+            Else{
+                Throw $_
+            }
+        }
+        Catch {
+            Throw $_
+        }
         $licenseList = Get-PnPList -Identity "Licenses"
         $licenseListId = $licenseList.ID
         $licenseListId = $licenseListId.ToString()

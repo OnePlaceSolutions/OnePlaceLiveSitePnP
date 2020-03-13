@@ -180,7 +180,7 @@
             </pnp:Section>
             <pnp:Section Order="2" Type="OneColumn" />
           </pnp:Sections>
-          <pnp:Header Type="Custom" ServerRelativeImageUrl="{site}/SiteAssets/SitePages/OnePlace-Solutions-Site-Dashboard/80150-OnePlaceSolutions-LS-150dpi-Medium.png" TranslateX="69.6808510638298" TranslateY="88.5964912280702" LayoutType="CutInShape" ShowTopicHeader="false" ShowPublishDate="false" TopicHeader="" AlternativeText="" Authors="[]" AuthorByLine="[]" AuthorByLineId="-1" />
+          <pnp:Header Type="Custom" ServerRelativeImageUrl="" TranslateX="69.6808510638298" TranslateY="88.5964912280702" LayoutType="CutInShape" ShowTopicHeader="false" ShowPublishDate="false" TopicHeader="" AlternativeText="" Authors="[]" AuthorByLine="[]" AuthorByLineId="-1" />
           <pnp:Security>
             <pnp:BreakRoleInheritance CopyRoleAssignments="false" ClearSubscopes="false" />
           </pnp:Security>
