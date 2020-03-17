@@ -114,6 +114,41 @@ Try {
         }
     }
 
+    function Attempt-Provision ([int]$count){
+        #Our first provisioning run can encounter a 403 if SharePoint has incorrectly told us the site is ready, this function will retry 
+        Try {
+            Apply-PnPProvisioningTemplate -path $Script:TemplatePath -ExcludeHandlers Pages, SiteSecurity
+        }
+        Catch [System.Net.WebException]{
+            If($($_.Exception.Message) -contains "(403) Forbidden"){
+                #SPO returning a trigger happy response, sleep for a bit...
+                $filler = "SharePoint Online incorrectly indicated the site is ready to provision, pausing the script to wait for it to catch up. Retrying in 5 minutes. Retry $count/4"
+                Write-Host $filler -ForegroundColor Yellow
+                Write-Log -Level Info -Message $filler
+
+                If($count -lt 4){
+                    Start-Sleep -Seconds 300
+                    $count = $count + 1
+                    Attempt-Provision -count $count
+                }
+                Else{
+                    $filler = "SharePoint Online is taking an unusual amount of time to create the site. Please check your SharePoint Admin Site in Office 365, and when the site is created please continue the script. Do not press Enter until you have confirmed the site has been completely created."
+                    Write-Host $filler -ForegroundColor Red
+                    Write-Log -Level Info -Message $filler
+                    Write-Host "`n"
+                    Pause
+                    Apply-PnPProvisioningTemplate -path $Script:TemplatePath -ExcludeHandlers Pages, SiteSecurity
+                }
+            }
+            Else{
+                Throw $_
+            }
+        }
+        Catch {
+            Throw $_
+        }
+    }
+
     If($solutionsSite -ne 'oneplacesolutions'){
         Write-Log -Level Info -Message "Script has been passed $solutionsSite for the Solutions Site URL"
     }
@@ -192,7 +227,10 @@ Try {
         Write-Progress -Activity "Solutions Site Deployment" -CurrentOperation $stage -PercentComplete (66)
 
         #Connecting to the site collection to apply the template
+        
+
         Connect-pnpOnline -url $SolutionsSiteUrl -UseWebLogin
+
 
         #Download OnePlace Solutions Site provisioning template
         $WebClient = New-Object System.Net.WebClient   
@@ -200,12 +238,12 @@ Try {
         
         #Fix this URL before merging to Master
         $Url = "https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/ash-dev-createsite/oneplaceSolutionsSite-template-v3-modern.xml"    
-        $Path = "$env:temp\oneplaceSolutionsSite-template-v3-modern.xml" 
+        $Script:TemplatePath = "$env:temp\oneplaceSolutionsSite-template-v3-modern.xml" 
 
-        $filler = "Downloading provisioning xml template to: $Path"
+        $filler = "Downloading provisioning xml template to: $Script:TemplatePath"
         Write-Host $filler -ForegroundColor Yellow  
         Write-Log -Level Info -Message $filler
-        $WebClient.DownloadFile( $Url, $Path )
+        $WebClient.DownloadFile( $Url, $Script:TemplatePath )
         
 
         #Download OnePlace Solutions Company logo to be used as Site logo    
@@ -219,27 +257,8 @@ Try {
         Write-Host $filler -ForegroundColor Yellow
         Write-Log -Level Info -Message $filler
 
-        Try {
-            Apply-PnPProvisioningTemplate -path $Path -ExcludeHandlers Pages, SiteSecurity
-        }
-        Catch [System.Net.WebException]{
-            If($($_.Exception.Message) -contains "(403) Forbidden"){
-                #SPO returning a trigger happy response, sleep for a bit...
-                $filler = "SharePoint Online incorrectly indicated the site is ready, pausing the script to wait for it to catch up. Retrying in 5 minutes."
-                Write-Host $filler -ForegroundColor Yellow
-                Write-Log -Level Info -Message $filler
-                For($i = 0; $i -lt 1; $i++){
-                    Start-Sleep -Seconds 300
-                    Apply-PnPProvisioningTemplate -path $Path -ExcludeHandlers Pages, SiteSecurity
-                }
-            }
-            Else{
-                Throw $_
-            }
-        }
-        Catch {
-            Throw $_
-        }
+        Attempt-Provision -count 0
+
         $licenseList = Get-PnPList -Identity "Licenses"
         $licenseListId = $licenseList.ID
         $licenseListId = $licenseListId.ToString()
@@ -249,8 +268,16 @@ Try {
         Write-Log -Level Info -Message $filler
         Start-Sleep -Seconds 2															
 
-        Apply-PnPProvisioningTemplate -path $Path -Handlers SiteSecurity, Pages -Parameters @{"licenseListID"=$licenseListId;"site"=$SolutionsSiteUrl}												  
-    
+        Apply-PnPProvisioningTemplate -path $Script:TemplatePath -Handlers SiteSecurity, Pages -Parameters @{"licenseListID"=$licenseListId;"site"=$SolutionsSiteUrl}												  
+        
+        Try {
+            #workaround for a PnP bug
+            $addLogo = Add-PnPfile -Path $PathImage -Folder "SiteAssets"
+        }
+        Catch {
+            Throw $_
+        }
+
         $filler = "Provisioning complete!"
         Write-Host $filler -ForeGroundColor Green
         Write-Log -Level Info -Message $filler
@@ -286,13 +313,7 @@ Try {
             $logToSharePoint = Add-PnPfile -Path $script:LogPath -Folder "Shared Documents"
         }
         Catch {
-            $exType = $($_.Exception.GetType().FullName)
-            $exMessage = $($_.Exception.Message)
-            Write-Host "Caught an exception:" -ForegroundColor Red
-            Write-Host "Exception Type: $exType" -ForegroundColor Red
-            Write-Host "Exception Message: $exMessage" -ForegroundColor Red
-            Write-Log -Level Error -Message "Caught an exception. Exception Type: $exType"
-            Write-Log -Level Error -Message $exMessage
+            Throw $_
         }
 
         Write-Progress -Activity "Completed" -Completed
