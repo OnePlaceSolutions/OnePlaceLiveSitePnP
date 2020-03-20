@@ -1,7 +1,7 @@
 ﻿param ([String]$solutionsSite = '')
 #set back to 'oneplacesolutions' when published
 <#
-    This script creates a new Site collection ('Team Site (Classic)'), and applies the configuration changes for the OnePlace Solutions site.
+    This script creates a new Site collection ('Team Site (Modern)'), and applies the configuration changes for the OnePlace Solutions site.
     All major actions are logged to 'OPSScriptLog.txt' in the user's or Administrators Documents folder, and it is uploaded to the Solutions Site at the end of provisioning.
 #>
 $ErrorActionPreference = 'Stop'
@@ -157,7 +157,7 @@ Try {
     Write-Host 'Welcome to the Solutions Site deployment script for OnePlace Solutions.' -ForegroundColor Green
     Write-Host "`n--------------------------------------------------------------------------------`n" -ForegroundColor Red
     
-    $stage = "Stage 1/3 - Team Site (modern) creation"
+    $stage = "Stage 1/3 - Team Site (Modern) creation"
     Write-Host "`n$stage`n" -ForegroundColor Yellow
     Write-Progress -Activity "Solutions Site Deployment" -CurrentOperation $stage -PercentComplete (33)
 
