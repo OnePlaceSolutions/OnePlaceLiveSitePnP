@@ -16,7 +16,7 @@ try {
     }
     Else{
         Write-Host "Enter SharePoint credentials (domain\username for on-premises):" -ForegroundColor Green  
-        Connect-pnpOnline -url $SharePointUrl 
+        Connect-pnpOnline -url $SharePointUrl
     }
 
     #Download OnePlace Solutions Site provisioning template   
@@ -33,8 +33,7 @@ try {
        
     #Apply provisioning xml to new site collection
     Write-Host "Applying configuration changes..." -ForegroundColor Green
-    Apply-PnPProvisioningTemplate -path $Path    
-
+    Apply-PnPProvisioningTemplate -path $Path
 }
 
 catch {
