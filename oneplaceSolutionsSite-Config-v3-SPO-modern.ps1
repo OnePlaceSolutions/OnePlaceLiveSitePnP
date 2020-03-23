@@ -1,5 +1,4 @@
-﻿param ([String]$solutionsSite = '')
-#set back to 'oneplacesolutions' when published
+﻿param ([String]$solutionsSite = 'oneplacesolutions')
 <#
     This script creates a new Site collection ('Team Site (Modern)'), and applies the configuration changes for the OnePlace Solutions site.
     All major actions are logged to 'OPSScriptLog.txt' in the user's or Administrators Documents folder, and it is uploaded to the Solutions Site at the end of provisioning.
@@ -236,8 +235,7 @@ Try {
         $WebClient = New-Object System.Net.WebClient   
 
         
-        #Fix this URL before merging to Master
-        $Url = "https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/ash-dev-createsite/oneplaceSolutionsSite-template-v3-modern.xml"    
+        $Url = "https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/master/oneplaceSolutionsSite-template-v3-modern.xml"    
         $Script:TemplatePath = "$env:temp\oneplaceSolutionsSite-template-v3-modern.xml" 
 
         $filler = "Downloading provisioning xml template to: $Script:TemplatePath"
