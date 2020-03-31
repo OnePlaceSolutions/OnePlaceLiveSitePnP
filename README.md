@@ -76,7 +76,7 @@ All actions performed with the script will be logged to 'OPSScriptLog.txt' in yo
     ![](./README-Images/invokestringSPO.png)
 
 
-3.  The PowerShell script will execute, begin logging and tell you the log file path, and prompt you to enter your SharePoint Tenant name and hit enter. For example, if your Root SharePoint Site Collection is 'https://contoso.sharepoint.com', just enter 'contoso':
+3.  The PowerShell script will execute, begin logging and tell you the log file path, and prompt you to enter your SharePoint Tenant name and hit enter. For example, if your Root SharePoint Site Collection is 'https://contoso&#46;sharepoint&#46;com', just enter 'contoso':
 
     ![](./README-Images/entertenantSPO.png)
 
