@@ -26,7 +26,7 @@ In Central Administration, create a site collection based on the Team Site templ
 ![](./README-Images/createsitecollection-onpremise-v2.png)
 
 ## SharePoint Online
-Site creation will be performed automatically with the configuration script. The site will be created at 'http://&lt;<span>yourSharePoint&gt;.sharepoint.com/sites/<b>oneplacesolutions</b>'. This can be overridden by downloading and running the PowerShell script locally and defining the '-solutionssite' parameter:
+Site creation will be performed automatically with the configuration script. The site will be created at 'http://&lt;yourSharePoint&gt;&#46;sharepoint&#46;com/sites/<b>oneplacesolutions</b>'. This can be overridden by downloading and running the PowerShell script locally and defining the '-solutionssite' parameter:
 ![](./README-Images/scriptoverrideSPO.png)
 
 Note that the script will not run if the site named already exists.
@@ -52,14 +52,22 @@ All actions performed with the script will be logged to 'OPSScriptLog.txt' in yo
 
     ![](./README-Images/entertenantSPO.png)
 
-4.  You will be asked to enter your credentials for Microsoft 365 \/ SharePoint. For SharePoint Online this will be your email address
+4.  You will be asked to enter your credentials for Microsoft 365 \/ SharePoint. For SharePoint Online this will be your email address.
 
-5.  You will be asked to enter an email address for the owner of this Site Collection. Enter the same email address you logged in with:
+5.  You will then be asked to enter an email address for the owner of this Site Collection. Enter the same email address you logged in with:
 
     ![](./README-Images/enterownerSPO.png)
 
-5.  The OnePlace Solutions site template will then be downloaded and applied to your site collection:
+6.  SharePoint will start provisioning the Site. Please leave the PowerShell window open while this happens, it will automatically resume the script when the Site is ready to configure.
 
-    ![](./README-Images/applychanges.png)
+    ![](./README-Images/sitecreationSPO.png)
 
-    ![](./README-Images/applyingchangestosite.png)
+7.  Once SharePoint has created the Site, the script will start configuring it for use.
+
+    ![](./README-Images/siteconfigurationSPO.png)
+	
+8.  When configuration has completed, your Solutions Site URL, License List URL and License List ID will be displayed (these are also in the log file, and will be visible in the Solutions Site). You may also opt to automatically email these details now to OnePlace Solutions. These URLs will be kept on file for support purposes, and the License List ID will be required for your Production License.
+
+    ![](./README-Images/configurationcompleteSPO.png)
+9.  Finally, press Enter to open your Solutions Site.
+    ![](./README-Images/solutionssiteSPO.png)
