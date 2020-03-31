@@ -54,7 +54,7 @@
     ![](./README-Images/applyingchangestosite.png)
 	
 ## SharePoint Online
-Site creation will be performed automatically with the configuration script. The site will be created at 'http://&lt;yourSharePoint&gt;&#46;sharepoint&#46;com/sites/<b>oneplacesolutions</b>'. This can be overridden by downloading and running the PowerShell script locally and defining the '-solutionssite' parameter:
+Site creation will be performed automatically with the configuration script. The site will be created at 'https://&lt;yourSharePoint&gt;&#46;sharepoint&#46;com/sites/<b>oneplacesolutions</b>'. This can be overridden by downloading and running the PowerShell script locally and defining the '-solutionssite' parameter:
 ![](./README-Images/scriptoverrideSPO.png)
 
 Note that the script will not run if the site named already exists.
@@ -76,7 +76,7 @@ All actions performed with the script will be logged to 'OPSScriptLog.txt' in yo
     ![](./README-Images/invokestringSPO.png)
 
 
-3.  The PowerShell script will execute, begin logging and tell you the log file path, and prompt you to enter your SharePoint Tenant name and hit enter. For example, if your Root SharePoint Site Collection is 'https://contoso&#46;sharepoint&#46;com', just enter 'contoso':
+3.  The PowerShell script will execute, begin logging and tell you the log file path, and prompt you to enter your SharePoint Tenant name and hit enter. For example, if your Root SharePoint Site Collection is 'htt<span>ps://contoso&#46;sharepoint&#46;com', just enter 'contoso':
 
     ![](./README-Images/entertenantSPO.png)
 
