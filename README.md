@@ -71,3 +71,4 @@ All actions performed with the script will be logged to 'OPSScriptLog.txt' in yo
     ![](./README-Images/configurationcompleteSPO.png)
 9.  Finally, press Enter to open your Solutions Site.
     ![](./README-Images/solutionssiteSPO.png)
+    ![](./README-Images/solutionssitedetailsSPO.png)
