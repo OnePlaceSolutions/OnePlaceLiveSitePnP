@@ -21,10 +21,38 @@
     ![](./README-Images/image3.png)
 
 ## SharePoint On-Premise (2013/2016/2019)
-In Central Administration, create a site collection based on the Team Site template
+1.  In Central Administration, create a site collection based on the Team Site template, and note it's URL:
 
 ![](./README-Images/createsitecollection-onpremise-v2.png)
 
+2.  Start PowerShell on your machine:
+
+    ![](./README-Images/image4.png)
+
+3.  Copy and paste the following command into your PowerShell command
+    window and hit enter:
+
+    ```PowerShell
+    Invoke-Expression (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/master/oneplaceSolutionsSite-Config-v1.ps1')
+    ```
+
+    ![](./README-Images/ps1command.png)
+
+
+4.  The PowerShell script will execute and prompt you to enter the Site Collection URL of the site collection you manually created in Step 1. You can either type it in or copy and paste the url into the command window and hit enter:
+
+    ![](./README-Images/enterurl.png)
+
+5.  You will be asked to enter your credentials for SharePoint. For SharePoint Online it will be your email address, for on-premise it will be your domain\\username:
+
+    ![](./README-Images/credentials.png)
+
+6.  The OnePlace Solutions site template will then be downloaded and applied to your site collection:
+
+    ![](./README-Images/applychanges.png)
+
+    ![](./README-Images/applyingchangestosite.png)
+	
 ## SharePoint Online
 Site creation will be performed automatically with the configuration script. The site will be created at 'http://&lt;yourSharePoint&gt;&#46;sharepoint&#46;com/sites/<b>oneplacesolutions</b>'. This can be overridden by downloading and running the PowerShell script locally and defining the '-solutionssite' parameter:
 ![](./README-Images/scriptoverrideSPO.png)
@@ -32,7 +60,7 @@ Site creation will be performed automatically with the configuration script. The
 Note that the script will not run if the site named already exists.
 All actions performed with the script will be logged to 'OPSScriptLog.txt' in your Documents folder (or under the Administrator account's Documents if running PowerShell as an Administrator). This log file will be uploaded to the Documents folder in the Solutions Site at the end of deployment for your record keeping.
 
-### Run the PnP PowerShell Script to create and configure the Solutions Site
+
 
 1.  Start PowerShell on your machine:
 
