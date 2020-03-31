@@ -20,18 +20,19 @@
 
     ![](./README-Images/image3.png)
 
-## Manually create a SharePoint Site Collection
-### On-Premise
+## SharePoint On-Premise (2013/2016/2019)
 In Central Administration, create a site collection based on the Team Site template
 
 ![](./README-Images/createsitecollection-onpremise-v2.png)
 
-### SharePoint Online
-In SharePoint Administration in your tenant, create a site collection based on the Team Site template:
+## SharePoint Online
+Site creation will be performed automatically with the configuration script. The site will be created at 'http://<yourSharePoint>.sharepoint.com/sites/oneplacesolutions'. This can be overridden by downloading and running the PowerShell script locally and defining the '-solutionssite' parameter:
+![](./README-Images/scriptoverrideSPO.png)
 
-![](./README-Images/createsitecollection-online.png)
+Note that the script will not run if the site named already exists.
+All actions performed with the script will be logged to 'OPSScriptLog.txt' in your Documents folder (or under the Administrator account's Documents if running PowerShell as an Administrator). This log file will be uploaded to the Documents folder in the Solutions Site at the end of deployment for your record keeping.
 
-## Apply the OnePlace Solutions Site configurations to your site collection
+### Run the PnP PowerShell Script to create and configure the Solutions Site
 
 1.  Start PowerShell on your machine:
 
@@ -41,19 +42,21 @@ In SharePoint Administration in your tenant, create a site collection based on t
     window and hit enter:
 
     ```PowerShell
-    Invoke-Expression (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/master/oneplaceSolutionsSite-Config-v1.ps1')
+    Invoke-Expression (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/master/oneplaceSolutionsSite-Config-v3-SPO-modern.ps1')
     ```
 
-    ![](./README-Images/ps1command.png)
+    ![](./README-Images/invokestringSPO.png)
 
 
-3.  The PowerShell script will execute and prompt you to enter the Site Collection Url of the site collection you manually created in the earlier step. You can either type it in or copy and paste the url into the command window and hit enter:
+3.  The PowerShell script will execute, begin logging and tell you the log file path, and prompt you to enter your SharePoint Tenant name and hit enter. For example, if your Root SharePoint Site Collection is 'https://contoso.sharepoint.com', just enter 'contoso':
 
-    ![](./README-Images/enterurl.png)
+    ![](./README-Images/entertenantSPO.png)
 
-4.  You will be asked to enter your credentials for SharePoint. For SharePoint Online it will be your email address, for on-premise it will be your domain\\username:
+4.  You will be asked to enter your credentials for Microsoft 365 \/ SharePoint. For SharePoint Online this will be your email address
 
-    ![](./README-Images/credentials.png)
+5.  You will be asked to enter an email address for the owner of this Site Collection. Enter the same email address you logged in with:
+
+    ![](./README-Images/enterownerSPO.png)
 
 5.  The OnePlace Solutions site template will then be downloaded and applied to your site collection:
 
