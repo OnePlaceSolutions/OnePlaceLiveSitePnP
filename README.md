@@ -23,7 +23,7 @@
 ## SharePoint On-Premise (2013/2016/2019)
 1.  In Central Administration, create a site collection based on the Team Site template, and note it's URL:
 
-![](./README-Images/createsitecollection-onpremise-v2.png)
+    ![](./README-Images/createsitecollection-onpremise-v2.png)
 
 2.  Start PowerShell on your machine:
 
