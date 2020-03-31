@@ -26,7 +26,7 @@ In Central Administration, create a site collection based on the Team Site templ
 ![](./README-Images/createsitecollection-onpremise-v2.png)
 
 ## SharePoint Online
-Site creation will be performed automatically with the configuration script. The site will be created at 'http://<yourSharePoint>.sharepoint.com/sites/oneplacesolutions'. This can be overridden by downloading and running the PowerShell script locally and defining the '-solutionssite' parameter:
+Site creation will be performed automatically with the configuration script. The site will be created at 'http://&lt;<span>yourSharePoint&gt;.sharepoint.com/sites/<b>oneplacesolutions</b>'. This can be overridden by downloading and running the PowerShell script locally and defining the '-solutionssite' parameter:
 ![](./README-Images/scriptoverrideSPO.png)
 
 Note that the script will not run if the site named already exists.
