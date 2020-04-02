@@ -119,8 +119,8 @@ Try {
             Apply-PnPProvisioningTemplate -path $Script:TemplatePath -ExcludeHandlers Pages, SiteSecurity
         }
         Catch [System.Net.WebException]{
-            If($($_.Exception.Message) -contains "(403) Forbidden"){
-                #SPO returning a trigger happy response, sleep for a bit...
+            If($($_.Exception.Message) -match '(403)'){
+                #SPO returning a trigger happy ready response, sleep for a bit...
                 $filler = "SharePoint Online incorrectly indicated the site is ready to provision, pausing the script to wait for it to catch up. Retrying in 5 minutes. Retry $count/4"
                 Write-Host $filler -ForegroundColor Yellow
                 Write-Log -Level Info -Message $filler
