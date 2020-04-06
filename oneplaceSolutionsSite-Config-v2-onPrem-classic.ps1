@@ -119,7 +119,7 @@ Try {
     Write-Host "`n$stage`n" -ForegroundColor Yellow
     Write-Progress -Activity "Solutions Site Deployment" -CurrentOperation $stage -PercentComplete (33)
     Write-Host "Please ensure you have created a new Site Collection with the template 'Team Site' (classic if the option is given) and the URL '/oneplacesolutions'"
-    $SolutionsSiteUrl = Read-Host -Prompt "Enter your new Site Collection URl here, eg http://contoso.com/sites/oneplacesolutions"
+    $SolutionsSiteUrl = Read-Host -Prompt "Enter your new Site Collection URL here, eg http://contoso.com/sites/oneplacesolutions"
     $licenseListUrl = $SolutionsSiteUrl + "/Lists/Licenses"
     
     Try {
