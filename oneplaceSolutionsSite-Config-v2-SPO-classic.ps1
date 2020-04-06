@@ -1,5 +1,5 @@
 ﻿param ([String]$solutionsSite = '')
-#set back to 'oneplacesolutions' when published
+
 <#
     This script creates a new Site collection ('Team Site (Classic)'), and applies the configuration changes for the OnePlace Solutions site.
     All major actions are logged to 'OPSScriptLog.txt' in the user's or Administrators Documents folder, and it is uploaded to the Solutions Site at the end of provisioning.
@@ -197,15 +197,14 @@ Try {
         #Download OnePlace Solutions Site provisioning template
         $WebClient = New-Object System.Net.WebClient   
 
-        #Fix this URL before merging to Master
-        $Url = "https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/ash-dev-createsite/oneplaceSolutionsSite-template-v2.xml"    
+        $Url = "https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/master/oneplaceSolutionsSite-template-v2.xml"    
         $Path = "$env:temp\oneplaceSolutionsSite-template-v2.xml" 
 
         $filler = "Downloading provisioning xml template to: $Path"
         Write-Host $filler -ForegroundColor Yellow  
         Write-Log -Level Info -Message $filler
         $WebClient.DownloadFile( $Url, $Path )
-
+        
         #Download OnePlace Solutions Company logo to be used as Site logo    
         $UrlSiteImage = "https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/master/oneplacesolutions-logo.png"
         $PathImage = "$env:temp\oneplacesolutions-logo.png" 
@@ -226,7 +225,7 @@ Try {
         Write-Host $filler -ForegroundColor Yellow
         Write-Log -Level Info -Message $filler
         Start-Sleep -Seconds 2
-        Apply-PnPProvisioningTemplate -path $Path -Handlers SiteSecurity, Pages -Parameters @{"licenseListID"=$licenseListId;"site"=$SolutionsSiteUrl}		
+        Apply-PnPProvisioningTemplate -path $Path -Handlers SiteSecurity, Pages -Parameters @{"licenseListID"=$licenseListId;"site"=$SolutionsSiteUrl;"version"="16.0.0.0"}		
     
         $filler = "Provisioning complete!"
         Write-Host $filler -ForeGroundColor Green

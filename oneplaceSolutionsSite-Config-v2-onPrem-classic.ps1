@@ -1,6 +1,5 @@
-﻿#set back to 'oneplacesolutions' when published
-<#
-    This script creates a new Site collection ('Team Site (Classic)'), and applies the configuration changes for the OnePlace Solutions site.
+﻿<#
+    This script applies the configuration changes for the OnePlace Solutions site.
     All major actions are logged to 'OPSScriptLog.txt' in the user's or Administrators Documents folder, and it is uploaded to the Solutions Site at the end of provisioning.
 #>
 $ErrorActionPreference = 'Stop'
@@ -23,7 +22,7 @@ Try {
         [CmdletBinding()] 
         Param ( 
             [Parameter(Mandatory=$true, 
-                       ValueFromPipelineByPropertyName=$true)] 
+                       ValueFromPipelineByPropertyName=$true)]
             [ValidateNotNullOrEmpty()] 
             [Alias("LogContent")] 
             [string]$Message, 
@@ -88,8 +87,8 @@ Try {
         } 
     }
 
-    function Send-OutlookEmail ($attachment,$body){
-        Try{
+    function Send-OutlookEmail ($attachment,$body) {
+        Try {
             #create COM object named Outlook
             $Outlook = New-Object -ComObject Outlook.Application
             #create Outlook MailItem named Mail using CreateItem() method
@@ -106,14 +105,10 @@ Try {
             $mail.Display()
             [System.Runtime.Interopservices.Marshal]::ReleaseComObject($Outlook) | Out-Null
         }
-        Catch{
+        Catch {
             Write-Host "Failed to open a new email in Outlook." -ForegroundColor Red
             Write-Log -Level Error -Message $_
         }
-    }
-
-    If($solutionsSite -ne 'oneplacesolutions'){
-        Write-Log -Level Info -Message "Script has been passed $solutionsSite for the Solutions Site URL"
     }
 
     Write-Host "`n--------------------------------------------------------------------------------`n" -ForegroundColor Red
@@ -137,18 +132,17 @@ Try {
         Connect-pnpOnline -url $SolutionsSiteUrl
 
         #Download OnePlace Solutions Site provisioning template
-        $WebClient = New-Object System.Net.WebClient   
+        $WebClient = New-Object System.Net.WebClient
 
-        <#
         #Fix this URL before merging to Master
-        $Url = "https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/ash-dev-onsite/oneplaceSolutionsSite-template-v2.xml"    
+        $Url = "https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/master/oneplaceSolutionsSite-template-v2.xml"    
         $Path = "$env:temp\oneplaceSolutionsSite-template-v2.xml" 
-
+        
         $filler = "Downloading provisioning xml template to: $Path"
         Write-Host $filler -ForegroundColor Yellow  
         Write-Log -Level Info -Message $filler
         $WebClient.DownloadFile( $Url, $Path )
-        #>
+        
         #Download OnePlace Solutions Company logo to be used as Site logo    
         $UrlSiteImage = "https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/master/oneplacesolutions-logo.png"
         $PathImage = "$env:temp\oneplacesolutions-logo.png" 
@@ -160,7 +154,6 @@ Try {
         Write-Host $filler -ForegroundColor Yellow
         Write-Log -Level Info -Message $filler
 
-        $path = "C:\Users\AshleyGregory\Documents\Github\OnePlaceLiveSitePnP\oneplaceSolutionsSite-template-v2.xml"
         Apply-PnPProvisioningTemplate -path $Path -ExcludeHandlers SiteSecurity, Pages
 		
 		$licenseList = Get-PnPList -Identity "Licenses"
@@ -171,8 +164,17 @@ Try {
         Write-Host $filler -ForegroundColor Yellow
         Write-Log -Level Info -Message $filler
         Start-Sleep -Seconds 2
-        Apply-PnPProvisioningTemplate -path $Path -Handlers SiteSecurity, Pages -Parameters @{"licenseListID"=$licenseListId;"site"=$SolutionsSiteUrl}	
-        
+        Try {
+            Apply-PnPProvisioningTemplate -path $Path -Handlers SiteSecurity, Pages -Parameters @{"licenseListID"=$licenseListId;"site"=$SolutionsSiteUrl;"version"="16.0.0.0"}
+        }
+        Catch [Microsoft.SharePoint.Client.ServerException] {
+            $filler = "Issue deploying SiteSecurity and Pages, likely running SharePoint 2013, retrying template deployment with fix..."
+            Write-Log -Level Warn -Message $filler
+            Apply-PnPProvisioningTemplate -path $Path -Handlers SiteSecurity, Pages -Parameters @{"licenseListID"=$licenseListId;"site"=$SolutionsSiteUrl;"version"="15.0.0.0"}
+        }
+        Catch {
+            Throw $_
+        }
         $filler = "Provisioning complete!"
         Write-Host $filler -ForeGroundColor Green
         Write-Log -Level Info -Message $filler
@@ -186,8 +188,8 @@ Try {
         Write-Log -Level Info -Message $filler
 
         $licenseItemCount = ((Get-PnPListItem -List "Licenses" -Query "<View><Query><Where><Eq><FieldRef Name='Title'/><Value Type='Text'>License</Value></Eq></Where></Query></View>").Count)
-        If ($licenseItemCount -eq 0){
-            Add-PnPListItem -List "Licenses" -Values @{"Title" = "License"}
+        If ($licenseItemCount -eq 0) {
+            Add-PnPListItem -List "Licenses" -Values @{"Title" = "License"} | Out-Null
             $filler = "License Item created!"
             Write-Host "`n$filler" -ForegroundColor Green
             Write-Log -Level Info -Message $filler
@@ -231,15 +233,15 @@ Try {
         
         $currentPrincipal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
         
-        If($false -eq $currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)){
+        If($false -eq $currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
             $input = Read-Host "Would you like to email this information and Log file to OnePlace Solutions now? (yes or no)"
             $input = $input[0]
-            If($input -eq 'y'){
+            If($input -eq 'y') {
                 $file = Get-ChildItem $script:logPath
                 Send-OutlookEmail -attachment $file.FullName -body $importants
             }
         }
-        Else{
+        Else {
             Write-Host "Script is run as Administrator, cannot compose email details. Please email the above information and the log file generated to 'success@oneplacesolutions.com'." -ForegroundColor Yellow
         }
         Write-Host "Opening Solutions Site at $SolutionsSiteUrl..." -ForegroundColor Yellow
@@ -247,20 +249,20 @@ Try {
         Pause
         Start-Process $SolutionsSiteUrl | Out-Null
     }
-    Catch [Microsoft.SharePoint.Client.ServerException]{
+    Catch [Microsoft.SharePoint.Client.ServerException] {
         $exMessage = $($_.Exception.Message)
-        If($exMessage -match 'A site already exists at url'){
+        If($exMessage -match 'A site already exists at url') {
             Write-Host $exMessage -ForegroundColor Red
             Write-Log -Level Error -Message $exMessage
             If($solutionsSite -ne 'oneplacesolutions'){
                 Write-Host "Please run the script again and choose a different Solutions Site suffix." -ForegroundColor Red
             }
         }
-        Else{
+        Else {
             Throw $_
         }
     }
-    Catch{
+    Catch {
         Throw $_
     }
 }
@@ -276,6 +278,10 @@ Catch {
     Pause
 }
 
-Finally{
+Finally {
+    Try {
+        Disconnect-PnPOnline
+    }
+    Catch {}
     Write-Log -Level Info -Message "End of script."
 }
