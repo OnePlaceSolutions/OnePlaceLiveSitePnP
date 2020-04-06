@@ -67,6 +67,7 @@ Note: * the script will not run if the site named already exists.
 
     ![](./README-Images/configurationcompleteSPO.png)
 9.  Finally, press Enter to open your Solutions Site.
+
 	The homepage contains some useful links for training and support resources, and when you have a Production license an overview of your License usage.
     ![](./README-Images/solutionssiteSPO.png)
 	Scrolling down you can always find your Client Configuration Details (The License List URL and Solutions Site URL), and your License List ID. If you did not opt to email these automatically in the previous step, please email the License List ID to 'success@oneplacesolutions.com' when procuring a Production License. If you have received a Production license or Time Expiry Key, you may attach it here.
@@ -74,7 +75,7 @@ Note: * the script will not run if the site named already exists.
 
 
 ## SharePoint On-Premise (2013/2016/2019)
-1.  In Central Administration, create a site collection based on the Team Site template, and note it's URL:
+1.  In Central Administration, create a site collection with the URL 'oneplacesolutions' and based on the Team Site template (Team Site (classic) if using SharePoint 2016/2019), note it's URL for later:
 
     ![](./README-Images/createsitecollection-onpremise-v2.png)
 
@@ -86,7 +87,7 @@ Note: * the script will not run if the site named already exists.
     window and hit enter:
 
     ```PowerShell
-    Invoke-Expression (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/master/oneplaceSolutionsSite-Config-v1.ps1')
+    Invoke-Expression (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/master/oneplaceSolutionsSite-Config-v2-onPrem-classic.ps1')
     ```
 
     ![](./README-Images/ps1command.png)
@@ -96,13 +97,21 @@ Note: * the script will not run if the site named already exists.
 
     ![](./README-Images/enterurl.png)
 
-5.  You will be asked to enter your credentials for SharePoint. For SharePoint Online it will be your email address, for on-premise it will be your domain\\username:
+5.  You will be asked to enter your credentials for SharePoint. For on-premise it will be your domain\\username:
 
     ![](./README-Images/credentials.png)
 
-6.  The OnePlace Solutions site template will then be downloaded and applied to your site collection:
+6.  The OnePlace Solutions site template will then be downloaded and the script will start configuring it for use:
+
 
     ![](./README-Images/applychanges.png)
+7.  When configuration has completed, your Solutions Site URL, License List URL and License List ID will be displayed (these are also in the log file, and will be visible in the Solutions Site). You may also opt to automatically email these details now to OnePlace Solutions. These URLs will be kept on file for support purposes, and the License List ID will be required for your Production License.
 
     ![](./README-Images/applyingchangestosite.png)
+8.  Finally, press Enter to open your Solutions Site.
+
+	The homepage contains some useful links for training and support resources, and when you have a Production license an overview of your License usage. 
+	![](./README-Images/solutionssiteonPrem.png)
 	
+	Here you can always find your Client Configuration Details (The License List URL and Solutions Site URL), and your License List ID. If you did not opt to email these automatically in the previous step, please email the License List ID to 'success@oneplacesolutions.com' when procuring a Production License. If you have received a Production license or Time Expiry Key, you may attach it here.
+
