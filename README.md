@@ -103,7 +103,7 @@ Note: * the script will not run if the site named already exists.
 6.  The OnePlace Solutions site template will then be downloaded and the script will start configuring it for use:
 
 
-    ![](./README-Images/applyingchanges.png)
+    ![](./README-Images/applychanges.png)
 7.  When configuration has completed, your Solutions Site URL, License List URL and License List ID will be displayed (these are also in the log file, and will be visible in the Solutions Site). You may also opt to automatically email these details now to OnePlace Solutions. These URLs will be kept on file for support purposes, and the License List ID will be required for your Production License.
 
     ![](./README-Images/applyingchangestosite.png)
