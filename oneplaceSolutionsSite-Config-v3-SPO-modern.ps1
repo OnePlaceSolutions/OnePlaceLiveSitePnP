@@ -404,5 +404,10 @@ Catch {
     Pause
 }
 Finally {
+    Try{
+        Disconnect-PnPOnline
+        Disconnect-SPOService
+    }
+    Catch{}
     Write-Log -Level Info -Message "End of script."
 }
