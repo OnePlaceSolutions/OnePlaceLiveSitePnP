@@ -19,6 +19,8 @@
     You will need to logon as a local Administrator to your machine to install the msi file.
 
     ![](./README-Images/image3.png)
+	
+4.  SharePoint Online also requires [the latest SharePoint Online Management Shell](https://www.microsoft.com/en-au/download/details.aspx?id=35588). This is not required for SharePoint On-Premise 2013/2016/2019.
 
 
 ## SharePoint Online
