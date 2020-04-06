@@ -7,6 +7,12 @@ $ErrorActionPreference = 'Stop'
 $script:logFile = "OPSScriptLog.txt"
 $script:logPath = "$env:userprofile\Documents\$script:logFile"
 
+#Set this to $true to deploy to an existing site
+$script:forceProvision = $false
+
+#Set this to $true to use only the PnP auth, not SharePoint Online Management Shell
+$script:onlyPnP = $false
+
 Write-Host "Beginning script. Logging script actions to $script:logPath" -ForegroundColor Cyan
 Start-Sleep -Seconds 3
 
@@ -112,7 +118,7 @@ Try {
             Write-Log -Level Error -Message $_
         }
     }
-
+    
     function Attempt-Provision ([int]$count){
         #Our first provisioning run can encounter a 403 if SharePoint has incorrectly told us the site is ready, this function will retry 
         Try {
@@ -151,6 +157,9 @@ Try {
     If($solutionsSite -ne 'oneplacesolutions'){
         Write-Log -Level Info -Message "Script has been passed $solutionsSite for the Solutions Site URL"
     }
+    Write-Log -Level Info -Message "Logging script actions to $script:logPath"
+    Write-Log -Level Info -Message "Forcing provision? $script:forceProvision"
+    Write-Log -Level Info -Message "Only PnP Auth? $script:onlyPnP"
 
     Write-Host "`n--------------------------------------------------------------------------------`n" -ForegroundColor Red
     Write-Host 'Welcome to the Solutions Site deployment script for OnePlace Solutions.' -ForegroundColor Green
@@ -175,7 +184,15 @@ Try {
     Write-Log -Level Info -Message "Admin SharePoint set to $adminSharePoint"
     Write-Log -Level Info -Message "Root SharePoint set to $rootSharePoint"
 
-    Connect-PnPOnline -Url $adminSharePoint -useweblogin
+    If($script:onlyPnP){
+        Connect-PnPOnline -Url $adminSharePoint -UseWebLogin
+    }
+    Else{
+        Connect-SPOService -url $adminSharePoint
+        Connect-PnPOnline -Url $adminSharePoint -SPOManagementShell
+    }
+
+    
     
     $solutionsSite = $solutionsSite.Trim()
     If ($solutionsSite.Length -eq 0){
@@ -211,25 +228,56 @@ Try {
         $filler = "Starting site creation at $timeStartCreate...."
         Write-Host $filler -ForegroundColor Yellow
         Write-Log -Level Info -Message $filler
-        New-PnPTenantSite -Title 'OnePlace Solutions Admin Site' -Url $SolutionsSiteUrl -Template STS#3 -Owner $ownerEmail -Timezone 0 -StorageQuota 110 -Wait
+
+        Try{
+            New-PnPTenantSite -Title 'OnePlace Solutions Admin Site' -Url $SolutionsSiteUrl -Template STS#3 -Owner $ownerEmail -Timezone 0 -StorageQuota 110 -Wait
+        }
+        Catch [Microsoft.SharePoint.Client.ServerException]{
+            $exMessage = $($_.Exception.Message)
+            If(($exMessage -match 'A site already exists at url') -and ($false -eq $script:forceProvision)){
+                Write-Host $exMessage -ForegroundColor Red
+                Write-Log -Level Error -Message $exMessage
+                If($solutionsSite -ne 'oneplacesolutions'){
+                    Write-Host "Site with URL $SolutionsSiteUrl already exists. Please run the script again and choose a different Solutions Site suffix." -ForegroundColor Red
+                }
+                Else{
+                    Write-Host "Site with URL $SolutionsSiteUrl already exists. Please contact OnePlace Solutions for further assistance." -ForegroundColor Red
+                }
+                Throw $_
+            }
+            ElseIf(($exMessage -match 'A site already exists at url') -and $script:forceProvision){
+                $filler = "Force provision has been set to true, site exists and script is continuing."
+                Write-Log -Level Warn -Message $filler
+            }
+            Else{
+                Throw $_
+            }
+        }
+        Catch{
+            Throw $_
+        }
+
         $timeEndCreate = Get-Date
 
         $timeToCreate = New-TimeSpan -Start $timeStartCreate -End $timeEndCreate
-        $filler = "Site created! Please authenticate against the newly created Site Collection"
+        $filler = "Site Created. Finished at $timeEndCreate. Took $timeToCreate"
         Write-Host "`n"
         Write-Host $filler "`n" -ForegroundColor Green
-        Write-Log -Level Info -Message "Site Created. Finished at $timeEndCreate. Took $timeToCreate"
-        Start-Sleep -Seconds 3
+        Write-Log -Level Info -Message $filler
 
         $stage = "Stage 2/3 - Apply Solutions Site template"
         Write-Host "`n$stage`n" -ForegroundColor Yellow
         Write-Progress -Activity "Solutions Site Deployment" -CurrentOperation $stage -PercentComplete (66)
 
         #Connecting to the site collection to apply the template
-        
-
-        Connect-pnpOnline -url $SolutionsSiteUrl -UseWebLogin
-
+        If($script:onlyPnP){
+            Write-Host  "Please authenticate against the newly created Site Collection"
+            Start-Sleep -Seconds 3
+            Connect-PnPOnline -Url $SolutionsSiteUrl -UseWebLogin
+        }
+        Else{
+            Connect-PnPOnline -Url $SolutionsSiteUrl -SPOManagementShell
+        }
 
         #Download OnePlace Solutions Site provisioning template
         $WebClient = New-Object System.Net.WebClient   
@@ -290,14 +338,13 @@ Try {
 
         $licenseItemCount = ((Get-PnPListItem -List "Licenses" -Query "<View><Query><Where><Eq><FieldRef Name='Title'/><Value Type='Text'>License</Value></Eq></Where></Query></View>").Count)
         If ($licenseItemCount -eq 0){
-            Add-PnPListItem -List "Licenses" -Values @{"Title" = "License"}
+            Add-PnPListItem -List "Licenses" -Values @{"Title" = "License"} | Out-Null
             $filler = "License Item created!"
             Write-Host "`n$filler" -ForegroundColor Green
             Write-Log -Level Info -Message $filler
         }
         Else {
             $filler = "License Item not created or is duplicate!"
-            Write-Host "`n$filler" -ForegroundColor Red
             Write-Log -Level Warn -Message $filler
         }
     
@@ -343,16 +390,6 @@ Try {
         Pause
         Start-Process $SolutionsSiteUrl | Out-Null
     }
-    Catch [Microsoft.SharePoint.Client.ServerException]{
-        $exMessage = $($_.Exception.Message)
-        If($exMessage -match 'A site already exists at url'){
-            Write-Host $exMessage -ForegroundColor Red
-            Write-Log -Level Error -Message $exMessage
-            If($solutionsSite -ne 'oneplacesolutions'){
-                Write-Host "Please run the script again and choose a different Solutions Site suffix." -ForegroundColor Red
-            }
-        }
-    }
     Catch{
         Throw $_
     }
@@ -361,13 +398,16 @@ Try {
 Catch {
     $exType = $($_.Exception.GetType().FullName)
     $exMessage = $($_.Exception.Message)
-    write-host "Caught an exception:" -ForegroundColor Red
-    write-host "Exception Type: $exType" -ForegroundColor Red
-    write-host "Exception Message: $exMessage" -ForegroundColor Red
+    write-host "`nCaught an exception, further debugging information below:" -ForegroundColor Red
     Write-Log -Level Error -Message "Caught an exception. Exception Type: $exType"
     Write-Log -Level Error -Message $exMessage
     Pause
 }
 Finally {
+    Try{
+        Disconnect-PnPOnline
+        Disconnect-SPOService
+    }
+    Catch{}
     Write-Log -Level Info -Message "End of script."
 }
