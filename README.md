@@ -67,6 +67,7 @@ Note: * the script will not run if the site named already exists.
 
     ![](./README-Images/configurationcompleteSPO.png)
 9.  Finally, press Enter to open your Solutions Site.
+
 	The homepage contains some useful links for training and support resources, and when you have a Production license an overview of your License usage.
     ![](./README-Images/solutionssiteSPO.png)
 	Scrolling down you can always find your Client Configuration Details (The License List URL and Solutions Site URL), and your License List ID. If you did not opt to email these automatically in the previous step, please email the License List ID to 'success@oneplacesolutions.com' when procuring a Production License. If you have received a Production license or Time Expiry Key, you may attach it here.
@@ -108,5 +109,9 @@ Note: * the script will not run if the site named already exists.
 
     ![](./README-Images/applyingchangestosite.png)
 8.  Finally, press Enter to open your Solutions Site.
-	The homepage contains some useful links for training and support resources, and when you have a Production license an overview of your License usage. Here you can always find your Client Configuration Details (The License List URL and Solutions Site URL), and your License List ID. If you did not opt to email these automatically in the previous step, please email the License List ID to 'success@oneplacesolutions.com' when procuring a Production License. If you have received a Production license or Time Expiry Key, you may attach it here.
+
+	The homepage contains some useful links for training and support resources, and when you have a Production license an overview of your License usage. 
 	![](./README-Images/solutionssiteonPrem.png)
+	
+	Here you can always find your Client Configuration Details (The License List URL and Solutions Site URL), and your License List ID. If you did not opt to email these automatically in the previous step, please email the License List ID to 'success@oneplacesolutions.com' when procuring a Production License. If you have received a Production license or Time Expiry Key, you may attach it here.
+
