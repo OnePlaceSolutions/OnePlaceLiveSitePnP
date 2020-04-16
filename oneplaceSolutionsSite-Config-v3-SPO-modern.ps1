@@ -13,6 +13,9 @@ $script:forceProvision = $false
 #Set this to $true to use only the PnP auth, not SharePoint Online Management Shell
 $script:onlyPnP = $false
 
+#Set this to $false to skip automatically creating the site. This will require manual creation of the site prior to running the script
+$script:doSiteCreation = $true
+
 Write-Host "Beginning script. Logging script actions to $script:logPath" -ForegroundColor Cyan
 Start-Sleep -Seconds 3
 
@@ -184,15 +187,33 @@ Try {
     Write-Log -Level Info -Message "Admin SharePoint set to $adminSharePoint"
     Write-Log -Level Info -Message "Root SharePoint set to $rootSharePoint"
 
-    If($script:onlyPnP){
-        Connect-PnPOnline -Url $adminSharePoint -UseWebLogin
+    If($script:doSiteCreation){
+        Try{
+            If($script:onlyPnP){
+                Connect-PnPOnline -Url $adminSharePoint -UseWebLogin
+            }
+            Else{
+                Connect-SPOService -url $adminSharePoint
+                Write-Host "Passing authentication from SharePoint Online Management Shell to SharePoint PnP..."
+                Start-Sleep -Seconds 3
+                Connect-PnPOnline -Url $adminSharePoint -SPOManagementShell
+            }
+        }
+        Catch{
+            $exMessage = $($_.Exception.Message)
+            If($exMessage -match "(403)"){
+                Write-Log -Level Error -Message $exMessage
+                $filler = "Error connecting to '$adminSharePoint'. Please ensure you have sufficient rights to create Site Collections in your Microsoft 365 Tenant. `nThis usually requires Global Administrative rights, or alternatively ask your SharePoint Administrator to perform the Solutions Site Setup."
+                Write-Host $filler
+                Write-Host "Please contact OnePlace Solutions Support if you are still encountering difficulties."
+                Write-Log -Level Info -Message $filler
+                Throw $_
+            }
+        }
     }
     Else{
-        Connect-SPOService -url $adminSharePoint
-        Connect-PnPOnline -Url $adminSharePoint -SPOManagementShell
+        $script:onlyPnP = $true
     }
-
-    
     
     $solutionsSite = $solutionsSite.Trim()
     If ($solutionsSite.Length -eq 0){
@@ -209,61 +230,61 @@ Try {
     $SolutionsSiteUrl = $rootSharePoint + '/sites/' + $solutionsSite
     $LicenseListUrl = $SolutionsSiteUrl + '/lists/Licenses'
 
-    $ownerEmail = Read-Host "Please enter the email address of the owner for this site."
-    $ownerEmail = $ownerEmail.Trim()
-    If($ownerEmail.Length -eq 0){
-        $filler = 'No Site Collection owner has been entered. Exiting script.'
-        Write-Host $filler
-        Write-Log -Level Error -Message $filler
-        Exit
-    }
-
     Try {
-        #Provisioning the site collection
-        $filler = "Creating site collection with URL '$SolutionsSiteUrl' for the Solutions Site, and owner '$ownerEmail'. This may take a while, please do not close this window, but feel free to minimize the PowerShell window and check back in 10 minutes."
-        Write-Host $filler -ForegroundColor Yellow
-        Write-Log -Level Info -Message $filler
+        If($script:doSiteCreation){
+            Try{
+                $ownerEmail = Read-Host "Please enter the email address of the owner for this site."
+                $ownerEmail = $ownerEmail.Trim()
+                If($ownerEmail.Length -eq 0){
+                    $filler = 'No Site Collection owner has been entered. Exiting script.'
+                    Write-Host $filler
+                    Write-Log -Level Error -Message $filler
+                    Exit
+                }
+                #Provisioning the site collection
+                $filler = "Creating site collection with URL '$SolutionsSiteUrl' for the Solutions Site, and owner '$ownerEmail'. This may take a while, please do not close this window, but feel free to minimize the PowerShell window and check back in 10 minutes."
+                Write-Host $filler -ForegroundColor Yellow
+                Write-Log -Level Info -Message $filler
 
-        $timeStartCreate = Get-Date
-        $filler = "Starting site creation at $timeStartCreate...."
-        Write-Host $filler -ForegroundColor Yellow
-        Write-Log -Level Info -Message $filler
-
-        Try{
-            New-PnPTenantSite -Title 'OnePlace Solutions Admin Site' -Url $SolutionsSiteUrl -Template STS#3 -Owner $ownerEmail -Timezone 0 -StorageQuota 110 -Wait
-        }
-        Catch [Microsoft.SharePoint.Client.ServerException]{
-            $exMessage = $($_.Exception.Message)
-            If(($exMessage -match 'A site already exists at url') -and ($false -eq $script:forceProvision)){
-                Write-Host $exMessage -ForegroundColor Red
-                Write-Log -Level Error -Message $exMessage
-                If($solutionsSite -ne 'oneplacesolutions'){
-                    Write-Host "Site with URL $SolutionsSiteUrl already exists. Please run the script again and choose a different Solutions Site suffix." -ForegroundColor Red
+                $timeStartCreate = Get-Date
+                $filler = "Starting site creation at $timeStartCreate...."
+                Write-Host $filler -ForegroundColor Yellow
+                Write-Log -Level Info -Message $filler
+                New-PnPTenantSite -Title 'OnePlace Solutions Admin Site' -Url $SolutionsSiteUrl -Template STS#3 -Owner $ownerEmail -Timezone 0 -StorageQuota 110 -Wait
+            }
+            Catch [Microsoft.SharePoint.Client.ServerException]{
+                $exMessage = $($_.Exception.Message)
+                If(($exMessage -match 'A site already exists at url') -and ($false -eq $script:forceProvision)){
+                    Write-Host $exMessage -ForegroundColor Red
+                    Write-Log -Level Error -Message $exMessage
+                    If($solutionsSite -ne 'oneplacesolutions'){
+                        Write-Host "Site with URL $SolutionsSiteUrl already exists. Please run the script again and choose a different Solutions Site suffix." -ForegroundColor Red
+                    }
+                    Else{
+                        Write-Host "Site with URL $SolutionsSiteUrl already exists. Please contact OnePlace Solutions for further assistance." -ForegroundColor Red
+                    }
+                    Throw $_
+                }
+                ElseIf(($exMessage -match 'A site already exists at url') -and $script:forceProvision){
+                    $filler = "Force provision has been set to true, site exists and script is continuing."
+                    Write-Log -Level Warn -Message $filler
                 }
                 Else{
-                    Write-Host "Site with URL $SolutionsSiteUrl already exists. Please contact OnePlace Solutions for further assistance." -ForegroundColor Red
+                    Throw $_
                 }
+            }
+            Catch{
                 Throw $_
             }
-            ElseIf(($exMessage -match 'A site already exists at url') -and $script:forceProvision){
-                $filler = "Force provision has been set to true, site exists and script is continuing."
-                Write-Log -Level Warn -Message $filler
-            }
-            Else{
-                Throw $_
+            Finally{
+                $timeEndCreate = Get-Date
+                $timeToCreate = New-TimeSpan -Start $timeStartCreate -End $timeEndCreate
+                $filler = "Site Created. Finished at $timeEndCreate. Took $timeToCreate"
+                Write-Host "`n"
+                Write-Host $filler "`n" -ForegroundColor Green
+                Write-Log -Level Info -Message $filler
             }
         }
-        Catch{
-            Throw $_
-        }
-
-        $timeEndCreate = Get-Date
-
-        $timeToCreate = New-TimeSpan -Start $timeStartCreate -End $timeEndCreate
-        $filler = "Site Created. Finished at $timeEndCreate. Took $timeToCreate"
-        Write-Host "`n"
-        Write-Host $filler "`n" -ForegroundColor Green
-        Write-Log -Level Info -Message $filler
 
         $stage = "Stage 2/3 - Apply Solutions Site template"
         Write-Host "`n$stage`n" -ForegroundColor Yellow
@@ -277,6 +298,7 @@ Try {
         }
         Else{
             Connect-PnPOnline -Url $SolutionsSiteUrl -SPOManagementShell
+            Start-Sleep -Seconds 3
         }
 
         #Download OnePlace Solutions Site provisioning template
