@@ -16,6 +16,9 @@ $script:onlyPnP = $false
 #Set this to $false to skip automatically creating the site. This will require manual creation of the site prior to running the script
 $script:doSiteCreation = $true
 
+#Set this to $false to provision a classic site and template instead of a modern site and template
+$script:doModern = $true
+
 Write-Host "Beginning script. Logging script actions to $script:logPath" -ForegroundColor Cyan
 Start-Sleep -Seconds 3
 
@@ -145,7 +148,7 @@ Try {
                     Write-Log -Level Info -Message $filler
                     Write-Host "`n"
                     Pause
-                    Apply-PnPProvisioningTemplate -path $Script:TemplatePath -ExcludeHandlers Pages, SiteSecurity
+                    Apply-PnPProvisioningTemplate -path $Script:templatePath -ExcludeHandlers Pages, SiteSecurity
                 }
             }
             Else{
@@ -250,7 +253,13 @@ Try {
                 $filler = "Starting site creation at $timeStartCreate...."
                 Write-Host $filler -ForegroundColor Yellow
                 Write-Log -Level Info -Message $filler
-                New-PnPTenantSite -Title 'OnePlace Solutions Admin Site' -Url $SolutionsSiteUrl -Template STS#3 -Owner $ownerEmail -Timezone 0 -StorageQuota 110 -Wait
+                
+                If($script:doModern){
+                    New-PnPTenantSite -Title 'OnePlace Solutions Admin Site' -Url $SolutionsSiteUrl -Template STS#3 -Owner $ownerEmail -Timezone 0 -StorageQuota 110 -Wait
+                }
+                Else{
+                    New-PnPTenantSite -Title 'OnePlace Solutions Admin Site' -Url $SolutionsSiteUrl -Template STS#0 -Owner $ownerEmail -Timezone 0 -StorageQuota 110 -Wait
+                }
 
                 $timeEndCreate = Get-Date
                 $timeToCreate = New-TimeSpan -Start $timeStartCreate -End $timeEndCreate
@@ -304,11 +313,16 @@ Try {
         #Download OnePlace Solutions Site provisioning template
         $WebClient = New-Object System.Net.WebClient   
 
-        
-        $Url = "https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/master/oneplaceSolutionsSite-template-v3-modern.xml"    
-        $Script:TemplatePath = "$env:temp\oneplaceSolutionsSite-template-v3-modern.xml" 
+        If($script:doModern){
+            $Url = "https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/master/oneplaceSolutionsSite-template-v3-modern.xml"    
+            $Script:templatePath = "$env:temp\oneplaceSolutionsSite-template-v3-modern.xml" 
+        }
+        Else{
+            $Url = "https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/master/oneplaceSolutionsSite-template-v2.xml"    
+            $Script:templatePath = "$env:temp\oneplaceSolutionsSite-template-v2.xml" 
+        }
 
-        $filler = "Downloading provisioning xml template to: $Script:TemplatePath"
+        $filler = "Downloading provisioning xml template to: $Script:templatePath"
         Write-Host $filler -ForegroundColor Yellow  
         Write-Log -Level Info -Message $filler
         $WebClient.DownloadFile( $Url, $Script:TemplatePath )
