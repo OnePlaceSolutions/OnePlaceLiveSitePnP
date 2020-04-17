@@ -7,16 +7,16 @@ $ErrorActionPreference = 'Stop'
 $script:logFile = "OPSScriptLog.txt"
 $script:logPath = "$env:userprofile\Documents\$script:logFile"
 
-#Set this to $true to deploy to an existing site
+#Set this to $true to continue past Stage 1 if the site already exists. This differs from doSiteCreation in that this option ensures the site exists and creates it if it doesn't, doSiteCreation skips Stage 1 altogether and existence of the Site is assumed.
 $script:forceProvision = $false
 
 #Set this to $true to use only the PnP auth, not SharePoint Online Management Shell
 $script:onlyPnP = $false
 
-#Set this to $false to skip automatically creating the site. This will require manual creation of the site prior to running the script
+#Set this to $false to skip automatically creating the site. This will require manual creation of the site prior to running the script.
 $script:doSiteCreation = $true
 
-#Set this to $false to provision a classic site and template instead of a modern site and template
+#Set this to $false to provision a classic site and template (v2 SPO) instead of a modern site and template (v3 SPO)
 $script:doModern = $true
 
 Write-Host "Beginning script. Logging script actions to $script:logPath" -ForegroundColor Cyan
@@ -160,12 +160,12 @@ Try {
         }
     }
 
-    If($solutionsSite -ne 'oneplacesolutions'){
-        Write-Log -Level Info -Message "Script has been passed $solutionsSite for the Solutions Site URL"
-    }
+    Write-Log -Level Info -Message "Script has been passed $solutionsSite for the Solutions Site URL"
     Write-Log -Level Info -Message "Logging script actions to $script:logPath"
     Write-Log -Level Info -Message "Forcing provision? $script:forceProvision"
     Write-Log -Level Info -Message "Only PnP Auth? $script:onlyPnP"
+    Write-Log -Level Info -Message "Create the site in Stage 1? $script:doSiteCreation"
+    Write-Log -Level Info -Message "Create a Modern Site? $script:doModern"
 
     Write-Host "`n--------------------------------------------------------------------------------`n" -ForegroundColor Red
     Write-Host 'Welcome to the Solutions Site deployment script for OnePlace Solutions.' -ForegroundColor Green
