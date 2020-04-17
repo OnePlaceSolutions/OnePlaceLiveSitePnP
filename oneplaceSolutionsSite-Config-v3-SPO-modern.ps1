@@ -204,7 +204,7 @@ Try {
             If($exMessage -match "(403)"){
                 Write-Log -Level Error -Message $exMessage
                 $filler = "Error connecting to '$adminSharePoint'. Please ensure you have sufficient rights to create Site Collections in your Microsoft 365 Tenant. `nThis usually requires Global Administrative rights, or alternatively ask your SharePoint Administrator to perform the Solutions Site Setup."
-                Write-Host $filler
+                Write-Host $filler -ForegroundColor Yellow
                 Write-Host "Please contact OnePlace Solutions Support if you are still encountering difficulties."
                 Write-Log -Level Info -Message $filler
                 Throw $_
@@ -251,6 +251,13 @@ Try {
                 Write-Host $filler -ForegroundColor Yellow
                 Write-Log -Level Info -Message $filler
                 New-PnPTenantSite -Title 'OnePlace Solutions Admin Site' -Url $SolutionsSiteUrl -Template STS#3 -Owner $ownerEmail -Timezone 0 -StorageQuota 110 -Wait
+
+                $timeEndCreate = Get-Date
+                $timeToCreate = New-TimeSpan -Start $timeStartCreate -End $timeEndCreate
+                $filler = "Site Created. Finished at $timeEndCreate. Took $timeToCreate"
+                Write-Host "`n"
+                Write-Host $filler "`n" -ForegroundColor Green
+                Write-Log -Level Info -Message $filler
             }
             Catch [Microsoft.SharePoint.Client.ServerException]{
                 $exMessage = $($_.Exception.Message)
@@ -274,15 +281,8 @@ Try {
                 }
             }
             Catch{
+                Write-Log -level Info -Message "Something went wrong during Site Creation. Details following"
                 Throw $_
-            }
-            Finally{
-                $timeEndCreate = Get-Date
-                $timeToCreate = New-TimeSpan -Start $timeStartCreate -End $timeEndCreate
-                $filler = "Site Created. Finished at $timeEndCreate. Took $timeToCreate"
-                Write-Host "`n"
-                Write-Host $filler "`n" -ForegroundColor Green
-                Write-Log -Level Info -Message $filler
             }
         }
 
