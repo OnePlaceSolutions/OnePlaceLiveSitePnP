@@ -1,8 +1,7 @@
 ## Pre-requisites
 
 
-1.  Have either of the following SharePoint environments: SharePoint Online, SharePoint 2019 on-premises, SharePoint 2016 on-premises, SharePoint 2013
-    on-premises.
+1.  Have either of the following SharePoint environments: SharePoint Online, SharePoint 2019 on-premises, SharePoint 2016 on-premises, SharePoint 2013 on-premises.
 
 2.  PowerShell v3.0 or greater installed on your work environment. 
 
@@ -10,7 +9,9 @@
 
     ![](./README-Images/image1.png)
 
-3.  The latest [SharePoint PnP PowerShell cmdlets](https://github.com/SharePoint/PnP-PowerShell/releases). You will need to install the the cmdlets that target your version of SharePoint.
+3.  \[SharePoint Online Only\] [The latest SharePoint Online Management Shell](https://www.microsoft.com/en-au/download/details.aspx?id=35588). This is not required for SharePoint On-Premise 2013/2016/2019.
+
+4.  The latest [SharePoint PnP PowerShell cmdlets](https://github.com/SharePoint/PnP-PowerShell/releases). You will need to install the the cmdlets that target your version of SharePoint.
 
     ![](./README-Images/image2.png)
 
@@ -20,8 +21,6 @@
 
     ![](./README-Images/image3.png)
 	
-4.  SharePoint Online also requires [the latest SharePoint Online Management Shell](https://www.microsoft.com/en-au/download/details.aspx?id=35588). This is not required for SharePoint On-Premise 2013/2016/2019.
-
 
 ## SharePoint Online
 Site creation will be performed automatically with the configuration script. The site will be created at 'https://&lt;yourSharePoint&gt;&#46;sharepoint&#46;com/sites/<b>oneplacesolutions</b>'.
