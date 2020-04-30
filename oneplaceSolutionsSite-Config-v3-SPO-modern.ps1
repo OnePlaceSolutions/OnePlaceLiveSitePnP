@@ -10,8 +10,8 @@ $script:logPath = "$env:userprofile\Documents\$script:logFile"
 #Set this to $true to continue past Stage 1 if the site already exists. This differs from doSiteCreation in that this option ensures the site exists and creates it if it doesn't, doSiteCreation skips Stage 1 altogether and existence of the Site is assumed.
 $script:forceProvision = $false
 
-#Set this to $true to use only the PnP auth, not SharePoint Online Management Shell
-$script:onlyPnP = $false
+#Set this to $true to use only the PnP auth, set to $false to use SharePoint Online Management Shell auth
+$script:onlyPnP = $true
 
 #Set this to $false to skip automatically creating the site. This will require manual creation of the site prior to running the script.
 $script:doSiteCreation = $true
