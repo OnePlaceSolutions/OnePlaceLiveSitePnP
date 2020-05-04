@@ -1,22 +1,26 @@
 ﻿param ([String]$solutionsSite = 'oneplacesolutions')
 <#
-    This script creates a new Site collection ('Team Site (Modern)'), and applies the configuration changes for the OnePlace Solutions site.
+    This script creates a new Site collection ('Team Site (Modern)' by default, 'Team Site (Classic)' by option), and applies the configuration changes / PnP template for the OnePlace Solutions site.
     All major actions are logged to 'OPSScriptLog.txt' in the user's or Administrators Documents folder, and it is uploaded to the Solutions Site at the end of provisioning.
 #>
 $ErrorActionPreference = 'Stop'
 $script:logFile = "OPSScriptLog.txt"
 $script:logPath = "$env:userprofile\Documents\$script:logFile"
 
-#Set this to $true to continue past Stage 1 if the site already exists. This differs from doSiteCreation in that this option ensures the site exists and creates it if it doesn't, doSiteCreation skips Stage 1 altogether and existence of the Site is assumed.
+#Set this to $true to continue past Stage 1 if the site already exists. This differs from doSiteCreation in that this option ensures the site exists and will still attempt to create it if it doesn't, doSiteCreation skips Stage 1 altogether and existence of the Site is assumed.
+#Default: $false
 $script:forceProvision = $false
 
 #Set this to $true to use only the PnP auth, set to $false to use SharePoint Online Management Shell auth
+#Default: $true
 $script:onlyPnP = $true
 
 #Set this to $false to skip automatically creating the site. This will require manual creation of the site prior to running the script.
+#Default: $true
 $script:doSiteCreation = $true
 
 #Set this to $false to provision a classic site and template (v2 SPO) instead of a modern site and template (v3 SPO)
+#Default: $true
 $script:doModern = $true
 
 Write-Host "Beginning script. Logging script actions to $script:logPath" -ForegroundColor Cyan
@@ -240,7 +244,7 @@ Try {
     Try {
         If($script:doSiteCreation){
             Try{
-                $ownerEmail = Read-Host "Please enter the email address of the owner for this site."
+                $ownerEmail = Read-Host "Please enter the email address of the owner for this site. This should be your current credentials."
                 $ownerEmail = $ownerEmail.Trim()
                 If($ownerEmail.Length -eq 0){
                     $filler = 'No Site Collection owner has been entered. Exiting script.'
@@ -288,6 +292,10 @@ Try {
                 ElseIf(($exMessage -match 'A site already exists at url') -and $script:forceProvision){
                     $filler = "Force provision has been set to true, site exists and script is continuing."
                     Write-Log -Level Warn -Message $filler
+                }
+                ElseIf(($exMessage -match '401') -and (-not $script:onlyPnP)){
+                    $filler = "Auth issue with SharePoint Online Management Shell. Re-run script with '`$script:onlyPnP' flag set to `$true. `nIf the Solutions Site does show in your SharePoint Online admin center, re-run the script with `$script:doSiteCreation' set to `$false."
+                    Write-Log -Level Error -Message $filler
                 }
                 Else{
                     Throw $_
