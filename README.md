@@ -9,9 +9,7 @@
 
     ![](./README-Images/image1.png)
 
-3.  \[SharePoint Online Only\] [The latest SharePoint Online Management Shell](https://www.microsoft.com/en-au/download/details.aspx?id=35588). This is not required for SharePoint On-Premise 2013/2016/2019.
-
-4.  The latest [SharePoint PnP PowerShell cmdlets](https://github.com/SharePoint/PnP-PowerShell/releases). You will need to install the the cmdlets that target your version of SharePoint.
+3.  The latest [SharePoint PnP PowerShell cmdlets](https://github.com/SharePoint/PnP-PowerShell/releases). You will need to install the the cmdlets that target your version of SharePoint.
 
     ![](./README-Images/image2.png)
 
