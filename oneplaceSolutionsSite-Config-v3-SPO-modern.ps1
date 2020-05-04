@@ -200,6 +200,7 @@ Try {
                 Write-Host "Passing authentication from SharePoint Online Management Shell to SharePoint PnP..."
                 Start-Sleep -Seconds 3
                 Connect-PnPOnline -Url $adminSharePoint -SPOManagementShell
+                Get-SPOSite | Out-Null
             }
         }
         Catch{
@@ -210,6 +211,9 @@ Try {
                 Write-Host $filler -ForegroundColor Yellow
                 Write-Host "Please contact OnePlace Solutions Support if you are still encountering difficulties."
                 Write-Log -Level Info -Message $filler
+                Throw $_
+            }
+            Else{
                 Throw $_
             }
         }
