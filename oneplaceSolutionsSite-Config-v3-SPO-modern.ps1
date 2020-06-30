@@ -201,6 +201,7 @@ Try{
                 }
                 Else{
                     Connect-PnPOnline -Url $adminSharePoint -SPOManagementShell
+                    Write-Host "Prompting for SharePoint Online Management Shell Authentication. Please do not continue until you are logged in. If no prompt appears you may already be authenticated."
                     Start-Sleep -Seconds 5
                     #PnP doesn't wait for SPO Management Shell to complete it's login, have to pause here
                     Pause
@@ -394,12 +395,13 @@ Try{
             }
             
             #This sets up a Custom Column Mapping list ready for use if required
-            New-PnPList -Title 'Custom Column Mapping' -Template GenericList
+            Write-Log -Level Info -Message "Creating Custom Column Mapping list for later use if required."
+            New-PnPList -Title 'Custom Column Mapping' -Template GenericList | Out-Null
 
-            Add-PnPField -List 'Custom Column Mapping' -DisplayName 'From Column' -InternalName 'From Column' -Type Text -Required -AddToDefaultView
+            Add-PnPField -List 'Custom Column Mapping' -DisplayName 'From Column' -InternalName 'From Column' -Type Text -Required -AddToDefaultView  | Out-Null
             Set-PnPField -List 'Custom Column Mapping' -Identity 'From Column' -Values @{Description = "This is the field (by internal name) you want to map from to an existing field"}
 
-            Add-PnPField -List 'Custom Column Mapping' -DisplayName 'To Column' -InternalName 'To Column' -Type Text -Required -AddToDefaultView
+            Add-PnPField -List 'Custom Column Mapping' -DisplayName 'To Column' -InternalName 'To Column' -Type Text -Required -AddToDefaultView  | Out-Null
             Set-PnPField -List 'Custom Column Mapping' -Identity 'To Column' -Values @{Description = "This is the field (by internal name) you want to map to. This should already exist"}
 
             Set-PnPField -List 'Custom Column Mapping' -Identity 'Title' -Values @{Title = "Scope"; DefaultValue = "Global"}

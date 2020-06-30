@@ -26,8 +26,6 @@
 			<pnp:NavigationNode Title="Licenses" Url="{site}/Lists/Licenses/AllItems.aspx" IsExternal="true" />
 			<pnp:NavigationNode Title="Configuration Profiles" Url="{site}/Lists/Configuration Profiles/AllItems.aspx" IsExternal="true" />
 			<pnp:NavigationNode Title="Solution Profiles" Url="{site}/Lists/Solution Profiles/AllItems.aspx" IsExternal="true" />
-			<pnp:NavigationNode Title="Recent" Url="" IsExternal="true" />
-			<pnp:NavigationNode Title="Site Contents" Url="{site}/_layouts/15/viewlsts.aspx" IsExternal="true" />
           </pnp:StructuralNavigation>
         </pnp:CurrentNavigation>
       </pnp:Navigation>   
