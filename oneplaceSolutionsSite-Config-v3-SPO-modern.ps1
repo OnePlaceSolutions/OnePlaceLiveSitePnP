@@ -394,7 +394,18 @@ Try{
                 $filler = "License Item not created or is duplicate!"
                 Write-Log -Level Warn -Message $filler
             }
-    
+            
+            #This sets up a Custom Column Mapping list ready for use if required
+            New-PnPList -Title 'Custom Column Mapping' -Template GenericList
+
+            Add-PnPField -List 'Custom Column Mapping' -DisplayName 'From Column' -InternalName 'From Column' -Type Text -Required -AddToDefaultView
+            Set-PnPField -List 'Custom Column Mapping' -Identity 'From Column' -Values @{Description = "This is the field (by internal name) you want to map from to an existing field"}
+
+            Add-PnPField -List 'Custom Column Mapping' -DisplayName 'To Column' -InternalName 'To Column' -Type Text -Required -AddToDefaultView
+            Set-PnPField -List 'Custom Column Mapping' -Identity 'To Column' -Values @{Description = "This is the field (by internal name) you want to map to. This should already exist"}
+
+            Set-PnPField -List 'Custom Column Mapping' -Identity 'Title' -Values @{Title = "Scope"; DefaultValue = "Global"}
+
             Write-Log -Level Info -Message "Solutions Site URL = $SolutionsSiteUrl"
             Write-Log -Level Info -Message "License List URL = $LicenseListUrl"
             Write-Log -Level Info -Message "License List ID = $licenseListId"
