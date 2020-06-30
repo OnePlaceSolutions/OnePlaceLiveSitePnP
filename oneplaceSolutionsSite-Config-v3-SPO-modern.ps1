@@ -13,7 +13,7 @@ $script:forceProvision = $false
 
 #Set this to $true to use only the PnP auth, set to $false to use SharePoint Online Management Shell auth
 #Default: $true
-$script:onlyPnP = $true
+$script:onlyPnP = $false
 
 #Set this to $false to skip automatically creating the site. This will require manual creation of the site prior to running the script.
 #Default: $true
@@ -23,11 +23,7 @@ $script:doSiteCreation = $true
 #Default: $true
 $script:doModern = $true
 
-Write-Host "Beginning script. Logging script actions to $script:logPath" -ForegroundColor Cyan
-Start-Sleep -Seconds 3
-Try{
-    Set-ExecutionPolicy Bypass -Scope Process
-    function Write-Log { 
+function Write-Log { 
         <#
         .NOTES 
             Created by: Jason Wasser @wasserja 
@@ -103,6 +99,11 @@ Try{
         } 
     }
 
+Write-Host "Beginning script. Logging script actions to $script:logPath" -ForegroundColor Cyan
+Start-Sleep -Seconds 3
+Try{
+    Set-ExecutionPolicy Bypass -Scope Process
+    
     Try { 
         function Send-OutlookEmail ($attachment,$body){
             Try{
@@ -199,11 +200,11 @@ Try{
                     Connect-PnPOnline -Url $adminSharePoint -UseWebLogin
                 }
                 Else{
-                    Connect-SPOService -url $adminSharePoint
-                    Write-Host "Passing authentication from SharePoint Online Management Shell to SharePoint PnP..."
-                    Start-Sleep -Seconds 3
                     Connect-PnPOnline -Url $adminSharePoint -SPOManagementShell
-                    Get-SPOSite | Out-Null
+                    Start-Sleep -Seconds 5
+                    #PnP doesn't wait for SPO Management Shell to complete it's login, have to pause here
+                    Pause
+                    Get-PnPWeb | Out-Null
                 }
             }
             Catch{
@@ -220,9 +221,6 @@ Try{
                     Throw $_
                 }
             }
-        }
-        Else{
-            $script:onlyPnP = $true
         }
     
         $solutionsSite = $solutionsSite.Trim()
