@@ -26,7 +26,7 @@ Site creation will be performed automatically with the configuration script. The
 
 Note: * the script will not run if the site named already exists.
 
-\* All actions performed with the script will be logged to 'OPSScriptLog.txt' in your Documents folder (or under the Administrator account's Documents if running PowerShell as an Administrator). 
+\* All actions performed with the script will be logged to 'OPSScriptLog.txt' in your Documents folder (or under the Administrator account's Documents if running PowerShell as an Administrator). When requesting assistance with this script please send this log file as an attachment.
 
 \* The log file will be uploaded to the Documents folder in the Solutions Site at the end of deployment for your record keeping. If this script does not work for you, please continue with using the SharePoint On-Premise 2013/2016/2019 instructions further down the page.
 
