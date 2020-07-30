@@ -24,89 +24,89 @@ $script:doSiteCreation = $true
 $script:doModern = $true
 
 function Write-Log { 
-        <#
+    <#
         .NOTES 
             Created by: Jason Wasser @wasserja 
             Modified by: Ashley Gregory
         .LINK (original)
             https://gallery.technet.microsoft.com/scriptcenter/Write-Log-PowerShell-999c32d0 
         #>
-        [CmdletBinding()] 
-        Param ( 
-            [Parameter(Mandatory=$true, 
-                        ValueFromPipelineByPropertyName=$true)] 
-            [ValidateNotNullOrEmpty()] 
-            [Alias("LogContent")] 
-            [string]$Message, 
+    [CmdletBinding()] 
+    Param ( 
+        [Parameter(Mandatory = $true, 
+            ValueFromPipelineByPropertyName = $true)] 
+        [ValidateNotNullOrEmpty()] 
+        [Alias("LogContent")] 
+        [string]$Message, 
  
-            [Parameter(Mandatory=$false)] 
-            [Alias('LogPath')] 
-            [string]$Path = $script:logPath, 
+        [Parameter(Mandatory = $false)] 
+        [Alias('LogPath')] 
+        [string]$Path = $script:logPath, 
          
-            [Parameter(Mandatory=$false)] 
-            [ValidateSet("Error","Warn","Info")] 
-            [string]$Level = "Info", 
+        [Parameter(Mandatory = $false)] 
+        [ValidateSet("Error", "Warn", "Info")] 
+        [string]$Level = "Info", 
          
-            [Parameter(Mandatory=$false)] 
-            [switch]$NoClobber 
-        ) 
+        [Parameter(Mandatory = $false)] 
+        [switch]$NoClobber 
+    ) 
  
-        Begin {
-            $VerbosePreference = 'SilentlyContinue' 
-            $ErrorActionPreference = 'Continue'
+    Begin {
+        $VerbosePreference = 'SilentlyContinue' 
+        $ErrorActionPreference = 'Continue'
+    } 
+    Process {
+        # If the file already exists and NoClobber was specified, do not write to the log. 
+        If ((Test-Path $Path) -AND $NoClobber) { 
+            Write-Error "Log file $Path already exists, and you specified NoClobber. Either delete the file or specify a different name." 
+            Return 
         } 
-        Process {
-            # If the file already exists and NoClobber was specified, do not write to the log. 
-            If ((Test-Path $Path) -AND $NoClobber){ 
-                Write-Error "Log file $Path already exists, and you specified NoClobber. Either delete the file or specify a different name." 
-                Return 
-            } 
  
-            # If attempting to write to a log file in a folder/path that doesn't exist create the file including the path. 
-            ElseIf (!(Test-Path $Path)){ 
-                Write-Verbose "Creating $Path." 
-                $NewLogFile = New-Item $Path -Force -ItemType File 
-            } 
- 
-            Else { 
-                # Nothing to see here yet. 
-            } 
- 
-            # Format Date for our Log File 
-            $FormattedDate = Get-Date -Format "yyyy-MM-dd HH:mm:ss K" 
- 
-            # Write message to error, warning, or verbose pipeline and specify $LevelText 
-            Switch($Level) { 
-                'Error' { 
-                    Write-Error $Message 
-                    $LevelText = 'ERROR:' 
-                    } 
-                'Warn' { 
-                    Write-Warning $Message 
-                    $LevelText = 'WARNING:' 
-                    } 
-                'Info' { 
-                    Write-Verbose $Message 
-                    $LevelText = 'INFO:' 
-                    } 
-            } 
-         
-            # Write log entry to $Path 
-            "$FormattedDate $LevelText $Message" | Out-File -FilePath $Path -Append 
-        }
-        End {
-            $ErrorActionPreference = 'Stop'
+        # If attempting to write to a log file in a folder/path that doesn't exist create the file including the path. 
+        ElseIf (!(Test-Path $Path)) { 
+            Write-Verbose "Creating $Path." 
+            $NewLogFile = New-Item $Path -Force -ItemType File 
         } 
+ 
+        Else { 
+            # Nothing to see here yet. 
+        } 
+ 
+        # Format Date for our Log File 
+        $FormattedDate = Get-Date -Format "yyyy-MM-dd HH:mm:ss K" 
+ 
+        # Write message to error, warning, or verbose pipeline and specify $LevelText 
+        Switch ($Level) { 
+            'Error' { 
+                Write-Error $Message 
+                $LevelText = 'ERROR:' 
+            } 
+            'Warn' { 
+                Write-Warning $Message 
+                $LevelText = 'WARNING:' 
+            } 
+            'Info' { 
+                Write-Verbose $Message 
+                $LevelText = 'INFO:' 
+            } 
+        } 
+         
+        # Write log entry to $Path 
+        "$FormattedDate $LevelText $Message" | Out-File -FilePath $Path -Append 
     }
+    End {
+        $ErrorActionPreference = 'Stop'
+    } 
+}
 
 Write-Host "Beginning script. Logging script actions to $script:logPath" -ForegroundColor Cyan
 Start-Sleep -Seconds 3
-Try{
+Try {
     Set-ExecutionPolicy Bypass -Scope Process
     
     Try { 
-        function Send-OutlookEmail ($attachment,$body){
-            Try{
+        function Send-OutlookEmail ($attachment, $body) {
+            Try {
                 #create COM object named Outlook
                 $Outlook = New-Object -ComObject Outlook.Application
                 #create Outlook MailItem named Mail using CreateItem() method
@@ -123,30 +123,30 @@ Try{
                 $mail.Display()
                 [System.Runtime.Interopservices.Marshal]::ReleaseComObject($Outlook) | Out-Null
             }
-            Catch{
+            Catch {
                 Write-Host "Failed to open a new email in Outlook." -ForegroundColor Red
                 Write-Log -Level Error -Message $_
             }
         }
     
-        function Attempt-Provision ([int]$count){
+        function Attempt-Provision ([int]$count) {
             #Our first provisioning run can encounter a 403 if SharePoint has incorrectly told us the site is ready, this function will retry 
             Try {
                 Apply-PnPProvisioningTemplate -path $Script:TemplatePath -ExcludeHandlers Pages, SiteSecurity
             }
-            Catch [System.Net.WebException]{
-                If($($_.Exception.Message) -match '(403)'){
+            Catch [System.Net.WebException] {
+                If ($($_.Exception.Message) -match '(403)') {
                     #SPO returning a trigger happy ready response, sleep for a bit...
                     $filler = "SharePoint Online incorrectly indicated the site is ready to provision, pausing the script to wait for it to catch up. Retrying in 5 minutes. Retry $count/4"
                     Write-Host $filler -ForegroundColor Yellow
                     Write-Log -Level Info -Message $filler
 
-                    If($count -lt 4){
+                    If ($count -lt 4) {
                         Start-Sleep -Seconds 300
                         $count = $count + 1
                         Attempt-Provision -count $count
                     }
-                    Else{
+                    Else {
                         $filler = "SharePoint Online is taking an unusual amount of time to create the site. Please check your SharePoint Admin Site in Office 365, and when the site is created please continue the script. Do not press Enter until you have confirmed the site has been completely created."
                         Write-Host $filler -ForegroundColor Red
                         Write-Log -Level Info -Message $filler
@@ -155,12 +155,12 @@ Try{
                         Apply-PnPProvisioningTemplate -path $Script:templatePath -ExcludeHandlers Pages, SiteSecurity
                     }
                 }
-                Else{
-                    Throw $_
+                Else {
+                    Throw $_.Exception.Message
                 }
             }
             Catch {
-                Throw $_
+                Throw $_.Exception.Message
             }
         }
 
@@ -181,7 +181,7 @@ Try{
 
         $tenant = Read-Host "Please enter the name of your Office 365 Tenant, eg for 'https://contoso.sharepoint.com/' just enter 'contoso'."
         $tenant = $tenant.Trim()
-        If($tenant.Length -eq 0){
+        If ($tenant.Length -eq 0) {
             Write-Host "No tenant entered. Exiting script."
             Write-Log -Level Error -Message "No tenant entered. Exiting script."
             Exit
@@ -194,41 +194,41 @@ Try{
         Write-Log -Level Info -Message "Admin SharePoint set to $adminSharePoint"
         Write-Log -Level Info -Message "Root SharePoint set to $rootSharePoint"
 
-        If($script:doSiteCreation){
-            Try{
-                If($script:onlyPnP){
+        If ($script:doSiteCreation) {
+            Try {
+                If ($script:onlyPnP) {
                     Connect-PnPOnline -Url $adminSharePoint -UseWebLogin
                 }
-                Else{
+                Else {
                     Connect-PnPOnline -Url $adminSharePoint -SPOManagementShell
-                    Write-Host "Prompting for SharePoint Online Management Shell Authentication. Please do not continue until you are logged in. If no prompt appears you may already be authenticated."
+                    Write-Host "Prompting for SharePoint Online Management Shell Authentication. Please do not continue until you are logged in. If no prompt appears you may already be authenticated to this Tenant."
                     Start-Sleep -Seconds 5
                     #PnP doesn't wait for SPO Management Shell to complete it's login, have to pause here
                     Pause
                     Get-PnPWeb | Out-Null
                 }
             }
-            Catch{
+            Catch {
                 $exMessage = $($_.Exception.Message)
-                If($exMessage -match "(403)"){
+                If ($exMessage -match "(403)") {
                     Write-Log -Level Error -Message $exMessage
                     $filler = "Error connecting to '$adminSharePoint'. Please ensure you have sufficient rights to create Site Collections in your Microsoft 365 Tenant. `nThis usually requires Global Administrative rights, or alternatively ask your SharePoint Administrator to perform the Solutions Site Setup."
                     Write-Host $filler -ForegroundColor Yellow
                     Write-Host "Please contact OnePlace Solutions Support if you are still encountering difficulties."
                     Write-Log -Level Info -Message $filler
-                    Throw $_
+                    Throw $_.Exception.Message
                 }
-                Else{
-                    Throw $_
+                Else {
+                    Throw $_.Exception.Message
                 }
             }
         }
     
         $solutionsSite = $solutionsSite.Trim()
-        If ($solutionsSite.Length -eq 0){
+        If ($solutionsSite.Length -eq 0) {
             $solutionsSite = Read-Host "Please enter the URL suffix for the Solutions Site you wish to provision, eg to create 'https://contoso.sharepoint.com/sites/oneplacesolutions', just enter 'oneplacesolutions'."
             $solutionsSite = $solutionsSite.Trim()
-            If ($solutionsSite.Length -eq 0){
+            If ($solutionsSite.Length -eq 0) {
                 Write-Host "Can't have an empty URL. Exiting script"
                 Write-Log -Level Error -Message "No URL suffix entered. Exiting script."
                 Exit
@@ -240,11 +240,11 @@ Try{
         $LicenseListUrl = $SolutionsSiteUrl + '/lists/Licenses'
 
         Try {
-            If($script:doSiteCreation){
-                Try{
+            If ($script:doSiteCreation) {
+                Try {
                     $ownerEmail = Read-Host "Please enter the email address of the owner for this site. This should be your current credentials."
                     $ownerEmail = $ownerEmail.Trim()
-                    If($ownerEmail.Length -eq 0){
+                    If ($ownerEmail.Length -eq 0) {
                         $filler = 'No Site Collection owner has been entered. Exiting script.'
                         Write-Host $filler
                         Write-Log -Level Error -Message $filler
@@ -260,10 +260,10 @@ Try{
                     Write-Host $filler -ForegroundColor Yellow
                     Write-Log -Level Info -Message $filler
                 
-                    If($script:doModern){
+                    If ($script:doModern) {
                         New-PnPTenantSite -Title 'OnePlace Solutions Admin Site' -Url $SolutionsSiteUrl -Template STS#3 -Owner $ownerEmail -Timezone 0 -StorageQuota 110 -Wait
                     }
-                    Else{
+                    Else {
                         New-PnPTenantSite -Title 'OnePlace Solutions Admin Site' -Url $SolutionsSiteUrl -Template STS#0 -Owner $ownerEmail -Timezone 0 -StorageQuota 110 -Wait
                     }
 
@@ -274,34 +274,34 @@ Try{
                     Write-Host $filler "`n" -ForegroundColor Green
                     Write-Log -Level Info -Message $filler
                 }
-                Catch [Microsoft.SharePoint.Client.ServerException]{
+                Catch [Microsoft.SharePoint.Client.ServerException] {
                     $exMessage = $($_.Exception.Message)
-                    If(($exMessage -match 'A site already exists at url') -and ($false -eq $script:forceProvision)){
+                    If (($exMessage -match 'A site already exists at url') -and ($false -eq $script:forceProvision)) {
                         Write-Host $exMessage -ForegroundColor Red
                         Write-Log -Level Error -Message $exMessage
-                        If($solutionsSite -ne 'oneplacesolutions'){
+                        If ($solutionsSite -ne 'oneplacesolutions') {
                             Write-Host "Site with URL $SolutionsSiteUrl already exists. Please run the script again and choose a different Solutions Site suffix." -ForegroundColor Red
                         }
-                        Else{
+                        Else {
                             Write-Host "Site with URL $SolutionsSiteUrl already exists. Please contact OnePlace Solutions for further assistance." -ForegroundColor Red
                         }
-                        Throw $_
+                        Throw $_.Exception.Message
                     }
-                    ElseIf(($exMessage -match 'A site already exists at url') -and $script:forceProvision){
+                    ElseIf (($exMessage -match 'A site already exists at url') -and $script:forceProvision) {
                         $filler = "Force provision has been set to true, site exists and script is continuing."
                         Write-Log -Level Warn -Message $filler
                     }
-                    ElseIf(($exMessage -match '401') -and (-not $script:onlyPnP)){
+                    ElseIf (($exMessage -match '401') -and (-not $script:onlyPnP)) {
                         $filler = "Auth issue with SharePoint Online Management Shell. Re-run script with '`$script:onlyPnP' flag set to `$true. `nIf the Solutions Site does show in your SharePoint Online admin center, re-run the script with `$script:doSiteCreation' set to `$false."
                         Write-Log -Level Error -Message $filler
                     }
-                    Else{
-                        Throw $_
+                    Else {
+                        Throw $_.Exception.Message
                     }
                 }
-                Catch{
+                Catch {
                     Write-Log -level Info -Message "Something went wrong during Site Creation. Details following"
-                    Throw $_
+                    Throw $_.Exception.Message
                 }
             }
 
@@ -310,12 +310,12 @@ Try{
             Write-Progress -Activity "Solutions Site Deployment" -CurrentOperation $stage -PercentComplete (66)
 
             #Connecting to the site collection to apply the template
-            If($script:onlyPnP){
+            If ($script:onlyPnP) {
                 Write-Host  "Please authenticate against the newly created Site Collection"
                 Start-Sleep -Seconds 3
                 Connect-PnPOnline -Url $SolutionsSiteUrl -UseWebLogin
             }
-            Else{
+            Else {
                 Connect-PnPOnline -Url $SolutionsSiteUrl -SPOManagementShell
                 Start-Sleep -Seconds 3
             }
@@ -323,11 +323,11 @@ Try{
             #Download OnePlace Solutions Site provisioning template
             $WebClient = New-Object System.Net.WebClient   
 
-            If($script:doModern){
+            If ($script:doModern) {
                 $Url = "https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/master/oneplaceSolutionsSite-template-v3-modern.xml"    
                 $Script:templatePath = "$env:temp\oneplaceSolutionsSite-template-v3-modern.xml" 
             }
-            Else{
+            Else {
                 $Url = "https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/master/oneplaceSolutionsSite-template-v2.xml"    
                 $Script:templatePath = "$env:temp\oneplaceSolutionsSite-template-v2.xml" 
             }
@@ -360,14 +360,14 @@ Try{
             Write-Log -Level Info -Message $filler
             Start-Sleep -Seconds 2															
 
-            Apply-PnPProvisioningTemplate -path $Script:TemplatePath -Handlers SiteSecurity, Pages -Parameters @{"licenseListID"=$licenseListId;"site"=$SolutionsSiteUrl}												  
+            Apply-PnPProvisioningTemplate -path $Script:TemplatePath -Handlers SiteSecurity, Pages -Parameters @{"licenseListID" = $licenseListId; "site" = $SolutionsSiteUrl }												  
         
             Try {
                 #workaround for a PnP bug
                 $addLogo = Add-PnPfile -Path $PathImage -Folder "SiteAssets"
             }
             Catch {
-                Throw $_
+                Throw $_.Exception.Message
             }
 
             $filler = "Provisioning complete!"
@@ -383,8 +383,8 @@ Try{
             Write-Log -Level Info -Message $filler
 
             $licenseItemCount = ((Get-PnPListItem -List "Licenses" -Query "<View><Query><Where><Eq><FieldRef Name='Title'/><Value Type='Text'>License</Value></Eq></Where></Query></View>").Count)
-            If ($licenseItemCount -eq 0){
-                Add-PnPListItem -List "Licenses" -Values @{"Title" = "License"} | Out-Null
+            If ($licenseItemCount -eq 0) {
+                Add-PnPListItem -List "Licenses" -Values @{"Title" = "License" } | Out-Null
                 $filler = "License Item created!"
                 Write-Host "`n$filler" -ForegroundColor Green
                 Write-Log -Level Info -Message $filler
@@ -399,12 +399,12 @@ Try{
             New-PnPList -Title 'Custom Column Mapping' -Template GenericList | Out-Null
 
             Add-PnPField -List 'Custom Column Mapping' -DisplayName 'From Column' -InternalName 'From Column' -Type Text -Required -AddToDefaultView  | Out-Null
-            Set-PnPField -List 'Custom Column Mapping' -Identity 'From Column' -Values @{Description = "This is the field (by internal name) you want to map from to an existing field"}
+            Set-PnPField -List 'Custom Column Mapping' -Identity 'From Column' -Values @{Description = "This is the field (by internal name) you want to map from to an existing field" }
 
             Add-PnPField -List 'Custom Column Mapping' -DisplayName 'To Column' -InternalName 'To Column' -Type Text -Required -AddToDefaultView  | Out-Null
-            Set-PnPField -List 'Custom Column Mapping' -Identity 'To Column' -Values @{Description = "This is the field (by internal name) you want to map to. This should already exist"}
+            Set-PnPField -List 'Custom Column Mapping' -Identity 'To Column' -Values @{Description = "This is the field (by internal name) you want to map to. This should already exist" }
 
-            Set-PnPField -List 'Custom Column Mapping' -Identity 'Title' -Values @{Title = "Scope"; DefaultValue = "Global"}
+            Set-PnPField -List 'Custom Column Mapping' -Identity 'Title' -Values @{Title = "Scope"; DefaultValue = "Global" }
 
             Write-Log -Level Info -Message "Solutions Site URL = $SolutionsSiteUrl"
             Write-Log -Level Info -Message "License List URL = $LicenseListUrl"
@@ -416,7 +416,7 @@ Try{
                 $logToSharePoint = Add-PnPfile -Path $script:LogPath -Folder "Shared Documents"
             }
             Catch {
-                Throw $_
+                Throw $_.Exception.Message
             }
 
             Write-Progress -Activity "Completed" -Completed
@@ -432,15 +432,15 @@ Try{
         
             $currentPrincipal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
         
-            If($false -eq $currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)){
+            If ($false -eq $currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
                 $input = Read-Host "Would you like to email this information and Log file to OnePlace Solutions now? (yes or no)"
                 $input = $input[0]
-                If($input -eq 'y'){
+                If ($input -eq 'y') {
                     $file = Get-ChildItem $script:logPath
                     Send-OutlookEmail -attachment $file.FullName -body $importants
                 }
             }
-            Else{
+            Else {
                 Write-Host "Script is run as Administrator, cannot compose email details. Please email the above information and the log file generated to 'success@oneplacesolutions.com'." -ForegroundColor Yellow
             }
             Write-Host "Opening Solutions Site at $SolutionsSiteUrl..." -ForegroundColor Yellow
@@ -448,8 +448,8 @@ Try{
             Pause
             Start-Process $SolutionsSiteUrl | Out-Null
         }
-        Catch{
-            Throw $_
+        Catch {
+            Throw $_.Exception.Message
         }
 
     }
@@ -462,14 +462,17 @@ Try{
         Pause
     }
     Finally {
-        Try{
-            Disconnect-PnPOnline
-            Disconnect-SPOService
+        Try {
+            Disconnect-PnPOnline -ErrorAction SilentlyContinue
         }
-        Catch{}
+        Catch {}
+        Try {
+            Disconnect-SPOService -ErrorAction SilentlyContinue
+        }
+        Catch {}
         Write-Log -Level Info -Message "End of script."
     }
 }
-Catch{
+Catch {
     $_
 }
