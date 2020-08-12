@@ -10,16 +10,19 @@
     ![](./README-Images/image1.png)
 3.  (SharePoint Online Only) The latest [SharePoint Online Management Shell](https://www.microsoft.com/en-au/download/details.aspx?id=35588)
 
-4.  The latest [SharePoint PnP PowerShell cmdlets](https://github.com/SharePoint/PnP-PowerShell/releases). You will need to install the the cmdlets that target your version of SharePoint.
+4.  The latest SharePoint PnP PowerShell cmdlets. 
+You will need to install the the cmdlets that target your version of SharePoint. The last MSI releases for PnP PowerShell are [here (June 2020)](https://github.com/pnp/PnP-PowerShell/releases/tag/3.22.2006.2), [current releases](https://github.com/SharePoint/PnP-PowerShell/releases) must be installed as a PowerShell Module using 'Install-Module -Name SharePointPnPPowerShell\[version\]', eg: 
+	```PowerShell
+	Install-Module -Name SharePointPnPPowerShellOnline
+	```
 
     ![](./README-Images/image2.png)
 
-    If you already have the PnP Powershell cmdlets installed, make sure you are on the most recent version by upgrading them by uninstalling the old version and [installing the new version](https://github.com/SharePoint/PnP-PowerShell/releases).
-
-    You will need to logon as a local Administrator to your machine to install the msi file.
-
-    ![](./README-Images/image3.png)
-	
+    If you already have the PnP Powershell cmdlets installed via MSI, make sure you either [install the latest MSI version](https://github.com/pnp/PnP-PowerShell/releases/tag/3.22.2006.2), or uninstall the MSI version and install via the Module command above. 
+    If you already have the PnP PowerShell cmdlets installed via Modules, you can update using 'Update-Module -Name SharePointPnPPowerShell\[version\]', eg:
+    ```PowerShell
+    Update-Module -Name SharePointPnPPowerShellOnline
+    ```
 
 ## SharePoint Online
 Site creation will be performed automatically with the configuration script. The site will be created at 'https://&lt;yourSharePoint&gt;&#46;sharepoint&#46;com/sites/<b>oneplacesolutions</b>'.
