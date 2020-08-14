@@ -6,12 +6,7 @@ $ErrorActionPreference = 'Stop'
 $script:logFile = "OPSScriptLog.txt"
 $script:logPath = "$env:userprofile\Documents\$script:logFile"
 
-Write-Host "Beginning script. Logging script actions to $script:logPath" -ForegroundColor Cyan
-Start-Sleep -Seconds 3
-
-Try { 
-    Set-ExecutionPolicy Bypass -Scope Process
-    function Write-Log { 
+function Write-Log { 
         <#
         .NOTES 
             Created by: Jason Wasser @wasserja 
@@ -86,6 +81,12 @@ Try {
             $ErrorActionPreference = 'Stop'
         } 
     }
+
+Write-Host "Beginning script. Logging script actions to $script:logPath" -ForegroundColor Cyan
+Start-Sleep -Seconds 3
+
+Try { 
+    Set-ExecutionPolicy Bypass -Scope Process
 
     function Send-OutlookEmail ($attachment,$body) {
         Try {
@@ -167,14 +168,12 @@ Try {
         Try {
             Apply-PnPProvisioningTemplate -path $Path -Handlers SiteSecurity, Pages -Parameters @{"licenseListID"=$licenseListId;"site"=$SolutionsSiteUrl;"version"="16.0.0.0"}
         }
-        Catch [Microsoft.SharePoint.Client.ServerException] {
+        Catch {
             $filler = "Issue deploying SiteSecurity and Pages, likely running SharePoint 2013, retrying template deployment with fix..."
             Write-Log -Level Warn -Message $filler
             Apply-PnPProvisioningTemplate -path $Path -Handlers SiteSecurity, Pages -Parameters @{"licenseListID"=$licenseListId;"site"=$SolutionsSiteUrl;"version"="15.0.0.0"}
         }
-        Catch {
-            Throw $_
-        }
+
         $filler = "Provisioning complete!"
         Write-Host $filler -ForeGroundColor Green
         Write-Log -Level Info -Message $filler
@@ -204,7 +203,19 @@ Try {
         Write-Log -Level Info -Message "License List URL = $LicenseListUrl"
         Write-Log -Level Info -Message "License List ID = $licenseListId"
         Write-Log -Level Info -Message "Uploading log file to $SolutionsSiteUrl/Shared%20Documents"
-    
+
+        #This sets up a Custom Column Mapping list ready for use if required
+        Write-Log -Level Info -Message "Creating Custom Column Mapping list for later use if required."
+        New-PnPList -Title 'Custom Column Mapping' -Template GenericList | Out-Null
+
+        Add-PnPField -List 'Custom Column Mapping' -DisplayName 'From Column' -InternalName 'From Column' -Type Text -Required -AddToDefaultView  | Out-Null
+        Set-PnPField -List 'Custom Column Mapping' -Identity 'From Column' -Values @{Description = "This is the field (by internal name) you want to map from to an existing field"}
+
+        Add-PnPField -List 'Custom Column Mapping' -DisplayName 'To Column' -InternalName 'To Column' -Type Text -Required -AddToDefaultView  | Out-Null
+        Set-PnPField -List 'Custom Column Mapping' -Identity 'To Column' -Values @{Description = "This is the field (by internal name) you want to map to. This should already exist"}
+
+        Set-PnPField -List 'Custom Column Mapping' -Identity 'Title' -Values @{Title = "Scope"; DefaultValue = "Global"}
+
         Try {
             #workaround for a PnP bug
             $logToSharePoint = Add-PnPfile -Path $script:LogPath -Folder "Shared Documents"

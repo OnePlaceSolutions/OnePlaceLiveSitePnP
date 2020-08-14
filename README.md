@@ -8,10 +8,9 @@
     Windows 10/8.1 and Windows Server 2012 and greater are all ready to go, but Windows 7 is preinstalled with PowerShell v2.0 and will need to be  upgraded. This can be done by [downloading and installing the Windows Management Framework 4.0](https://www.microsoft.com/en-au/download/details.aspx?id=40855). Download and install either the x64 or x86 version based on your version of Windows 7.
 
     ![](./README-Images/image1.png)
+3.  (SharePoint Online Only) The latest [SharePoint Online Management Shell](https://www.microsoft.com/en-au/download/details.aspx?id=35588)
 
-3.  \[SharePoint Online Only\] [The latest SharePoint Online Management Shell](https://www.microsoft.com/en-au/download/details.aspx?id=35588). This is not required for SharePoint On-Premise 2013/2016/2019.
-
-4.  The latest [SharePoint PnP PowerShell cmdlets](https://github.com/SharePoint/PnP-PowerShell/releases). You will need to install the the cmdlets that target your version of SharePoint.
+4.  The latest SharePoint PnP PowerShell cmdlets. You will need to install the the cmdlets that target your version of SharePoint. The last MSI release for this is [June 2020](https://github.com/pnp/PnP-PowerShell/releases/tag/3.22.2006.2), [current releases](https://github.com/SharePoint/PnP-PowerShell/releases) must be installed as a PowerShell Module using 'Install-Module -Name SharePointPnPPowerShell`[version`]'.
 
     ![](./README-Images/image2.png)
 
@@ -27,7 +26,7 @@ Site creation will be performed automatically with the configuration script. The
 
 Note: * the script will not run if the site named already exists.
 
-\* All actions performed with the script will be logged to 'OPSScriptLog.txt' in your Documents folder (or under the Administrator account's Documents if running PowerShell as an Administrator). 
+\* All actions performed with the script will be logged to 'OPSScriptLog.txt' in your Documents folder (or under the Administrator account's Documents if running PowerShell as an Administrator). When requesting assistance with this script please send this log file as an attachment.
 
 \* The log file will be uploaded to the Documents folder in the Solutions Site at the end of deployment for your record keeping. If this script does not work for you, please continue with using the SharePoint On-Premise 2013/2016/2019 instructions further down the page.
 
