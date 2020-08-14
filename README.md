@@ -44,29 +44,34 @@ Note: * the script will not run if the site named already exists.
 
     ![](./README-Images/invokestringSPO.png)
 
+3.  The PowerShell script will execute and begin logging actions to the noted log file path. You will be prompted to choose whether to deploy a new Solutions Site, or deploy the template to an existing Site Collection. 
 
-3.  The PowerShell script will execute, begin logging and tell you the log file path, and prompt you to enter your SharePoint Tenant name and hit enter. For example, if your Root SharePoint Site Collection is 'htt<span>ps://contoso&#46;sharepoint&#46;com', just enter 'contoso':
+If the Solutions Site already exists and you wish to update it, or a problem was encountered during deployment, select option 2. You will also be prompted to enter the URL suffix of the existing Solutions Site (default is 'oneplacesolutions').
+
+    ![](./README-Images/menu.png)
+
+4.  Please type your SharePoint Tenant name and press enter. For example, if your Root SharePoint Site Collection is 'htt<span>ps://contoso&#46;sharepoint&#46;com', just enter 'contoso':
 
     ![](./README-Images/entertenantSPO.png)
 
-4.  You will be asked to enter your credentials for Microsoft 365 \/ SharePoint. For SharePoint Online this will be your email address.
+5.  You will be asked to enter your credentials for Microsoft 365 \/ SharePoint. For SharePoint Online this will be your email address.
 
-5.  You will then be asked to enter an email address for the owner of this Site Collection. Enter the same email address you logged in with:
+6.  You will then be asked to enter an email address for the owner of this Site Collection. Enter the same email address you logged in with, as only the Site Owner can deploy the script to the new Site Collection it's current state. You can change the Site Owner after deployment if you wish:
 
     ![](./README-Images/enterownerSPO.png)
 
-6.  SharePoint will start provisioning the Site. Please leave the PowerShell window open while this happens, it will automatically resume the script when the Site is ready to configure.
+7.  SharePoint will start provisioning the Site. Please leave the PowerShell window open while this happens, it will automatically resume the script when the Site is ready to configure. Depending on Microsoft service usage this can take up to 30 minutes, but creation usually occurs in less than 10 minutes.
 
     ![](./README-Images/sitecreationSPO.png)
 
-7.  Once SharePoint has created the Site, the script will start configuring it for use.
+8.  Once SharePoint has created the Site, the script will start configuring it for use.
 
     ![](./README-Images/siteconfigurationSPO.png)
 	
-8.  When configuration has completed, your Solutions Site URL, License List URL and License List ID will be displayed (these are also in the log file, and will be visible in the Solutions Site). You may also opt to automatically email these details now to OnePlace Solutions. These URLs will be kept on file for support purposes, and the License List ID will be required for your Production License.
+9.  When configuration has completed, your Solutions Site URL, License List URL and License List ID will be displayed (these are also in the log file, and will be visible in the Solutions Site). You may also opt to automatically email these details now to OnePlace Solutions. These URLs will be kept on file for support purposes, and the License List ID will be required for your Production License.
 
     ![](./README-Images/configurationcompleteSPO.png)
-9.  Finally, press Enter to open your Solutions Site.
+10.  Finally, press Enter to open your Solutions Site.
 
 	The homepage contains some useful links for training and support resources, and when you have a Production license an overview of your License usage.
     ![](./README-Images/solutionssiteSPO.png)
