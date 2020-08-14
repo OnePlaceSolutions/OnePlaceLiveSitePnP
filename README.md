@@ -46,10 +46,10 @@ Note: * the script will not run if the site named already exists.
 
 3.  The PowerShell script will execute and begin logging actions to the noted log file path. You will be prompted to choose whether to deploy a new Solutions Site, or deploy the template to an existing Site Collection. 
 
-If the Solutions Site already exists and you wish to update it, or a problem was encountered during deployment, select option 2. You will also be prompted to enter the URL suffix of the existing Solutions Site (default is 'oneplacesolutions').
+    If the Solutions Site already exists and you wish to update it, or a problem was encountered during deployment, select option 2. You will also be prompted to enter the URL suffix of the existing Solutions Site (default is 'oneplacesolutions').
 
-    ![](./README-Images/menu.png)
-
+    ![](./README-Images/enterownerSPO.png)
+    
 4.  Please type your SharePoint Tenant name and press enter. For example, if your Root SharePoint Site Collection is 'htt<span>ps://contoso&#46;sharepoint&#46;com', just enter 'contoso':
 
     ![](./README-Images/entertenantSPO.png)
