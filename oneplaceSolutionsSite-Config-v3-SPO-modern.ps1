@@ -7,12 +7,12 @@ $ErrorActionPreference = 'Stop'
 $script:logFile = "OPSScriptLog.txt"
 $script:logPath = "$env:userprofile\Documents\$script:logFile"
 
-#Set this to $true to continue past Stage 1 if the site already exists. This differs from doSiteCreation in that this option ensures the site exists and will still attempt to create it if it doesn't, doSiteCreation skips Stage 1 altogether and existence of the Site is assumed.
+#Set this to $true to continue past Stage 1 if the site appears to already exists. This differs from doSiteCreation in that this option ensures the site exists and will still attempt to create it if it doesn't, doSiteCreation skips Stage 1 altogether and existence of the Site is assumed.
 #Default: $false
 $script:forceProvision = $false
 
 #Set this to $true to use only the PnP auth, set to $false to use SharePoint Online Management Shell auth
-#Default: $true
+#Default: $false
 $script:onlyPnP = $false
 
 #Set this to $false to skip automatically creating the site. This will require manual creation of the site prior to running the script.
@@ -164,17 +164,45 @@ Try {
             }
         }
 
+        function showEnvMenu { 
+            Clear-Host 
+            Write-Host "`n--------------------------------------------------------------------------------`n" -ForegroundColor Red
+            Write-Host 'Welcome to the Solutions Site Deployment Script for OnePlace Solutions' -ForegroundColor Green
+            Write-Host "`n--------------------------------------------------------------------------------`n" -ForegroundColor Red
+            Write-Host 'Please make a selection:' -ForegroundColor Yellow
+            Write-Host "1: Deploy a new Solutions Site" 
+            Write-Host "2: Deploy the Solutions Site template to an existing Site Collection"
+            Write-Host "Q: Press 'Q' to quit." 
+        }
+
+        do {
+            showEnvMenu 
+            $userInput = Read-Host "Please select an option" 
+            Write-Log -Level Info -Message "User has entered option '$userInput'"
+            switch ($userInput) { 
+                '1' {
+                    $userInput = 'continue'
+                }
+                '2' {
+                    $script:doSiteCreation = $false
+                    $extraInput = Read-Host "What is the URL suffix of the existing site? Eg, for 'https://contoso.sharepoint.com/sites/opl', just enter 'opl'. Press Enter to accept default 'oneplacesolutions'."
+                    If($extraInput -ne ""){
+                        $solutionsSite = $extraInput
+                    }
+                    $userInput = 'continue'
+                }
+                'q' { exit }
+            } 
+        } 
+        until(($userInput -eq 'q') -or ($userInput -eq 'continue')) {}
+
         Write-Log -Level Info -Message "Script has been passed $solutionsSite for the Solutions Site URL"
         Write-Log -Level Info -Message "Logging script actions to $script:logPath"
         Write-Log -Level Info -Message "Forcing provision? $script:forceProvision"
         Write-Log -Level Info -Message "Only PnP Auth? $script:onlyPnP"
         Write-Log -Level Info -Message "Create the site in Stage 1? $script:doSiteCreation"
         Write-Log -Level Info -Message "Create a Modern Site? $script:doModern"
-
-        Write-Host "`n--------------------------------------------------------------------------------`n" -ForegroundColor Red
-        Write-Host 'Welcome to the Solutions Site deployment script for OnePlace Solutions.' -ForegroundColor Green
-        Write-Host "`n--------------------------------------------------------------------------------`n" -ForegroundColor Red
-    
+  
         $stage = "Stage 1/3 - Team Site (Modern) creation"
         Write-Host "`n$stage`n" -ForegroundColor Yellow
         Write-Progress -Activity "Solutions Site Deployment" -CurrentOperation $stage -PercentComplete (33)
