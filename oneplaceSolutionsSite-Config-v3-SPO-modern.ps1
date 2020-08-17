@@ -185,6 +185,7 @@ Try {
                 }
                 '2' {
                     $script:doSiteCreation = $false
+                    $script:onlyPnP = $true
                     $extraInput = Read-Host "What is the URL suffix of the existing site? Eg, for 'https://contoso.sharepoint.com/sites/opl', just enter 'opl'. Press Enter to accept default 'oneplacesolutions'."
                     If($extraInput -ne ""){
                         $solutionsSite = $extraInput
@@ -345,7 +346,9 @@ Try {
             }
             Else {
                 Connect-PnPOnline -Url $SolutionsSiteUrl -SPOManagementShell
+                #PnP doesn't wait for SPO Management Shell to complete it's login, have to pause here
                 Start-Sleep -Seconds 3
+                Pause
             }
 
             #Download OnePlace Solutions Site provisioning template
