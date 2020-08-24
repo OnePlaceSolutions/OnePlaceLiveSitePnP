@@ -332,9 +332,6 @@ Try {
                     Pause
                 }
 
-                #Download OnePlace Solutions Site provisioning template
-                $WebClient = New-Object System.Net.WebClient
-
                 If ($script:doModern) {
                     $Url = "https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/master/oneplaceSolutionsSite-template-v3-modern.xml"    
                     $Script:templatePath = "$env:temp\oneplaceSolutionsSite-template-v3-modern.xml" 
@@ -344,18 +341,27 @@ Try {
                     $Script:templatePath = "$env:temp\oneplaceSolutionsSite-template-v2.xml" 
                 }
 
-                $filler = "Downloading provisioning xml template to: $Script:templatePath"
-                Write-Host $filler -ForegroundColor Yellow  
-                Write-Log -Level Info -Message $filler
-                $WebClient.DownloadFile( $Url, $Script:TemplatePath )
-        
-
-                #Download OnePlace Solutions Company logo to be used as Site logo    
                 $UrlSiteImage = "https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/master/oneplacesolutions-logo.png"
                 $PathImage = "$env:temp\oneplacesolutions-logo.png" 
-                $WebClient.DownloadFile( $UrlSiteImage, $PathImage )
-                Write-Log -Level Info -Message "Downloading OPS logo for Solutions Site"
-       
+
+                #Check if resources already exist
+                If((-not (Test-Path $Script:templatePath -NewerThan (Get-Date).AddDays(-7))) -or (-not (Test-Path $PathImage))) {
+                    Write-Log -Level Info -Message 'Local resources not present or older than 7 days.'
+                    #Download OnePlace Solutions Site provisioning template
+                    $WebClient = New-Object System.Net.WebClient
+                    $filler = "Downloading provisioning xml template to: $Script:templatePath"
+                    Write-Host $filler -ForegroundColor Yellow  
+                    Write-Log -Level Info -Message $filler
+                    $WebClient.DownloadFile( $Url, $Script:TemplatePath )
+        
+                    #Download OnePlace Solutions Company logo to be used as Site logo    
+                    $WebClient.DownloadFile( $UrlSiteImage, $PathImage )
+                    Write-Log -Level Info -Message "Downloading OPS logo for Solutions Site"
+                }
+                Else {
+                    Write-Log -Level Info -Message 'Local resources present, skipping download.' -Verbose
+                }
+
                 #Apply provisioning xml to new site collection
                 $filler = "Applying configuration changes..."
                 Write-Host $filler -ForegroundColor Yellow
