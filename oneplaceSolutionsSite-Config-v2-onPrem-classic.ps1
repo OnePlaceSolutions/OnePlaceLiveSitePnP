@@ -134,22 +134,23 @@ Try {
 
         #Download OnePlace Solutions Site provisioning template
         $WebClient = New-Object System.Net.WebClient
-
-        #Fix this URL before merging to Master
         $Url = "https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/master/oneplaceSolutionsSite-template-v2.xml"    
         $Path = "$env:temp\oneplaceSolutionsSite-template-v2.xml" 
-        
-        $filler = "Downloading provisioning xml template to: $Path"
-        Write-Host $filler -ForegroundColor Yellow  
-        Write-Log -Level Info -Message $filler
-        $WebClient.DownloadFile( $Url, $Path )
-        
+        If(-not (Test-Path $Path)) {
+            $filler = "Downloading provisioning xml template to: $Path"
+            Write-Host $filler -ForegroundColor Yellow  
+            Write-Log -Level Info -Message $filler
+            $WebClient.DownloadFile( $Url, $Path )
+        }
         #Download OnePlace Solutions Company logo to be used as Site logo    
         $UrlSiteImage = "https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/master/oneplacesolutions-logo.png"
         $PathImage = "$env:temp\oneplacesolutions-logo.png" 
-        $WebClient.DownloadFile( $UrlSiteImage, $PathImage )
-        Write-Log -Level Info -Message "Downloading OPS logo for Solutions Site"
-       
+        If(-not (Test-Path $PathImage )) {
+            $filler = "Downloading OPS logo for Solutions Site"
+            Write-Host $filler -ForegroundColor Yellow 
+            Write-Log -Level Info -Message $filler
+            $WebClient.DownloadFile( $UrlSiteImage, $PathImage )
+        }
         #Apply provisioning xml to new site collection
         $filler = "Applying configuration changes..."
         Write-Host $filler -ForegroundColor Yellow
