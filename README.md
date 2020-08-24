@@ -19,6 +19,8 @@
     You will need to logon as a local Administrator to your machine to install the msi file.
 
     ![](./README-Images/image3.png)
+
+5.  If you need to deploy this Site without Internet Access, please download the applicable PowerShell Script ([SharePoint 2013/2016/2019](./oneplaceSolutionsSite-Config-v2-onPrem-classic.ps1) or [SharePoint Online] (./oneplaceSolutionsSite-Config-v3-SPO-modern.ps1)), template XML ([SharePoint 2013/2016/2019](./oneplaceSolutionsSite-template-v2.xml) or [SharePoint Online](./oneplaceSolutionsSite-template-v3-modern.xml)) and [logo PNG](./oneplacesolutions-logo.png) and place them in '%LocalAppData%\Temp' on the machine you plan to run the script offline from.\
 	
 
 ## SharePoint Online
