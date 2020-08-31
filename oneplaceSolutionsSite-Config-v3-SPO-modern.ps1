@@ -19,6 +19,9 @@ $script:doSiteCreation = $true
 #Default: $true
 $script:doModern = $true
 
+$pnp = Get-Module SharePointPnPPowerShell* | Select-Object Name, Version
+$spoms = Get-InstalledModule Microsoft.Online.SharePoint.PowerShell | Select-Object Name, Version
+
 function Write-Log { 
     <#
         .NOTES 
@@ -94,6 +97,19 @@ function Write-Log {
         $ErrorActionPreference = 'Stop'
     } 
 }
+
+Clear-Host 
+Write-Host "`n--------------------------------------------------------------------------------`n" -ForegroundColor Red
+Write-Host 'Welcome to the Solutions Site Deployment Script for OnePlace Solutions' -ForegroundColor Green
+Write-Host "`n--------------------------------------------------------------------------------`n" -ForegroundColor Red
+Get-InstalledModule *Sharepoint* | Out-Null
+Write-Host "Please ensure you have checked and installed the pre-requisites listed in the GitHub documentation prior to continuing this script."
+Write-Host "!!! If pre-requisites for the Solutions Site creation/provisioning have not been completed this process may fail !!!" -ForegroundColor Yellow
+Start-Sleep -Seconds 2
+Pause
+
+Write-Log -Level Info -Message "PnP Installed: $pnp"
+Write-Log -Level Info -Message "SPOMS Installed: $spoms"
 
 Write-Host "Beginning script. Logging script actions to $script:logPath" -ForegroundColor Cyan
 Start-Sleep -Seconds 3
@@ -183,15 +199,19 @@ Try {
                 Write-Host "`n$stage`n" -ForegroundColor Yellow
                 Write-Progress -Activity "Solutions Site Deployment" -CurrentOperation $stage -PercentComplete (33)
                 
-                $tenant = Read-Host "Please enter the name of your Office 365 Tenant, eg for 'https://contoso.sharepoint.com/' just enter 'contoso'."
-                $tenant = $tenant.Trim()
-                If ($tenant.Length -eq 0) {
-                    Write-Host "No tenant entered. Exiting script."
+                $rootSharePoint = Read-Host "Please enter your SharePoint Online Root Site Collection URL, eg 'https://contoso.sharepoint.com/'"
+                $rootSharePoint.Trim()
+
+                $tenant = $rootSharepoint  -match 'https://(?<Tenant>.+)\.sharepoint.com'
+                $tenant = $Matches.Tenant
+
+                $adminSharePoint = "https://$tenant-admin.sharepoint.com"
+
+                If (($rootSharePoint.Length -eq 0) -or ($tenant.Length -eq 0)) {
+                    Write-Host "Root SharePoint URL invalid. Exiting script."
                     Write-Log -Level Error -Message "No tenant entered. Exiting script."
                     Exit
                 }
-                $adminSharePoint = "https://$tenant-admin.sharepoint.com"
-                $rootSharePoint = "https://$tenant.sharepoint.com"
 
                 Try {
                     If ($script:onlyPnP) {
@@ -203,6 +223,7 @@ Try {
                         Start-Sleep -Seconds 5
                         #PnP doesn't wait for SPO Management Shell to complete it's login, have to pause here
                         Pause
+                        #See if we can get the current web, throw an exception otherwise so we don't continue without being connected
                         Get-PnPWeb | Out-Null
                     }
                 }
@@ -299,7 +320,7 @@ Try {
                 Write-Host "`n$stage`n" -ForegroundColor Yellow
                 Write-Progress -Activity "Solutions Site Deployment" -CurrentOperation $stage -PercentComplete (33)
                 
-                $input = Read-Host "What is the URL of the existing site? Eg, 'https://contoso.sharepoint.com/sites/oneplacesolutions'. Do not include trailing view information such as '/AllItems.aspx'."
+                $input = Read-Host "What is the URL of the existing Site Collection? Eg, 'https://contoso.sharepoint.com/sites/oneplacesolutions'. Do not include trailing view information such as '/AllItems.aspx'."
                 $input = $input.Trim()
                 If($input.Length -ne 0){
                     $solutionsSiteUrl = $input.TrimEnd('/')
