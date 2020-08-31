@@ -11,8 +11,8 @@
 3.  (SharePoint Online Only) The latest [SharePoint Online Management Shell](https://www.microsoft.com/en-au/download/details.aspx?id=35588)
 
 4.  The SharePoint PnP PowerShell cmdlets. 
-You will need to install the the cmdlets that target your version of SharePoint, and we currently recommend using the last MSI release which is [June 2020](https://github.com/pnp/PnP-PowerShell/releases/tag/3.22.2006.2). \
-[Current releases](https://github.com/SharePoint/PnP-PowerShell/releases) can be installed as a PowerShell Module using 'Install-Module -Name SharePointPnPPowerShell`[version`]' but may be unstable.
+You will need to install the the cmdlets that target your version of SharePoint, and we currently recommend using the last MSI release from [June 2020](https://github.com/pnp/PnP-PowerShell/releases/tag/3.22.2006.2). \
+*31/8/2020 - There is a bug in the current release of the PnP Cmdlets that interupts deployment, so we only advise using the June 2020 release at this time.*
 
     ![](./README-Images/image2.png)
 
