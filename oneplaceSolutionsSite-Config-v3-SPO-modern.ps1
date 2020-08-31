@@ -567,7 +567,7 @@ Try {
         $exMessage = $($_.Exception.Message)
         Write-Host "`nCaught an exception, further debugging information below:" -ForegroundColor Red
         Write-Log -Level Error -Message "Caught an exception. Exception Type: $exType"
-        Write-Log -Level Error -Message $exMessage
+        Write-Host $exMessage -ForegroundColor Red
         Pause
     }
     #Clean up and disconnect any leftover PnPOnline or SPOService sessions

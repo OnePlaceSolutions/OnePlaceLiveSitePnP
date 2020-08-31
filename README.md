@@ -10,17 +10,17 @@
     ![](./README-Images/image1.png)
 3.  (SharePoint Online Only) The latest [SharePoint Online Management Shell](https://www.microsoft.com/en-au/download/details.aspx?id=35588)
 
-4.  The latest SharePoint PnP PowerShell cmdlets. You will need to install the the cmdlets that target your version of SharePoint. The last MSI release for this is [June 2020](https://github.com/pnp/PnP-PowerShell/releases/tag/3.22.2006.2), [current releases](https://github.com/SharePoint/PnP-PowerShell/releases) must be installed as a PowerShell Module using 'Install-Module -Name SharePointPnPPowerShell`[version`]'.
+4.  The SharePoint PnP PowerShell cmdlets. 
+You will need to install the the cmdlets that target your version of SharePoint, and we currently recommend using the last MSI release from [June 2020](https://github.com/pnp/PnP-PowerShell/releases/tag/3.22.2006.2). \
+*31/8/2020 - There is a bug in the current release of the PnP Cmdlets that interupts deployment, so we only advise using the June 2020 release at this time.*
 
     ![](./README-Images/image2.png)
-
-    If you already have the PnP Powershell cmdlets installed, make sure you are on the most recent version by upgrading them by uninstalling the old version and [installing the new version](https://github.com/SharePoint/PnP-PowerShell/releases).
 
     You will need to logon as a local Administrator to your machine to install the msi file.
 
     ![](./README-Images/image3.png)
 
-5.  If you need to deploy this Site without Internet Access, please download the applicable PowerShell Script ([SharePoint 2013/2016/2019](./oneplaceSolutionsSite-Config-v2-onPrem-classic.ps1) or [SharePoint Online](./oneplaceSolutionsSite-Config-v3-SPO-modern.ps1)), template XML ([SharePoint 2013/2016/2019](./oneplaceSolutionsSite-template-v2.xml) or [SharePoint Online](./oneplaceSolutionsSite-template-v3-modern.xml)) and [logo PNG](./oneplacesolutions-logo.png) and place them in '%LocalAppData%\Temp' on the machine you plan to run the script offline from.
+5.  If you need to deploy this Site without GitHub Access (eg, On-Premise deployment without internet access), please download the applicable PowerShell Script ([SharePoint 2013/2016/2019](./oneplaceSolutionsSite-Config-v2-onPrem-classic.ps1) or [SharePoint Online](./oneplaceSolutionsSite-Config-v3-SPO-modern.ps1)), template XML ([SharePoint 2013/2016/2019](./oneplaceSolutionsSite-template-v2.xml) or [SharePoint Online](./oneplaceSolutionsSite-template-v3-modern.xml)) and [logo PNG](./oneplacesolutions-logo.png) and place them in '%LocalAppData%\Temp' on the machine you plan to run the script offline from.
 	
 
 ## SharePoint Online
