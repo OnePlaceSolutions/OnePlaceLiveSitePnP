@@ -206,16 +206,26 @@ Try {
         Write-Log -Level Info -Message "Uploading log file to $SolutionsSiteUrl/Shared%20Documents"
 
         #This sets up a Custom Column Mapping list ready for use if required
-        Write-Log -Level Info -Message "Creating Custom Column Mapping list for later use if required."
-        New-PnPList -Title 'Custom Column Mapping' -Template GenericList | Out-Null
+        If($null -ne (Get-PnPList -Identity 'Custom Column Mapping')) {
+            Write-Log -Level Info -Message "Creating Custom Column Mapping list for later use if required."
+            Try {
+                New-PnPList -Title 'Custom Column Mapping' -Template GenericList | Out-Null
 
-        Add-PnPField -List 'Custom Column Mapping' -DisplayName 'From Column' -InternalName 'From Column' -Type Text -Required -AddToDefaultView  | Out-Null
-        Set-PnPField -List 'Custom Column Mapping' -Identity 'From Column' -Values @{Description = "This is the field (by internal name) you want to map from to an existing field"}
+                Add-PnPField -List 'Custom Column Mapping' -DisplayName 'From Column' -InternalName 'From Column' -Type Text -Required -AddToDefaultView  | Out-Null
+                Set-PnPField -List 'Custom Column Mapping' -Identity 'From Column' -Values @{Description = "This is the field (by internal name) you want to map from to an existing field" }
 
-        Add-PnPField -List 'Custom Column Mapping' -DisplayName 'To Column' -InternalName 'To Column' -Type Text -Required -AddToDefaultView  | Out-Null
-        Set-PnPField -List 'Custom Column Mapping' -Identity 'To Column' -Values @{Description = "This is the field (by internal name) you want to map to. This should already exist"}
+                Add-PnPField -List 'Custom Column Mapping' -DisplayName 'To Column' -InternalName 'To Column' -Type Text -Required -AddToDefaultView  | Out-Null
+                Set-PnPField -List 'Custom Column Mapping' -Identity 'To Column' -Values @{Description = "This is the field (by internal name) you want to map to. This should already exist" }
 
-        Set-PnPField -List 'Custom Column Mapping' -Identity 'Title' -Values @{Title = "Scope"; DefaultValue = "Global"}
+                Set-PnPField -List 'Custom Column Mapping' -Identity 'Title' -Values @{Title = "Scope"; DefaultValue = "Global" }
+            }
+            Catch {
+                Write-Log -Level Warn -Message "Issue creating Custom Column Mapping List. May already exist."
+            }
+        }
+        Else {
+            Write-Log -Level Info -Message "Custom Column Mapping list already exists by name, skipping creation."
+        }
 
         Try {
             #workaround for a PnP bug
@@ -285,8 +295,7 @@ Catch {
     write-host "Caught an exception:" -ForegroundColor Red
     write-host "Exception Type: $exType" -ForegroundColor Red
     write-host "Exception Message: $exMessage" -ForegroundColor Red
-    Write-Log -Level Error -Message "Caught an exception. Exception Type: $exType"
-    Write-Log -Level Error -Message $exMessage
+    Write-Log -Level Error -Message "Caught an exception. Exception Type: $exType, Message: $exMessage"
     Pause
 }
 

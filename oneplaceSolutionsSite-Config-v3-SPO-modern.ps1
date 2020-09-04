@@ -566,8 +566,9 @@ Try {
         $exType = $($_.Exception.GetType().FullName)
         $exMessage = $($_.Exception.Message)
         Write-Host "`nCaught an exception, further debugging information below:" -ForegroundColor Red
-        Write-Log -Level Error -Message "Caught an exception. Exception Type: $exType"
+        Write-Log -Level Error -Message "Caught an exception. Exception Type: $exType. $exMessage"
         Write-Host $exMessage -ForegroundColor Red
+        Write-Host "`nPlease send the log file at '$script:logPath' to 'support@oneplacesolutions.com' for assistance." -ForegroundColor Yellow
         Pause
     }
     #Clean up and disconnect any leftover PnPOnline or SPOService sessions
