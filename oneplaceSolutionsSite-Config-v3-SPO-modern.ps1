@@ -109,7 +109,7 @@ Clear-Host
 Write-Host "`n--------------------------------------------------------------------------------`n" -ForegroundColor Red
 Write-Host 'Welcome to the Solutions Site Deployment Script for OnePlace Solutions' -ForegroundColor Green
 Write-Host "`n--------------------------------------------------------------------------------`n" -ForegroundColor Red
-Get-InstalledModule *Sharepoint* | Out-Null
+#Get-InstalledModule *Sharepoint* | Out-Null
 Write-Host "Please ensure you have checked and installed the pre-requisites listed in the GitHub documentation prior to continuing this script."
 Write-Host "!!! If pre-requisites for the Solutions Site creation/provisioning have not been completed this process may fail !!!" -ForegroundColor Yellow
 Start-Sleep -Seconds 2
