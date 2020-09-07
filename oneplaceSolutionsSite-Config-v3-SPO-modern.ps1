@@ -19,6 +19,7 @@ $script:doSiteCreation = $true
 #Default: $true
 $script:doModern = $true
 
+<#
 Try {
     $pnp = Get-Module SharePointPnPPowerShell* | Select-Object Name, Version
     $spoms = Get-InstalledModule Microsoft.Online.SharePoint.PowerShell | Select-Object Name, Version
@@ -26,6 +27,8 @@ Try {
 Catch {
     #Couldn't check PNP or SPOMS versions, not an issue
 }
+#>
+
 function Write-Log { 
     <#
         .NOTES 
@@ -112,8 +115,10 @@ Write-Host "!!! If pre-requisites for the Solutions Site creation/provisioning h
 Start-Sleep -Seconds 2
 Pause
 
+<#
 Write-Log -Level Info -Message "PnP Installed: $pnp"
 Write-Log -Level Info -Message "SPOMS Installed: $spoms"
+#>
 
 Write-Host "Beginning script. Logging script actions to $script:logPath" -ForegroundColor Cyan
 Start-Sleep -Seconds 3
