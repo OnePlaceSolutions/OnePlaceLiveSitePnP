@@ -19,9 +19,13 @@ $script:doSiteCreation = $true
 #Default: $true
 $script:doModern = $true
 
-$pnp = Get-Module SharePointPnPPowerShell* | Select-Object Name, Version
-$spoms = Get-InstalledModule Microsoft.Online.SharePoint.PowerShell | Select-Object Name, Version
-
+Try {
+    $pnp = Get-Module SharePointPnPPowerShell* | Select-Object Name, Version
+    $spoms = Get-InstalledModule Microsoft.Online.SharePoint.PowerShell | Select-Object Name, Version
+}
+Catch {
+    #Couldn't check PNP or SPOMS versions, not an issue
+}
 function Write-Log { 
     <#
         .NOTES 
