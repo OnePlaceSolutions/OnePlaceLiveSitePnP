@@ -2,7 +2,7 @@
 
 1. [Pre-Requisites](#pre-requisites)
 2. [SharePoint Online](#sharepoint-online)
-3. [SharePoint On-Premise](#sharepoint-on-premise-201320162019)
+3. [SharePoint On-Premise (2013/2016/2019)](#sharepoint-on-premise-201320162019)
 
 
 ## Pre-requisites
