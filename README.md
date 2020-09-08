@@ -23,7 +23,7 @@ You will need to install the the cmdlets that target your version of SharePoint,
 5.  If you need to deploy this Site without GitHub Access (eg, On-Premise deployment without internet access), please download the applicable PowerShell Script ([SharePoint 2013/2016/2019](./oneplaceSolutionsSite-Config-v2-onPrem-classic.ps1) or [SharePoint Online](./oneplaceSolutionsSite-Config-v3-SPO-modern.ps1)), template XML ([SharePoint 2013/2016/2019](./oneplaceSolutionsSite-template-v2.xml) or [SharePoint Online](./oneplaceSolutionsSite-template-v3-modern.xml)) and [logo PNG](./oneplacesolutions-logo.png) and place them in '%LocalAppData%\Temp' on the machine you plan to run the script offline from.
 	
 
-## SharePoint Online
+## [SharePoint Online](#sposteps)
 Site creation can be performed automatically with the configuration script. The site will be created at 'https://&lt;yourSharePoint&gt;&#46;sharepoint&#46;com/sites/<b>oneplacesolutions</b>'.
 
 Note: * The script will not run if the site named already exists. Select Option 2 when prompted to deploy the template to an existing Site Collection if required.
