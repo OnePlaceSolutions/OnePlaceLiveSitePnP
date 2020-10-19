@@ -191,7 +191,7 @@
           </pnp:Security>
         </pnp:ClientSidePage>
       </pnp:ClientSidePages>
-      <pnp:Header Layout="Standard" />
+      <!--<pnp:Header Layout="Standard" /> This line was causing a token issue in PnP-->
     </pnp:ProvisioningTemplate>
   </pnp:Templates>
 </pnp:Provisioning>
