@@ -109,19 +109,62 @@ Clear-Host
 Write-Host "`n--------------------------------------------------------------------------------`n" -ForegroundColor Red
 Write-Host 'Welcome to the Solutions Site Deployment Script for OnePlace Solutions' -ForegroundColor Green
 Write-Host "`n--------------------------------------------------------------------------------`n" -ForegroundColor Red
-#Get-InstalledModule *Sharepoint* | Out-Null
-Write-Host "Please ensure you have checked and installed the pre-requisites listed in the GitHub documentation prior to continuing this script."
-Write-Host "!!! If pre-requisites for the Solutions Site creation/provisioning have not been completed this process may fail !!!" -ForegroundColor Yellow
-Start-Sleep -Seconds 2
-Pause
 
-<#
-Write-Log -Level Info -Message "PnP Installed: $pnp"
-Write-Log -Level Info -Message "SPOMS Installed: $spoms"
-#>
+Start-Sleep -Seconds 2
 
 Write-Host "Beginning script. Logging script actions to $script:logPath" -ForegroundColor Cyan
+
+Write-Host "Performing Pre-Requisite checks, please wait..." -ForeGroundColor Yellow
 Start-Sleep -Seconds 3
+
+#Check for module versions of PnP / SPOMS
+Try {
+    Write-Host "Checking if PnP / SPOMS installed via Module..." -ForegroundColor Cyan
+    $pnpModule = Get-InstalledModule SharePointPnPPowerShell* | Select-Object Name, Version
+    $spomsModule = Get-InstalledModule Microsoft.Online.SharePoint.PowerShell | Select-Object Name, Version
+}
+Catch {
+    #Couldn't check PNP or SPOMS Module versions, Package Manager may be absent
+}
+Finally {
+    Write-Log -Level Info -Message "PnP Module Installed: $pnpModule"
+    Write-Log -Level Info -Message "SPOMS Module Installed: $spomsModule"
+}
+
+#Check for MSI versions of PnP / SPOMS
+Try {
+    Write-Host "Checking if PnP / SPOMS installed via MSI..." -ForegroundColor Cyan
+    $pnpMSI = Get-WmiObject Win32_Product | Where-Object {$_.Name -match "PnP PowerShell*"} | Select-Object Name, Version
+    $spomsMSI = Get-WmiObject Win32_Product | Where-Object {$_.Name -match "SharePoint Online Management Shell"} | Select-Object Name, Version
+}
+Catch {
+    #Couldn't check PNP or SPOMS MSI versions
+}
+Finally {
+    Write-Log -Level Info -Message "PnP MSI Installed: $pnpMSI"
+    Write-Log -Level Info -Message "SPOMS MSI Installed: $spomsMSI"
+}
+
+If (($null -ne $pnpModule.Count) -or ((0 -ne $pnpMSI.Count) -and (1 -ne $pnpMSI.Count))) {
+    Write-Log -Level Warn -Message "Multiple versions of PnP may be installed. This is not supported by PnP and will likely cause issues when running this script.`nPlease uninstall the versions not applicable to your SharePoint version and re-run this script."
+    Pause
+}
+
+$preReqMissing = $false
+If (($null -eq $pnpModule) -and ($null -eq $pnpMSI)) {
+    Write-Log -Level Warn -Message "No SharePoint PnP Cmdlets installation detected! This is required for all options."
+    $preReqMissing = $true
+}
+If (($null -eq $spomsModule) -and ($null -eq $spomsMSI)) {
+    Write-Log -Level Warn -Message "No SharePoint Online Management Shell installation detected! If you are only deploying to SharePoint On-Premise (2013/2016/2019) or to an existing Site Collection please ignore this warning."
+    $preReqMissing = $true
+}
+If ($preReqMissing) {
+    Write-Host "`nPlease ensure you have checked and installed the pre-requisites listed in the GitHub documentation prior to running this script."
+    Write-Host "!!! If pre-requisites for the Solutions Site Deployment have not been completed this script/process may fail !!!" -ForegroundColor Yellow
+    Pause
+}
+
 #First Try statement is to set the execution policy
 Try {
     Set-ExecutionPolicy Bypass -Scope Process
