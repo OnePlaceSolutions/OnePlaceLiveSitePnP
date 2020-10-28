@@ -272,7 +272,7 @@ Try {
                         Connect-PnPOnline -Url $adminSharePoint -UseWebLogin
                     }
                     Else {
-                        Connect-PnPOnline -Url $adminSharePoint -SPOManagementShell
+                        Connect-PnPOnline -Url $adminSharePoint -SPOManagementShell -ClearTokenCache
                         Write-Host "Prompting for SharePoint Online Management Shell Authentication. Please do not continue until you are logged in. If no prompt appears you may already be authenticated to this Tenant."
                         Start-Sleep -Seconds 5
                         #PnP doesn't wait for SPO Management Shell to complete it's login, have to pause here
@@ -374,7 +374,7 @@ Try {
                 Write-Host "`n$stage`n" -ForegroundColor Yellow
                 Write-Progress -Activity "Solutions Site Deployment" -CurrentOperation $stage -PercentComplete (33)
                 
-                $input = Read-Host "What is the URL of the existing Site Collection? Eg, 'https://contoso.sharepoint.com/sites/oneplacesolutions'. Do not include trailing view information such as '/AllItems.aspx'."
+                $input = Read-Host "What is the URL of the existing Site Collection? `nEg, 'https://contoso.sharepoint.com/sites/oneplacesolutions'. Do not include trailing view information such as '/AllItems.aspx'."
                 $input = $input.Trim()
                 If($input.Length -ne 0){
                     $solutionsSiteUrl = $input.TrimEnd('/')
@@ -400,8 +400,14 @@ Try {
                     Connect-PnPOnline -Url $SolutionsSiteUrl -UseWebLogin
                 }
                 Else {
-                    Write-Host "Attempting to use existing SPO Management Shell Authentication..."
-                    Connect-PnPOnline -Url $SolutionsSiteUrl -SPOManagementShell
+                    If($script:doSiteCreation) {
+                        Write-Host "Attempting to use existing SPO Management Shell Authentication..."
+                        Connect-PnPOnline -Url $SolutionsSiteUrl -SPOManagementShell
+                    }
+                    Else {
+                        Write-Host "Attempting to use new SPO Management Shell Authentication..."
+                        Connect-PnPOnline -Url $SolutionsSiteUrl -SPOManagementShell -ClearTokenCache
+                    }
                     #PnP doesn't wait for SPO Management Shell to complete it's login, have to pause here
                     Start-Sleep -Seconds 5
                     Pause
