@@ -251,9 +251,10 @@ Try {
                 Write-Host "`n$stage`n" -ForegroundColor Yellow
                 Write-Progress -Activity "Solutions Site Deployment" -CurrentOperation $stage -PercentComplete (33)
                 
-                $rootSharePoint = Read-Host "Please enter your SharePoint Online Root Site Collection URL, eg (without quotes) 'https://contoso.sharepoint.com/'"
+                $rootSharePoint = Read-Host "Please enter your SharePoint Online Root Site Collection URL, eg (without quotes) 'https://contoso.sharepoint.com'"
                 Write-Log -Level Info -Message "Root SharePoint: $rootSharePoint"
-                $rootSharePoint = $rootSharePoint.Trim("'"," ")
+                $rootSharePoint = $rootSharePoint.Trim("'")
+                $rootSharePoint = $rootSharePoint.Trim("/")
                 Write-Log -Level Info -Message "Sanitized: $rootSharePoint"
                 
                 $tenant = $rootSharepoint  -match 'https://(?<Tenant>.+)\.sharepoint.com'
