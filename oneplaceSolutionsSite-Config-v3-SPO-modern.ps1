@@ -105,6 +105,8 @@ function Write-Log {
     } 
 }
 
+Write-Log -Level Info -Message "Start of script. Start of log."
+
 Clear-Host 
 Write-Host "`n--------------------------------------------------------------------------------`n" -ForegroundColor Red
 Write-Host 'Welcome to the Solutions Site Deployment Script for OnePlace Solutions' -ForegroundColor Green
@@ -134,8 +136,8 @@ Finally {
 #Check for MSI versions of PnP / SPOMS
 Try {
     Write-Host "Checking if PnP / SPOMS installed via MSI..." -ForegroundColor Cyan
-    $pnpMSI = Get-WmiObject Win32_Product | Where-Object {$_.Name -match "PnP PowerShell*"} | Select-Object Name, Version
-    $spomsMSI = Get-WmiObject Win32_Product | Where-Object {$_.Name -match "SharePoint Online Management Shell"} | Select-Object Name, Version
+    $pnpMSI = Get-WmiObject Win32_Product -Property Name | Where-Object {$_.Name -match "PnP PowerShell*"} | Select-Object Name, Version
+    $spomsMSI = Get-WmiObject Win32_Product -Property Name | Where-Object {$_.Name -match "SharePoint Online Management Shell"} | Select-Object Name, Version
 }
 Catch {
     #Couldn't check PNP or SPOMS MSI versions
@@ -145,18 +147,34 @@ Finally {
     Write-Log -Level Info -Message "SPOMS MSI Installed: $spomsMSI"
 }
 
-If (($null -ne $pnpModule.Count) -or ((0 -ne $pnpMSI.Count) -and (1 -ne $pnpMSI.Count))) {
+#count the versions we found
+$pnpversionsInstalled = 0
+
+#assume no pre-requisites are missing yet
+$preReqMissing = $false
+If ($null -ne $pnpMsi) {
+    If ($null -eq $pnpMsi.Count) {
+        $pnpVersionsInstalled++
+    }
+    Else {
+        $pnpVersionsInstalled += $pnpMsi.Count
+    }
+}
+
+$pnpVersionsInstalled += $pnpModule.Count
+Write-Log -Level Info -Message "Count of PnP versions installed: $pnpVersionsInstalled"
+
+If ($pnpVersionsInstalled -gt 1) {
     Write-Log -Level Warn -Message "Multiple versions of PnP may be installed. This is not supported by PnP and will likely cause issues when running this script.`nPlease uninstall the versions not applicable to your SharePoint version and re-run this script."
     Pause
 }
-
-$preReqMissing = $false
-If (($null -eq $pnpModule) -and ($null -eq $pnpMSI)) {
+ElseIf ($pnpVersionsInstalled -lt 1) {
     Write-Log -Level Warn -Message "No SharePoint PnP Cmdlets installation detected! This is required for all options."
     $preReqMissing = $true
 }
+
 If (($null -eq $spomsModule) -and ($null -eq $spomsMSI)) {
-    Write-Log -Level Warn -Message "No SharePoint Online Management Shell installation detected! If you are only deploying to SharePoint On-Premise (2013/2016/2019) or to an existing Site Collection please ignore this warning."
+    Write-Log -Level Warn -Message "No SharePoint Online Management Shell installation detected! If you are deploying the Solutions Site template to an existing Site Collection please ignore this warning."
     $preReqMissing = $true
 }
 If ($preReqMissing) {
@@ -642,7 +660,7 @@ Try {
             Disconnect-SPOService -ErrorAction SilentlyContinue
         }
         Catch {}
-        Write-Log -Level Info -Message "End of script."
+        Write-Log -Level Info -Message "End of script. End of log."
     }
 }
 Catch {
