@@ -19,16 +19,6 @@ $script:doSiteCreation = $true
 #Default: $true
 $script:doModern = $true
 
-<#
-Try {
-    $pnp = Get-Module SharePointPnPPowerShell* | Select-Object Name, Version
-    $spoms = Get-InstalledModule Microsoft.Online.SharePoint.PowerShell | Select-Object Name, Version
-}
-Catch {
-    #Couldn't check PNP or SPOMS versions, not an issue
-}
-#>
-
 function Write-Log { 
     <#
         .NOTES 
@@ -124,6 +114,7 @@ Try {
     Write-Host "Checking if PnP / SPOMS installed via Module..." -ForegroundColor Cyan
     $pnpModule = Get-InstalledModule SharePointPnPPowerShell* | Select-Object Name, Version
     $spomsModule = Get-InstalledModule Microsoft.Online.SharePoint.PowerShell | Select-Object Name, Version
+    Start-Sleep -Seconds 1
 }
 Catch {
     #Couldn't check PNP or SPOMS Module versions, Package Manager may be absent
@@ -161,15 +152,23 @@ If ($null -ne $pnpMsi) {
     }
 }
 
-$pnpVersionsInstalled += $pnpModule.Count
+If ($null -ne $pnpModule) {
+    If ($null -eq $pnpModule.Count) {
+        $pnpVersionsInstalled++
+    }
+    Else {
+        $pnpVersionsInstalled += $pnpModule.Count
+    }
+}
+
 Write-Log -Level Info -Message "Count of PnP versions installed: $pnpVersionsInstalled"
 
 If ($pnpVersionsInstalled -gt 1) {
     Write-Log -Level Warn -Message "Multiple versions of PnP may be installed. This is not supported by PnP and will likely cause issues when running this script.`nPlease uninstall the versions not applicable to your SharePoint version and re-run this script."
     Pause
 }
-ElseIf ($pnpVersionsInstalled -lt 1) {
-    Write-Log -Level Warn -Message "No SharePoint PnP Cmdlets installation detected! This is required for all options."
+ElseIf (($pnpVersionsInstalled -lt 1) -or (($pnpMsi -notlike "*Online*") -and ($pnpModule -notlike "*Online*"))) {
+    Write-Log -Level Warn -Message "No SharePoint Online PnP Cmdlets installation detected! This is required for all options."
     $preReqMissing = $true
 }
 
