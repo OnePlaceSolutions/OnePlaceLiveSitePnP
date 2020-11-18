@@ -281,7 +281,7 @@ Try {
 
                 If (($rootSharePoint.Length -eq 0) -or ($tenant.Length -eq 0)) {
                     Write-Host "Root SharePoint URL invalid. Exiting script."
-                    Write-Log -Level Error -Message "No tenant entered. Exiting script."
+                    Write-Log -Level Error -Message "No valid Root Site Collection URL entered. Exiting script."
                     Exit
                 }
 
@@ -539,7 +539,7 @@ Try {
                 }
             
                 #This sets up a Custom Column Mapping list ready for use if required
-                If($null -ne (Get-PnPList -Identity 'Custom Column Mapping')) {
+                If($null -eq (Get-PnPList -Identity 'Custom Column Mapping')) {
                     Write-Log -Level Info -Message "Creating Custom Column Mapping list for later use if required."
                     Try {
                         New-PnPList -Title 'Custom Column Mapping' -Template GenericList | Out-Null
