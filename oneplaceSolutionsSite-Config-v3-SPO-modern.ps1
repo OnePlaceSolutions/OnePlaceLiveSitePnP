@@ -482,12 +482,13 @@ Try {
                 Start-Sleep -Seconds 2															
 
                 Try{
-                    Apply-PnPProvisioningTemplate -path $Script:TemplatePath -Handlers SiteSecurity, Pages -Parameters @{"licenseListID" = $licenseListId; "site" = $SolutionsSiteUrl }												  
+                    Apply-PnPProvisioningTemplate -path $Script:TemplatePath -Handlers SiteSecurity, Pages -Parameters @{"licenseListID" = $licenseListId; "site" = $SolutionsSiteUrl }
                 }
                 #If this is a GROUP#0 Site we can continue, just no Site Page unfortunately
                 Catch [System.Management.Automation.RuntimeException] {
                     If((Get-PnPProperty -ClientObject (Get-PnPWeb) -Property WebTemplate) -eq 'GROUP'){
-                        Write-Log -Level Warn -Message "GROUP#0 Site, non terminating error, continuing."
+                        Write-Log -Level Warn -Message "Team Site with Group (GROUP#0) Site detected, non terminating error, adjusting and continuing script."
+                        Get-PnPNavigationNode | Where-Object {@('2004','2005','1033','1034') -contains $_.Id} | Remove-PnPNavigationNode -Force
                     }
                     Else {
                         Throw $_.Exception.Message
