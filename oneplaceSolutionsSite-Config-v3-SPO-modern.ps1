@@ -7,17 +7,16 @@ $ErrorActionPreference = 'Stop'
 $script:logFile = "OPSScriptLog.txt"
 $script:logPath = "$env:userprofile\Documents\$script:logFile"
 
-#Set this to $true to use only the PnP auth, set to $false to use SharePoint Online Management Shell auth. Deploying to an existing Site will try to only use PnP.
-#Default: $false
-$script:onlyPnP = $false
-
-#Assume we are creating a new Site Collection from scratch
-#Default: $true
-$script:doSiteCreation = $true
-
-#Set this to $false to create and/or provision to a classic site and template (v2 SPO) instead of a modern site and template (v3 SPO)
+#Set this to $false to create and/or provision to a classic site (STS#0) and template (v2 SPO) instead of a modern site (STS#3) and template (v3 SPO). v3 SPO is required for deployment to Group Sites (GROUP#0).
 #Default: $true
 $script:doModern = $true
+
+#This handles whether SharePoint Online Management Shell authentication is being forced.
+#Default: $false
+$script:forceSPOMS = $false
+
+#Store whether we found SharePoint Online Management Shell installed
+$script:missingSPOMS = $false
 
 function Write-Log { 
     <#
@@ -172,14 +171,15 @@ ElseIf (($pnpVersionsInstalled -lt 1) -or (($pnpMsi -notlike "*Online*") -and ($
     $preReqMissing = $true
 }
 
-If (($null -eq $spomsModule) -and ($null -eq $spomsMSI)) {
-    Write-Log -Level Warn -Message "No SharePoint Online Management Shell installation detected! If you are deploying the Solutions Site template to an existing Site Collection please ignore this warning."
-    $preReqMissing = $true
-}
 If ($preReqMissing) {
     Write-Host "`nPlease ensure you have checked and installed the pre-requisites listed in the GitHub documentation prior to running this script."
     Write-Host "!!! If pre-requisites for the Solutions Site Deployment have not been completed this script/process may fail !!!" -ForegroundColor Yellow
     Pause
+}
+
+If (($null -eq $spomsModule) -and ($null -eq $spomsMSI)) {
+    Write-Log -Message "No SharePoint Online Management Shell installation detected! Cannot force SPOMS Authentication."
+    $script:missingSPOMS = $true
 }
 
 #First Try statement is to set the execution policy
@@ -258,12 +258,12 @@ Try {
             }
         }
 
-        function Deploy() {
-            Write-Log -Level Info -Message "Creating Site from scratch? $script:doSiteCreation"
-            Write-Log -Level Info -Message "Are we only using PnP? $script:onlyPnP"
+        function Deploy ([boolean]$spoms, $createSite) {
+            Write-Log -Level Info -Message "Creating Site from scratch? $createSite"
+            Write-Log -Level Info -Message "Are we using SPOMS? $spoms"
             
-            #Stage 1a Continuing with creating a Solutions Site from scratch
-            If($script:doSiteCreation) {
+            #Stage 1a Creating a Solutions Site from scratch
+            If($createSite) {
                 $stage = "Stage 1/3 - Team Site (Modern) creation"
                 Write-Host "`n$stage`n" -ForegroundColor Yellow
                 Write-Progress -Activity "Solutions Site Deployment" -CurrentOperation $stage -PercentComplete (33)
@@ -286,10 +286,7 @@ Try {
                 }
 
                 Try {
-                    If ($script:onlyPnP) {
-                        Connect-PnPOnline -Url $adminSharePoint -UseWebLogin
-                    }
-                    Else {
+                    If ($spoms) {
                         Connect-PnPOnline -Url $adminSharePoint -SPOManagementShell -ClearTokenCache
                         Write-Host "Prompting for SharePoint Online Management Shell Authentication. Please do not continue until you are logged in. If no prompt appears you may already be authenticated to this Tenant."
                         Start-Sleep -Seconds 5
@@ -297,6 +294,9 @@ Try {
                         Pause
                         #See if we can get the current web, throw an exception otherwise so we don't continue without being connected
                         Get-PnPWeb | Out-Null
+                    }
+                    Else {
+                        Connect-PnPOnline -Url $adminSharePoint -UseWebLogin
                     }
                 }
                 Catch {
@@ -372,8 +372,8 @@ Try {
                         Write-Host "Site with URL $SolutionsSiteUrl already exists. Please run the script again and choose a different Solutions Site suffix, or opt to deploy to an existing Site." -ForegroundColor Red
                         Throw $_.Exception.Message
                     }
-                    ElseIf (($exMessage -match '401') -and (-not $script:onlyPnP)) {
-                        $filler = "Auth issue with SharePoint Online Management Shell. Re-run script with '`$script:onlyPnP' flag set to `$true. `nIf the Solutions Site does show in your SharePoint Online admin center, re-run the script and opt to deploy to an existing site."
+                    ElseIf (($exMessage -match '401') -and ($spoms)) {
+                        $filler = "Auth issue with SharePoint Online Management Shell. `nIf the newly created Site Collection is visible in your SharePoint Online admin center, re-run the script and select Option 1 to deploy to that site."
                         Write-Log -Level Error -Message $filler
                     }
                     Else {
@@ -412,13 +412,8 @@ Try {
                 Write-Progress -Activity "Solutions Site Deployment" -CurrentOperation $stage -PercentComplete (66)
 
                 #Connecting to the site collection to apply the template
-                If ($script:onlyPnP) {
-                    Write-Host  "Please authenticate against the Site Collection"
-                    Start-Sleep -Seconds 3
-                    Connect-PnPOnline -Url $SolutionsSiteUrl -UseWebLogin
-                }
-                Else {
-                    If($script:doSiteCreation) {
+                If ($spoms) {
+                    If($createSite) {
                         Write-Host "Attempting to use existing SPO Management Shell Authentication..."
                         Connect-PnPOnline -Url $SolutionsSiteUrl -SPOManagementShell
                     }
@@ -429,6 +424,11 @@ Try {
                     #PnP doesn't wait for SPO Management Shell to complete it's login, have to pause here
                     Start-Sleep -Seconds 5
                     Pause
+                }
+                Else {
+                    Write-Host "Please authenticate against the Site Collection"
+                    Start-Sleep -Seconds 3
+                    Connect-PnPOnline -Url $SolutionsSiteUrl -UseWebLogin
                 }
 
                 If ($script:doModern) {
@@ -487,7 +487,7 @@ Try {
                 #If this is a GROUP#0 Site we can continue, just no Site Page unfortunately
                 Catch [System.Management.Automation.RuntimeException] {
                     If((Get-PnPProperty -ClientObject (Get-PnPWeb) -Property WebTemplate) -eq 'GROUP'){
-                        Write-Log -Level Warn -Message "GROUP#0 Site, non terminating error, continuing."
+                        Write-Log -Level Info -Message "GROUP#0 Site detected, non terminating error, continuing."
                     }
                     Else {
                         Throw $_.Exception.Message
@@ -614,8 +614,12 @@ Try {
             Write-Host 'Welcome to the Solutions Site Deployment Script for OnePlace Solutions' -ForegroundColor Green
             Write-Host "`n--------------------------------------------------------------------------------`n" -ForegroundColor Red
             Write-Host 'Please make a selection:' -ForegroundColor Yellow
-            Write-Host "1: Deploy a new Solutions Site" 
-            Write-Host "2: Deploy the Solutions Site template to an existing Site Collection"
+            Write-Host "1: Deploy the Solutions Site template to an existing Site Collection"
+            Write-Host "2: Create a new Site Collection and deploy the Solutions Site template"
+            Write-Host "P: List Pre-Requisite PnP Cmdlets / SharePoint Online Management Shell version(s) detected"
+            Write-Host "L: Change Log file: $script:logPath"
+            Write-Host "S: Toggle SharePoint Online Management Shell Authentication (currently: $script:forceSPOMS)"
+
             Write-Host "Q: Press 'Q' to quit." 
             Write-Log -Level Info -Message "Displaying Menu"
         }
@@ -625,15 +629,44 @@ Try {
         do {
             showMenu
             $userInput = Read-Host "Please select an option" 
-            Write-Log -Level Info -Message "User has entered option '$userInput'"
+            Write-Log -Message "User has entered option '$userInput'"
             switch ($userInput) { 
+                #Apply site template (SPOMS not required, this can be selected with only PnP installed)
                 '1' {
-                    Deploy
+                    Deploy -createSite $false -spoms $script:forceSPOMS
                 }
+                #Create site and deploy (SPOMS + PnP required)
                 '2' {
-                    $script:doSiteCreation = $false
-                    $script:onlyPnP = $true
-                    Deploy
+                    If (-not $script:missingSPOMS) {
+                        Deploy -createSite $true -spoms $true
+                    }
+                    Else {
+                        Write-Log -Level Warn -Message "No SharePoint Online Management Shell installation detected! Cannot automatically create the Site Collection. Please install this from the pre-requisites on GitHub and re-run this script."
+                    }
+                }
+                '3' {
+                    Write-Host "PnP Cmdlets detected via Module:"
+                    $pnpModule
+                    Write-Host "PnP Cmdlets detected via MSI:"
+                    $pnpMSI
+                    Write-Host "SharePoint Online Management Shell detected via Module:"
+                    $spomsModule
+                    Write-Host "SharePoint Online Management Shell detected via MSI:"
+                    $spomsMSI
+                    Pause
+                }
+                'p' {
+                    $script:logPath = (Read-Host "Please enter a new path excluding 'OPSScriptLog.txt' for the new log file.") + "\OPSScriptLog.txt"
+                    $script:logPath = $script:logPath.Replace('\\','\')
+                }
+                's'{
+                    If ($script:missingSPOMS) {
+                        Write-Log -Level Warn -Message "No SharePoint Online Management Shell installation detected! Cannot force SPOMS Authentication. Please install this from the pre-requisites on GitHub and re-run this script."
+                    }
+                    Else{
+                        $script:forceSPOMS = -not $script:forceSPOMS
+                        Write-Log -Message "Toggling SPOMS to $script:forceSPOMS"
+                    }
                 }
                 'q' {Exit}
             }
