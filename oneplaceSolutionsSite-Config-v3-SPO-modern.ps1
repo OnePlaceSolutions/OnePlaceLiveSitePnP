@@ -1,4 +1,9 @@
-﻿<#
+﻿<#  
+    .NOTES 
+        Created by: Ashley Gregory
+    .LINK (original)
+        https://github.com/OnePlaceSolutions/OnePlaceLiveSitePnP
+       
     This script optionally creates a new Site collection ('Team Site (Modern)' by default, 'Team Site (Classic)' by option), and applies the configuration changes / PnP template for the OnePlace Solutions site.
     All major actions are logged to 'OPSScriptLog.txt' in the user's or Administrators Documents folder, and it is uploaded to the Solutions Site at the end of provisioning.
 #>
@@ -7,7 +12,7 @@ $script:logFile = "OPSScriptLog.txt"
 $script:logPath = "$env:userprofile\Documents\$script:logFile"
 
 #URL suffix of the Site Collection to create (if we create one)
-$script:solutionsSite = 'oneplacesolutions'
+$script:solutionsSite = 'otheroneplacesolutions'
 
 #Set this to $false to create and/or provision to a classic site (STS#0) and template (v2 SPO) instead of a modern site (STS#3) and template (v3 SPO). v3 SPO is required for deployment to Group Sites (GROUP#0).
 #Default: $true
@@ -22,12 +27,12 @@ $script:missingSPOMS = $false
 
 function Write-Log { 
     <#
-        .NOTES 
-            Created by: Jason Wasser @wasserja 
-            Modified by: Ashley Gregory
-        .LINK (original)
-            https://gallery.technet.microsoft.com/scriptcenter/Write-Log-PowerShell-999c32d0 
-        #>
+    .NOTES 
+        Created by: Jason Wasser @wasserja 
+        Modified by: Ashley Gregory
+    .LINK (original)
+        https://gallery.technet.microsoft.com/scriptcenter/Write-Log-PowerShell-999c32d0 
+    #>
     [CmdletBinding()] 
     Param ( 
         [Parameter(Mandatory = $true, 
@@ -218,8 +223,8 @@ Try {
         function Attempt-Provision ([int]$count) {
             #Our first provisioning run can encounter a 403 if SharePoint has incorrectly told us the site is ready, this function will retry 
             Try {
-                Apply-PnPProvisioningTemplate -path $Script:TemplatePath -ExcludeHandlers Pages, SiteSecurity -ClearNavigation-WarningAction Ignore
-                #Apply-PnPProvisioningTemplate -Path $Script:TemplatePath -Handlers Lists -WarningAction Ignore
+                Write-Log -Message "Provisioning attempt $count-1"
+                Apply-PnPProvisioningTemplate -path $Script:TemplatePath -ExcludeHandlers Pages, SiteSecurity -ClearNavigation -WarningAction Ignore
             }
             Catch [System.Net.WebException] {
                 If ($($_.Exception.Message) -match '(403)') {
@@ -240,7 +245,6 @@ Try {
                         Write-Host "`n"
                         Pause
                         Apply-PnPProvisioningTemplate -Path $Script:templatePath -ExcludeHandlers Pages, SiteSecurity -ClearNavigation -WarningAction Ignore
-                        #Apply-PnPProvisioningTemplate -Path $Script:TemplatePath -Handlers Lists -WarningAction Ignore
                     }
                 }
                 Else {
@@ -408,14 +412,15 @@ Try {
                     If($createSite) {
                         Write-Host "Attempting to use existing SPO Management Shell Authentication..."
                         Connect-PnPOnline -Url $SolutionsSiteUrl -SPOManagementShell
+                        Start-Sleep -Seconds 5
                     }
                     Else {
                         Write-Host "Attempting to use new SPO Management Shell Authentication..."
                         Connect-PnPOnline -Url $SolutionsSiteUrl -SPOManagementShell -ClearTokenCache
+                        Start-Sleep -Seconds 5
+                        Pause
                     }
                     #PnP doesn't wait for SPO Management Shell to complete it's login, have to pause here
-                    Start-Sleep -Seconds 5
-                    Pause
                 }
                 Else {
                     Write-Host "Please authenticate against the Site Collection"
@@ -481,12 +486,6 @@ Try {
                     #If this is a GROUP#0 Site we can continue, just need to adjust some things
                     If((Get-PnPProperty -ClientObject (Get-PnPWeb) -Property WebTemplate) -eq 'GROUP'){
                         Write-Log -Message "GROUP#0 Site detected, non terminating error, continuing."
-                        Write-Log -Message "Removing some navigation nodes"
-                        Get-PnPNavigationNode | ForEach-Object {
-                            If(@(2002,2004,2005,1033).Contains($_.Id)){
-                                $_ | Remove-PnPNavigationNode -Force
-                            }
-                        }
                     }
                     Else {
                         Throw $_.Exception.Message
@@ -494,6 +493,18 @@ Try {
                 }
                 Catch {
                     Throw $_.Exception.Message
+                }
+
+                Try {
+                    Write-Log -Message "Removing some navigation nodes"
+                    Get-PnPNavigationNode | ForEach-Object {
+                        If(@(2002,2004,2005,1033).Contains($_.Id)){
+                            $_ | Remove-PnPNavigationNode -Force
+                        }
+                    }
+                }
+                Catch {
+                    #Couldn't remove the nodes, not an issue though.
                 }
                     
                 #Upload logo to Solutions Site
