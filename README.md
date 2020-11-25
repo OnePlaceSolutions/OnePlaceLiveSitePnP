@@ -36,13 +36,13 @@ You will need to install the the cmdlets on the machine you are running the scri
 ## SharePoint Online
 
 
-If you are deploying the Solutions Site to your own Microsoft 365 Tenant, please create a Team/Group Site from your SharePoint Home as below. Note it's URL, select **Option 1** in the script when prompted, and skip steps 4-7.
-![](./README-Images/createSite.png)
-![](./README-Images/configureSite.png)
+If you are deploying the Solutions Site to your own Microsoft 365 Tenant, please create a Team/Group Site from your SharePoint Home as below. Note it's URL, select **Option 1** in the script when prompted.
+> ![](./README-Images/createSite.png)
+> ![](./README-Images/configureSite.png)
 
 If any of the following applies to you:
- - You are logged in to your own Microsoft 365 Tenant on your machine and are deploying this Solutions Site in a different Tenant (multi-tenant scenario)
- - You want the script to create a Site Collection for you (requires SharePoint Administrator privileges)
+> - You are logged in to your own Microsoft 365 Tenant on your machine and are deploying this Solutions Site in a different Tenant (multi-tenant scenario)
+> - You want the script to create a Site Collection for you (requires SharePoint Administrator privileges)
 
  You must install the SharePoint Online Management Shell pre-requisite, and select **Option 2** in the script when prompted. The site will be created at 'https://&lt;yourTenant&gt;&#46;sharepoint&#46;com/sites/<b>oneplacesolutions</b>'.
 \For multi-tenant scenarios where you want to deploy the template to an existing Site Collection (**Option 1**), please toggle SharePoint Online Management Shell Authentication to 'True' in the script by selecting 'S' in the menu before selecting another option.
@@ -57,7 +57,7 @@ If any of the following applies to you:
 
 1.  Start PowerShell on your machine:
 
-    ![](./README-Images/image4.png)
+    > ![](./README-Images/image4.png)
 
 2.  Copy and paste the following command into your PowerShell command
     window and hit enter:
@@ -66,38 +66,38 @@ If any of the following applies to you:
     Invoke-Expression (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/master/oneplaceSolutionsSite-Config-v3-SPO-modern.ps1')
     ```
 
-    ![](./README-Images/invokestringSPO.png)
+    > ![](./README-Images/invokestringSPO.png)
 
 3.  The PowerShell script will execute and begin logging actions to the noted log file path. You will be prompted to choose whether to deploy the template to an existing Site Collection, or create a new Site Collection and deploy the template afterwards. 
 
     If the Solutions Site already exists and you wish to update it, or a problem was encountered during deployment, select **Option 1 **. You will be prompted to enter the URL of the existing Solutions Site.
 
-    ![](./README-Images/menu.png)
+    > ![](./README-Images/menu.png)
     
-	If you have selected **Option 1** please skip steps 4-7.
+	If you have selected **Option 1** please move on to Step 4.
 	
-4.  (**Option 2 Only**) Please enter the SharePoint Root Site Collection URL and press enter. For example, 'htt<span>ps://contoso&#46;sharepoint&#46;com':
-<!--
-    ![](./README-Images/entertenantSPO.png)
--->
-5.  You will be asked to enter your credentials for Microsoft 365 \/ SharePoint Online.
+	> 3a.  (**Option 2 Only**) Please enter the SharePoint Root Site Collection URL and press enter. For example, 'htt<span>ps://contoso&#46;sharepoint&#46;com':
+	<!--
+		![](./README-Images/entertenantSPO.png)
+	-->
+	> 3b.  You will be asked to enter your credentials for Microsoft 365 \/ SharePoint Online.
 
-6.  (**Option 2 Only**) You will then be asked to enter an email address for the owner of this Site Collection. Enter the same email address you logged in with, as only the Site Owner can deploy the script to the new Site Collection it's current state. You can change the Site Owner after deployment if you wish:
+	> 3c.  (**Option 2 Only**) You will then be asked to enter an email address for the owner of this Site Collection. Enter the same email address you logged in with, as only the Site Owner can deploy the script to the new Site Collection it's current state. You can change the Site Owner after deployment if you wish:
 
-    ![](./README-Images/enterownerSPO.png)
+		> ![](./README-Images/enterownerSPO.png)
 
-7.  (**Option 2 Only**) SharePoint will start provisioning the Site. Please leave the PowerShell window open while this happens, it will automatically resume the script when the Site is ready to configure. Depending on Microsoft service usage this can take up to 30 minutes, but creation usually occurs in less than 10 minutes.
+	> 3d.  (**Option 2 Only**) SharePoint will start provisioning the Site. Please leave the PowerShell window open while this happens, it will automatically resume the script when the Site is ready to configure. Depending on Microsoft service usage this can take up to 30 minutes, but creation usually occurs in less than 10 minutes.
 
-    ![](./README-Images/sitecreationSPO.png)
+		> ![](./README-Images/sitecreationSPO.png)
 
-8.  Once the Site Collection URL has been entered (or the Site Collection has been created as part of Option 2) the script will start configuring it for use.
+4.  Once the Site Collection URL has been entered (or the Site Collection has been created as part of Option 2) the script will start configuring it for use.
 
-    ![](./README-Images/siteconfigurationSPO.png)
+    > ![](./README-Images/siteconfigurationSPO.png)
 	
-9.  When configuration has completed, your Solutions Site URL, License List URL and License List ID will be displayed (these are also in the log file, and will be visible in the Solutions Site). You may also opt to automatically email these details now to OnePlace Solutions. These URLs will be kept on file for support purposes, and the License List ID will be required for your Production License.
+5.  When configuration has completed, your Solutions Site URL, License List URL and License List ID will be displayed (these are also in the log file, and will be visible in the Solutions Site). You may also opt to automatically email these details now to OnePlace Solutions. These URLs will be kept on file for support purposes, and the License List ID will be required for your Production License.
 
-    ![](./README-Images/configurationcompleteSPO.png)
-10.  Finally, press Enter to open your Solutions Site.\
+    > ![](./README-Images/configurationcompleteSPO.png)
+6.  Finally, press Enter to open your Solutions Site.\
     The homepage contains some useful links for training and support resources, and when you have a Production license an overview of your License usage.\
     ![](./README-Images/solutionssiteSPO.png)
     Scrolling down you can always find your Client Configuration Details (The License List URL and Solutions Site URL), and your License List ID. If you did not opt to email these automatically in the previous step, please email the License List ID to 'success@oneplacesolutions.com' when procuring a Production License. If you have received a Production license or Time Expiry Key, you may attach it here.\
