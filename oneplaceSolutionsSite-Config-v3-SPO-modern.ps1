@@ -1,11 +1,13 @@
-﻿Param ([String]$solutionsSite = 'oneplacesolutions')
-<#
+﻿<#
     This script optionally creates a new Site collection ('Team Site (Modern)' by default, 'Team Site (Classic)' by option), and applies the configuration changes / PnP template for the OnePlace Solutions site.
     All major actions are logged to 'OPSScriptLog.txt' in the user's or Administrators Documents folder, and it is uploaded to the Solutions Site at the end of provisioning.
 #>
 $ErrorActionPreference = 'Stop'
 $script:logFile = "OPSScriptLog.txt"
 $script:logPath = "$env:userprofile\Documents\$script:logFile"
+
+#URL suffix of the Site Collection to create (if we create one)
+$script:solutionsSite = 'oneplacesolutions'
 
 #Set this to $false to create and/or provision to a classic site (STS#0) and template (v2 SPO) instead of a modern site (STS#3) and template (v3 SPO). v3 SPO is required for deployment to Group Sites (GROUP#0).
 #Default: $true
@@ -316,25 +318,15 @@ Try {
                 Write-Log -Level Info -Message "Admin SharePoint set to $adminSharePoint"
                 Write-Log -Level Info -Message "Root SharePoint set to $rootSharePoint"
 
-                $solutionsSite = $solutionsSite.Trim()
-                If ($solutionsSite.Length -eq 0) {
-                    $solutionsSite = Read-Host "Please enter the URL suffix for the Solutions Site you wish to provision, eg to create 'https://contoso.sharepoint.com/sites/oneplacesolutions', just enter 'oneplacesolutions'."
-                    $solutionsSite = $solutionsSite.Trim()
-                    If ($solutionsSite.Length -eq 0) {
-                        Write-Host "Can't have an empty URL. Exiting script"
-                        Write-Log -Level Error -Message "No URL suffix entered. Exiting script."
-                        Exit
-                    }
-                }
-                Write-Log -Level Info -Message "Solutions Site URL suffix set to $solutionsSite"
+                Write-Log -Level Info -Message "Solutions Site URL suffix set to $script:solutionsSite"
 
-                $SolutionsSiteUrl = $rootSharePoint + '/sites/' + $solutionsSite
+                $SolutionsSiteUrl = $rootSharePoint + '/sites/' + $script:solutionsSite
                 $LicenseListUrl = $SolutionsSiteUrl + '/lists/Licenses'
 
                 Try {
                     $ownerEmail = Read-Host "Please enter the email address of the owner-to-be for this site. This should be your current credentials."
                     $ownerEmail = $ownerEmail.Trim()
-                    If ($ownerEmail.Length -eq 0) {
+                    If ([string]::IsNullOrWhiteSpace($ownerEmail)) {
                         $filler = 'No Site Collection owner has been entered. Exiting script.'
                         Write-Host $filler
                         Write-Log -Level Error -Message $filler
@@ -613,14 +605,15 @@ Try {
             Write-Host "`n--------------------------------------------------------------------------------`n" -ForegroundColor Red
             Write-Host 'Welcome to the Solutions Site Deployment Script for OnePlace Solutions' -ForegroundColor Green
             Write-Host "`n--------------------------------------------------------------------------------`n" -ForegroundColor Red
-            Write-Host 'Please make a selection:' -ForegroundColor Yellow
-            Write-Host "1: Deploy the Solutions Site template to an existing Site Collection"
-            Write-Host "2: Create a new Site Collection and deploy the Solutions Site template"
+            Write-Host "Please make a selection:" -ForegroundColor Yellow
+            Write-Host "1: Deploy the Solutions Site template to an existing Group or Modern Team Site Collection"
+            Write-Host "2: Create a new Modern Team Site Collection and deploy the Solutions Site template"
+            Write-Host "`nAdditional Configuration Options:" -ForegroundColor Yellow
             Write-Host "P: List Pre-Requisite PnP Cmdlets / SharePoint Online Management Shell version(s) detected"
-            Write-Host "L: Change Log file: $script:logPath"
+            Write-Host "L: Change Log file path (currently: '$script:logPath')"
             Write-Host "S: Toggle SharePoint Online Management Shell Authentication (currently: $script:forceSPOMS)"
 
-            Write-Host "Q: Press 'Q' to quit." 
+            Write-Host "`nQ: Press 'Q' to quit." 
             Write-Log -Level Info -Message "Displaying Menu"
         }
 
@@ -637,30 +630,38 @@ Try {
                 }
                 #Create site and deploy (SPOMS + PnP required)
                 '2' {
-                    If (-not $script:missingSPOMS) {
+                    If ($false -eq $script:missingSPOMS) {
                         Deploy -createSite $true -spoms $true
                     }
                     Else {
                         Write-Log -Level Warn -Message "No SharePoint Online Management Shell installation detected! Cannot automatically create the Site Collection. Please install this from the pre-requisites on GitHub and re-run this script."
                     }
                 }
-                '3' {
-                    Write-Host "PnP Cmdlets detected via Module:"
-                    $pnpModule
-                    Write-Host "PnP Cmdlets detected via MSI:"
-                    $pnpMSI
-                    Write-Host "SharePoint Online Management Shell detected via Module:"
-                    $spomsModule
-                    Write-Host "SharePoint Online Management Shell detected via MSI:"
-                    $spomsMSI
+                'p' {
+                    Write-Host "`nPnP Cmdlets detected via Module:" -ForegroundColor Yellow
+                    Write-Host $pnpModule
+                    Write-Host "`nPnP Cmdlets detected via MSI:" -ForegroundColor Yellow
+                    Write-Host $pnpMSI
+                    Write-Host "`nSharePoint Online Management Shell detected via Module:" -ForegroundColor Yellow
+                    Write-Host $spomsModule
+                    Write-Host "`nSharePoint Online Management Shell detected via MSI:" -ForegroundColor Yellow
+                    Write-Host $spomsMSI
                     Pause
                 }
-                'p' {
-                    $script:logPath = (Read-Host "Please enter a new path excluding 'OPSScriptLog.txt' for the new log file.") + "\OPSScriptLog.txt"
-                    $script:logPath = $script:logPath.Replace('\\','\')
+                'l' {
+                    $newLogPath = (Read-Host "Please enter a new path including 'OPSScriptLog.txt' and quotes for the new log file. Eg, 'C:\Users\John\Documents\OPSScriptLog.txt'.")
+                    $newLogPath = $newLogPath.Replace('\\','\')
+                    If ([string]::IsNullOrWhiteSpace($newLogPath)) {
+                        Write-Host "No path entered, keeping default '$script:logPath'"
+                    }
+                    Else {
+                        Move-Item -Path $script:logPath -Destination $newLogPath
+                        $script:logPath = $newLogPath
+                    }
+                    Pause
                 }
                 's'{
-                    If ($script:missingSPOMS) {
+                    If ($true -eq $script:missingSPOMS) {
                         Write-Log -Level Warn -Message "No SharePoint Online Management Shell installation detected! Cannot force SPOMS Authentication. Please install this from the pre-requisites on GitHub and re-run this script."
                     }
                     Else{
