@@ -36,9 +36,9 @@ You will need to install the the cmdlets on the machine you are running the scri
 ## SharePoint Online
 
 
-If you are deploying the Solutions Site to your own Microsoft 365 Tenant, please create a Team/Group Site from your SharePoint Home as below. Note it's URL, select **Option 1** in the script when prompted, and skip steps 4-7.
-![](./README-Images/createSite.png)
-![](./README-Images/configureSite.png)
+> If you are deploying the Solutions Site to your own Microsoft 365 Tenant, please create a Team/Group Site from your SharePoint Home as below. Note it's URL, select **Option 1** in the script when prompted, and skip steps 4-7.
+> > ![](./README-Images/createSite.png)
+> > ![](./README-Images/configureSite.png)
 
 If any of the following applies to you:
  - You are logged in to your own Microsoft 365 Tenant on your machine and are deploying this Solutions Site in a different Tenant (multi-tenant scenario)
