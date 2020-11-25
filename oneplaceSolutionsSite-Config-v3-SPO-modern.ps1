@@ -12,7 +12,7 @@ $script:logFile = "OPSScriptLog.txt"
 $script:logPath = "$env:userprofile\Documents\$script:logFile"
 
 #URL suffix of the Site Collection to create (if we create one)
-$script:solutionsSite = 'otheroneplacesolutions'
+$script:solutionsSite = 'oneplacesolutions'
 
 #Set this to $false to create and/or provision to a classic site (STS#0) and template (v2 SPO) instead of a modern site (STS#3) and template (v3 SPO). v3 SPO is required for deployment to Group Sites (GROUP#0).
 #Default: $true
@@ -133,8 +133,9 @@ Finally {
 #Check for MSI versions of PnP / SPOMS
 Try {
     Write-Host "Checking if PnP / SPOMS installed via MSI..." -ForegroundColor Cyan
-    $pnpMSI = Get-WmiObject Win32_Product -Property Name | Where-Object {$_.Name -match "PnP PowerShell*"} | Select-Object Name, Version
-    $spomsMSI = Get-WmiObject Win32_Product -Property Name | Where-Object {$_.Name -match "SharePoint Online Management Shell"} | Select-Object Name, Version
+    $installedProducts = Get-ItemProperty HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* | Select-Object DisplayName, DisplayVersion
+    $pnpMSI =  $installedProducts | Where-Object {$_.DisplayName -match "PnP PowerShell*"}
+    $spomsMSI = $installedProducts | Where-Object {$_.DisplayName -match "SharePoint Online Management Shell"}
 }
 Catch {
     #Couldn't check PNP or SPOMS MSI versions
@@ -388,7 +389,7 @@ Try {
                 Write-Host "`n$stage`n" -ForegroundColor Yellow
                 Write-Progress -Activity "Solutions Site Deployment" -CurrentOperation $stage -PercentComplete (33)
                 
-                $input = Read-Host "What is the URL of the existing Site Collection? `nEg, 'https://contoso.sharepoint.com/sites/oneplacesolutions'. Do not include trailing view information such as '/AllItems.aspx'."
+                $input = Read-Host "What is the URL of the existing Site Collection you have created? `nEg, 'https://contoso.sharepoint.com/sites/oneplacesolutions'. Do not include trailing view information such as '/AllItems.aspx'."
                 $input = $input.Trim()
                 If($input.Length -ne 0){
                     $solutionsSiteUrl = $input.TrimEnd('/')
