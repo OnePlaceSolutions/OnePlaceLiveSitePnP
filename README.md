@@ -16,17 +16,17 @@
 
     Windows 10/8.1 and Windows Server 2012 and greater are all ready to go, but Windows 7 is preinstalled with PowerShell v2.0 and will need to be  upgraded. This can be done by [downloading and installing the Windows Management Framework 4.0](https://www.microsoft.com/en-au/download/details.aspx?id=40855). Download and install either the x64 or x86 version based on your version of Windows 7.
 
-    ![](./README-Images/image1.png)
+    > ![](./README-Images/image1.png)
 
 3.  The SharePoint PnP PowerShell cmdlets. 
 You will need to install the the cmdlets on the machine you are running the script from that target your version of SharePoint, and we currently recommend using the last MSI release from [June 2020](https://github.com/pnp/PnP-PowerShell/releases/tag/3.22.2006.2). \
 *31/8/2020 - There is a bug in the current release of the PnP Cmdlets that may interupt deployment, so we only advise using the June 2020 release at this time.*
 
-    ![](./README-Images/image2.png)
+    > ![](./README-Images/image2.png)
 
     You will need to logon as a local Administrator to your machine to install the msi file.
 
-    ![](./README-Images/image3.png)
+    > ![](./README-Images/image3.png)
 
 4.  (Optional) (SharePoint Online Only) (Multi-Tenant) The latest [SharePoint Online Management Shell](https://www.microsoft.com/en-au/download/details.aspx?id=35588) installed on the machine you are running the script from. This is required if you would like the script to create a Site Collection for you automatically, and/or if you are deploying the template for a different Tenant to your own (eg, you are an Agent or Partner and are logged in to your own Microsoft 365 Tenant on your machine).
 
@@ -41,18 +41,18 @@ If you are deploying the Solutions Site to your own Microsoft 365 Tenant, please
 > ![](./README-Images/configureSite.png)
 
 If any of the following applies to you:
-> - You are logged in to your own Microsoft 365 Tenant on your machine and are deploying this Solutions Site in a different Tenant (multi-tenant scenario)
-> - You want the script to create a Site Collection for you (requires SharePoint Administrator privileges)
+- You are logged in to your own Microsoft 365 Tenant on your machine and are deploying this Solutions Site in a different Tenant (multi-tenant scenario)
+- You want the script to create a Site Collection for you (requires SharePoint Administrator privileges)
 
  You must install the SharePoint Online Management Shell pre-requisite, and select **Option 2** in the script when prompted. The site will be created at 'https://&lt;yourTenant&gt;&#46;sharepoint&#46;com/sites/<b>oneplacesolutions</b>'.
-\For multi-tenant scenarios where you want to deploy the template to an existing Site Collection (**Option 1**), please toggle SharePoint Online Management Shell Authentication to 'True' in the script by selecting 'S' in the menu before selecting another option.
+
+For multi-tenant scenarios where you want to deploy the template to an existing Site Collection (**Option 1**), please toggle SharePoint Online Management Shell Authentication to 'True' in the script by selecting 'S' in the menu before selecting another option.
 
 *Note: Option 1 will fail if the site named (by default '\*/oneplacesolutions') already exists.*
 
+*All actions performed with the script will be logged to 'OPSScriptLog.txt' in your Documents folder (or under the Administrator account's Documents if running PowerShell as an Administrator). When requesting assistance with this script please send this log file as an attachment. This directory can be changed in-script.*
 
-\* All actions performed with the script will be logged to 'OPSScriptLog.txt' in your Documents folder (or under the Administrator account's Documents if running PowerShell as an Administrator). When requesting assistance with this script please send this log file as an attachment. This directory can be changed in-script.
-
-\* The log file will be uploaded to the Documents folder in the Solutions Site at the end of deployment for your record keeping.
+*The log file will be uploaded to the Documents folder in the Solutions Site at the end of deployment for your record keeping.*
 
 
 1.  Start PowerShell on your machine:
@@ -70,25 +70,23 @@ If any of the following applies to you:
 
 3.  The PowerShell script will execute and begin logging actions to the noted log file path. You will be prompted to choose whether to deploy the template to an existing Site Collection, or create a new Site Collection and deploy the template afterwards. 
 
-    If the Solutions Site already exists and you wish to update it, or a problem was encountered during deployment, select **Option 1 **. You will be prompted to enter the URL of the existing Solutions Site.
+    If you have created a Group Site, or the Solutions Site already exists and you wish to update it, or a problem was encountered during initial deployment, select **Option 1 **. You will be prompted to enter the URL of the existing Solutions Site.
 
     > ![](./README-Images/menu.png)
     
-	If you have selected **Option 1** please move on to Step 4.
+	If you are deploying to a Group Site or existing Site and have selected **Option 1** please move on to Step 4.
 	
-	> 3a.  (**Option 2 Only**) Please enter the SharePoint Root Site Collection URL and press enter. For example, 'htt<span>ps://contoso&#46;sharepoint&#46;com':
-	<!--
-		![](./README-Images/entertenantSPO.png)
-	-->
-	> 3b.  You will be asked to enter your credentials for Microsoft 365 \/ SharePoint Online.
+	3a.  (**Option 2 Only**) Please enter the SharePoint Root Site Collection URL and press enter. For example, 'htt<span>ps://contoso&#46;sharepoint&#46;com':
 
-	> 3c.  (**Option 2 Only**) You will then be asked to enter an email address for the owner of this Site Collection. Enter the same email address you logged in with, as only the Site Owner can deploy the script to the new Site Collection it's current state. You can change the Site Owner after deployment if you wish:
+	3b.  You will be asked to enter your credentials for Microsoft 365 \/ SharePoint Online.
 
-		> ![](./README-Images/enterownerSPO.png)
+	3c.  (**Option 2 Only**) You will then be asked to enter an email address for the owner of this Site Collection. Enter the same email address you logged in with, as only the Site Owner can deploy the script to the new Site Collection it's current state. You can change the Site Owner after deployment if you wish:
 
-	> 3d.  (**Option 2 Only**) SharePoint will start provisioning the Site. Please leave the PowerShell window open while this happens, it will automatically resume the script when the Site is ready to configure. Depending on Microsoft service usage this can take up to 30 minutes, but creation usually occurs in less than 10 minutes.
+	> ![](./README-Images/enterownerSPO.png)
 
-		> ![](./README-Images/sitecreationSPO.png)
+	3d.  (**Option 2 Only**) SharePoint will start provisioning the Site. Please leave the PowerShell window open while this happens, it will automatically resume the script when the Site is ready to configure. Depending on Microsoft service usage this can take up to 30 minutes, but creation usually occurs in less than 10 minutes.
+
+	> ![](./README-Images/sitecreationSPO.png)
 
 4.  Once the Site Collection URL has been entered (or the Site Collection has been created as part of Option 2) the script will start configuring it for use.
 
