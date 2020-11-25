@@ -36,19 +36,21 @@ You will need to install the the cmdlets on the machine you are running the scri
 ## SharePoint Online
 
 
-If you are deploying the Solutions Site to your own Microsoft 365 Tenant, please create a Team/Group Site from your SharePoint Home and select Option 1 in the script when prompted.
+If you are deploying the Solutions Site to your own Microsoft 365 Tenant, please create a Team/Group Site from your SharePoint Home and select **Option 1** in the script when prompted.
 
 If any of the following applies to you:
- - You are logged in to your own Microsoft 365 Tenant on your machine and are deploying this Solutions Site in a different Tenant
+ - You are logged in to your own Microsoft 365 Tenant on your machine and are deploying this Solutions Site in a different Tenant (multi-tenant scenario)
  - You want the script to create a Site Collection for you (requires SharePoint Administrator privileges)
- You must install the SharePoint Online Management Shell pre-requisite, and select Option 2 in the script when prompted. The site will be created at 'https://&lt;yourTenant&gt;&#46;sharepoint&#46;com/sites/<b>oneplacesolutions</b>'.
 
-Note: * The script will not work with Option 1 if the site named already exists.
+ You must install the SharePoint Online Management Shell pre-requisite, and select **Option 2** in the script when prompted. The site will be created at 'https://&lt;yourTenant&gt;&#46;sharepoint&#46;com/sites/<b>oneplacesolutions</b>'.
+ For multi-tenant scenarios where you want to deploy the template to an existing Site Collection (**Option 1**), please toggle SharePoint Online Management Shell Authentication to 'True' in the script by selecting 'S' in the menu before selecting another option.
+
+Note: * Option 1 will fail if the site named (by default '*/oneplacesolutions') already exists.
 
 
-\* All actions performed with the script will be logged to 'OPSScriptLog.txt' in your Documents folder (or under the Administrator account's Documents if running PowerShell as an Administrator). When requesting assistance with this script please send this log file as an attachment.
+\* All actions performed with the script will be logged to 'OPSScriptLog.txt' in your Documents folder (or under the Administrator account's Documents if running PowerShell as an Administrator). When requesting assistance with this script please send this log file as an attachment. This directory can be changed in-script.
 
-\* The log file will be uploaded to the Documents folder in the Solutions Site at the end of deployment for your record keeping. If this script does not work for you, please continue with using the SharePoint On-Premise 2013/2016/2019 instructions further down the page.
+\* The log file will be uploaded to the Documents folder in the Solutions Site at the end of deployment for your record keeping.
 
 
 1.  Start PowerShell on your machine:
@@ -64,27 +66,29 @@ Note: * The script will not work with Option 1 if the site named already exists.
 
     ![](./README-Images/invokestringSPO.png)
 
-3.  The PowerShell script will execute and begin logging actions to the noted log file path. You will be prompted to choose whether to deploy a new Solutions Site, or deploy the template to an existing Site Collection. 
+3.  The PowerShell script will execute and begin logging actions to the noted log file path. You will be prompted to choose whether to deploy the template to an existing Site Collection, or create a new Site Collection and deploy the template afterwards. 
 
-    If the Solutions Site already exists and you wish to update it, or a problem was encountered during deployment, select option 2. You will also be prompted to enter the URL of the existing Solutions Site.
+    If the Solutions Site already exists and you wish to update it, or a problem was encountered during deployment, select **Option 1 **. You will be prompted to enter the URL of the existing Solutions Site.
 
     ![](./README-Images/menu.png)
     
-4.  (Option 1 Only) Please type your SharePoint Tenant name and press enter. For example, if your Root SharePoint Site Collection is 'htt<span>ps://contoso&#46;sharepoint&#46;com', just enter 'contoso':
-
+	If you have selected **Option 1** please skip steps 4-7.
+	
+4.  Option 2 Only) Please enter the SharePoint Root Site Collection URL and press enter. For example, 'htt<span>ps://contoso&#46;sharepoint&#46;com':
+<!--
     ![](./README-Images/entertenantSPO.png)
+-->
+5.  You will be asked to enter your credentials for Microsoft 365 \/ SharePoint Online.
 
-5.  You will be asked to enter your credentials for Microsoft 365 \/ SharePoint. For SharePoint Online this will be your email address.
-
-6.  (Option 1 Only) You will then be asked to enter an email address for the owner of this Site Collection. Enter the same email address you logged in with, as only the Site Owner can deploy the script to the new Site Collection it's current state. You can change the Site Owner after deployment if you wish:
+6.  (Option 2 Only) You will then be asked to enter an email address for the owner of this Site Collection. Enter the same email address you logged in with, as only the Site Owner can deploy the script to the new Site Collection it's current state. You can change the Site Owner after deployment if you wish:
 
     ![](./README-Images/enterownerSPO.png)
 
-7.  (Option 1 Only) SharePoint will start provisioning the Site. Please leave the PowerShell window open while this happens, it will automatically resume the script when the Site is ready to configure. Depending on Microsoft service usage this can take up to 30 minutes, but creation usually occurs in less than 10 minutes.
+7.  (Option 2 Only) SharePoint will start provisioning the Site. Please leave the PowerShell window open while this happens, it will automatically resume the script when the Site is ready to configure. Depending on Microsoft service usage this can take up to 30 minutes, but creation usually occurs in less than 10 minutes.
 
     ![](./README-Images/sitecreationSPO.png)
 
-8.  Once SharePoint has created the Site, the script will start configuring it for use.
+8.  Once the Site Collection URL has been entered (or the Site Collection has been created as part of Option 2) the script will start configuring it for use.
 
     ![](./README-Images/siteconfigurationSPO.png)
 	
