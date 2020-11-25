@@ -218,8 +218,8 @@ Try {
         function Attempt-Provision ([int]$count) {
             #Our first provisioning run can encounter a 403 if SharePoint has incorrectly told us the site is ready, this function will retry 
             Try {
-                Apply-PnPProvisioningTemplate -path $Script:TemplatePath -ExcludeHandlers Pages, SiteSecurity -ClearNavigation
-                Apply-PnPProvisioningTemplate -Path $Script:TemplatePath -Handlers Lists -ErrorAction Ignore
+                Apply-PnPProvisioningTemplate -path $Script:TemplatePath -ExcludeHandlers Pages, SiteSecurity -ClearNavigation-WarningAction Ignore
+                #Apply-PnPProvisioningTemplate -Path $Script:TemplatePath -Handlers Lists -WarningAction Ignore
             }
             Catch [System.Net.WebException] {
                 If ($($_.Exception.Message) -match '(403)') {
@@ -239,8 +239,8 @@ Try {
                         Write-Log -Level Info -Message $filler
                         Write-Host "`n"
                         Pause
-                        Apply-PnPProvisioningTemplate -Path $Script:templatePath -ExcludeHandlers Pages, SiteSecurity -ClearNavigation
-                        Apply-PnPProvisioningTemplate -Path $Script:TemplatePath -Handlers Lists -ErrorAction Ignore
+                        Apply-PnPProvisioningTemplate -Path $Script:templatePath -ExcludeHandlers Pages, SiteSecurity -ClearNavigation -WarningAction Ignore
+                        #Apply-PnPProvisioningTemplate -Path $Script:TemplatePath -Handlers Lists -WarningAction Ignore
                     }
                 }
                 Else {
@@ -249,7 +249,7 @@ Try {
             }
             Catch [System.Management.Automation.RuntimeException] {
                 If((Get-PnPProperty -ClientObject (Get-PnPWeb) -Property WebTemplate) -eq 'GROUP'){
-                    Write-Log -Level Warn -Message "GROUP#0 Site, non terminating error, continuing."
+                    Write-Log -Message "GROUP#0 Site, non terminating error, continuing."
                 }
                 Else {
                     Throw $_.Exception.Message
@@ -474,12 +474,19 @@ Try {
                 Start-Sleep -Seconds 2															
 
                 Try{
-                    Apply-PnPProvisioningTemplate -path $Script:TemplatePath -Handlers SiteSecurity, Pages -Parameters @{"licenseListID" = $licenseListId; "site" = $SolutionsSiteUrl }												  
+                    Apply-PnPProvisioningTemplate -path $Script:TemplatePath -Handlers SiteSecurity, Pages -Parameters @{"licenseListID" = $licenseListId; "site" = $SolutionsSiteUrl }	-ClearNavigation -WarningAction Ignore											  
                 }
-                #If this is a GROUP#0 Site we can continue, just no Site Page unfortunately
+
                 Catch [System.Management.Automation.RuntimeException] {
+                    #If this is a GROUP#0 Site we can continue, just need to adjust some things
                     If((Get-PnPProperty -ClientObject (Get-PnPWeb) -Property WebTemplate) -eq 'GROUP'){
-                        Write-Log -Level Info -Message "GROUP#0 Site detected, non terminating error, continuing."
+                        Write-Log -Message "GROUP#0 Site detected, non terminating error, continuing."
+                        Write-Log -Message "Removing some navigation nodes"
+                        Get-PnPNavigationNode | ForEach-Object {
+                            If(@(2002,2004,2005,1033).Contains($_.Id)){
+                                $_ | Remove-PnPNavigationNode -Force
+                            }
+                        }
                     }
                     Else {
                         Throw $_.Exception.Message
@@ -524,6 +531,7 @@ Try {
                     $filler = "License Item created!"
                     Write-Host "`n$filler" -ForegroundColor Green
                     Write-Log -Level Info -Message $filler
+                    Add-PnPListItem -List "Licenses" -Values @{"Title" = "If you do not have a Production license, this list will appear blank for now. You can safely delete this message." } | Out-Null
                 }
                 Else {
                     $filler = "License Item not created or is duplicate!"
