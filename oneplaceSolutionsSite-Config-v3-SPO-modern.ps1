@@ -1,5 +1,9 @@
-﻿Param ([String]$solutionsSite = 'oneplacesolutions')
-<#
+﻿<#  
+    .NOTES 
+        Created by: Ashley Gregory
+    .LINK (original)
+        https://github.com/OnePlaceSolutions/OnePlaceLiveSitePnP
+       
     This script optionally creates a new Site collection ('Team Site (Modern)' by default, 'Team Site (Classic)' by option), and applies the configuration changes / PnP template for the OnePlace Solutions site.
     All major actions are logged to 'OPSScriptLog.txt' in the user's or Administrators Documents folder, and it is uploaded to the Solutions Site at the end of provisioning.
 #>
@@ -7,26 +11,25 @@ $ErrorActionPreference = 'Stop'
 $script:logFile = "OPSScriptLog.txt"
 $script:logPath = "$env:userprofile\Documents\$script:logFile"
 
-#Set this to $true to use only the PnP auth, set to $false to use SharePoint Online Management Shell auth. Deploying to an existing Site will try to only use PnP.
-#Default: $false
-$script:onlyPnP = $false
+#URL suffix of the Site Collection to create (if we create one)
+$script:solutionsSite = 'oneplacesolutions'
 
-#Assume we are creating a new Site Collection from scratch
-#Default: $true
-$script:doSiteCreation = $true
-
-#Set this to $false to create and/or provision to a classic site and template (v2 SPO) instead of a modern site and template (v3 SPO)
+#Set this to $false to create and/or provision to a classic site (STS#0) and template (v2 SPO) instead of a modern site (STS#3) and template (v3 SPO). v3 SPO is required for deployment to Group Sites (GROUP#0).
 #Default: $true
 $script:doModern = $true
 
+#This handles whether SharePoint Online Management Shell authentication is being forced.
+#Default: $false
+$script:forceSPOMS = $false
+
 function Write-Log { 
     <#
-        .NOTES 
-            Created by: Jason Wasser @wasserja 
-            Modified by: Ashley Gregory
-        .LINK (original)
-            https://gallery.technet.microsoft.com/scriptcenter/Write-Log-PowerShell-999c32d0 
-        #>
+    .NOTES 
+        Created by: Jason Wasser @wasserja 
+        Modified by: Ashley Gregory
+    .LINK (original)
+        https://gallery.technet.microsoft.com/scriptcenter/Write-Log-PowerShell-999c32d0 
+    #>
     [CmdletBinding()] 
     Param ( 
         [Parameter(Mandatory = $true, 
@@ -87,7 +90,7 @@ function Write-Log {
             } 
         } 
          
-        # Write log entry to $Path 
+        # Write log entry to $Path
         "$FormattedDate $LevelText $Message" | Out-File -FilePath $Path -Append 
     }
     End {
@@ -105,82 +108,6 @@ Write-Host "`n------------------------------------------------------------------
 Start-Sleep -Seconds 2
 
 Write-Host "Beginning script. Logging script actions to $script:logPath" -ForegroundColor Cyan
-
-Write-Host "Performing Pre-Requisite checks, please wait..." -ForeGroundColor Yellow
-Start-Sleep -Seconds 3
-
-#Check for module versions of PnP / SPOMS
-Try {
-    Write-Host "Checking if PnP / SPOMS installed via Module..." -ForegroundColor Cyan
-    $pnpModule = Get-InstalledModule SharePointPnPPowerShell* | Select-Object Name, Version
-    $spomsModule = Get-InstalledModule Microsoft.Online.SharePoint.PowerShell | Select-Object Name, Version
-    Start-Sleep -Seconds 1
-}
-Catch {
-    #Couldn't check PNP or SPOMS Module versions, Package Manager may be absent
-}
-Finally {
-    Write-Log -Level Info -Message "PnP Module Installed: $pnpModule"
-    Write-Log -Level Info -Message "SPOMS Module Installed: $spomsModule"
-}
-
-#Check for MSI versions of PnP / SPOMS
-Try {
-    Write-Host "Checking if PnP / SPOMS installed via MSI..." -ForegroundColor Cyan
-    $pnpMSI = Get-WmiObject Win32_Product -Property Name | Where-Object {$_.Name -match "PnP PowerShell*"} | Select-Object Name, Version
-    $spomsMSI = Get-WmiObject Win32_Product -Property Name | Where-Object {$_.Name -match "SharePoint Online Management Shell"} | Select-Object Name, Version
-}
-Catch {
-    #Couldn't check PNP or SPOMS MSI versions
-}
-Finally {
-    Write-Log -Level Info -Message "PnP MSI Installed: $pnpMSI"
-    Write-Log -Level Info -Message "SPOMS MSI Installed: $spomsMSI"
-}
-
-#count the versions we found
-$pnpversionsInstalled = 0
-
-#assume no pre-requisites are missing yet
-$preReqMissing = $false
-If ($null -ne $pnpMsi) {
-    If ($null -eq $pnpMsi.Count) {
-        $pnpVersionsInstalled++
-    }
-    Else {
-        $pnpVersionsInstalled += $pnpMsi.Count
-    }
-}
-
-If ($null -ne $pnpModule) {
-    If ($null -eq $pnpModule.Count) {
-        $pnpVersionsInstalled++
-    }
-    Else {
-        $pnpVersionsInstalled += $pnpModule.Count
-    }
-}
-
-Write-Log -Level Info -Message "Count of PnP versions installed: $pnpVersionsInstalled"
-
-If ($pnpVersionsInstalled -gt 1) {
-    Write-Log -Level Warn -Message "Multiple versions of PnP may be installed. This is not supported by PnP and will likely cause issues when running this script.`nPlease uninstall the versions not applicable to your SharePoint version and re-run this script."
-    Pause
-}
-ElseIf (($pnpVersionsInstalled -lt 1) -or (($pnpMsi -notlike "*Online*") -and ($pnpModule -notlike "*Online*"))) {
-    Write-Log -Level Warn -Message "No SharePoint Online PnP Cmdlets installation detected! This is required for all options."
-    $preReqMissing = $true
-}
-
-If (($null -eq $spomsModule) -and ($null -eq $spomsMSI)) {
-    Write-Log -Level Warn -Message "No SharePoint Online Management Shell installation detected! If you are deploying the Solutions Site template to an existing Site Collection please ignore this warning."
-    $preReqMissing = $true
-}
-If ($preReqMissing) {
-    Write-Host "`nPlease ensure you have checked and installed the pre-requisites listed in the GitHub documentation prior to running this script."
-    Write-Host "!!! If pre-requisites for the Solutions Site Deployment have not been completed this script/process may fail !!!" -ForegroundColor Yellow
-    Pause
-}
 
 #First Try statement is to set the execution policy
 Try {
@@ -208,16 +135,15 @@ Try {
                 [System.Runtime.Interopservices.Marshal]::ReleaseComObject($Outlook) | Out-Null
             }
             Catch {
-                Write-Host "Failed to open a new email in Outlook." -ForegroundColor Red
-                Write-Log -Level Error -Message $_
+                Write-Log -Level Error -Message "Failed to open a new email in Outlook."
             }
         }
     
         function Attempt-Provision ([int]$count) {
             #Our first provisioning run can encounter a 403 if SharePoint has incorrectly told us the site is ready, this function will retry 
             Try {
-                Apply-PnPProvisioningTemplate -path $Script:TemplatePath -ExcludeHandlers Pages, SiteSecurity -ClearNavigation
-                Apply-PnPProvisioningTemplate -Path $Script:TemplatePath -Handlers Lists -ErrorAction Ignore
+                Write-Log -Message "Provisioning attempt $count-1"
+                Apply-PnPProvisioningTemplate -path $Script:TemplatePath -ExcludeHandlers Pages, SiteSecurity -ClearNavigation -WarningAction Ignore
             }
             Catch [System.Net.WebException] {
                 If ($($_.Exception.Message) -match '(403)') {
@@ -237,33 +163,32 @@ Try {
                         Write-Log -Level Info -Message $filler
                         Write-Host "`n"
                         Pause
-                        Apply-PnPProvisioningTemplate -Path $Script:templatePath -ExcludeHandlers Pages, SiteSecurity -ClearNavigation
-                        Apply-PnPProvisioningTemplate -Path $Script:TemplatePath -Handlers Lists -ErrorAction Ignore
+                        Apply-PnPProvisioningTemplate -Path $Script:templatePath -ExcludeHandlers Pages, SiteSecurity -ClearNavigation -WarningAction Ignore
                     }
                 }
                 Else {
-                    Throw $_.Exception.Message
+                    Throw
                 }
             }
             Catch [System.Management.Automation.RuntimeException] {
                 If((Get-PnPProperty -ClientObject (Get-PnPWeb) -Property WebTemplate) -eq 'GROUP'){
-                    Write-Log -Level Warn -Message "GROUP#0 Site, non terminating error, continuing."
+                    Write-Log -Message "GROUP#0 Site, non terminating error, continuing."
                 }
                 Else {
-                    Throw $_.Exception.Message
+                    Throw
                 }
             }
             Catch {
-                Throw $_.Exception.Message
+                Throw
             }
         }
 
-        function Deploy() {
-            Write-Log -Level Info -Message "Creating Site from scratch? $script:doSiteCreation"
-            Write-Log -Level Info -Message "Are we only using PnP? $script:onlyPnP"
+        function Deploy ([boolean]$spoms, $createSite) {
+            Write-Log -Level Info -Message "Creating Site from scratch? $createSite"
+            Write-Log -Level Info -Message "Are we using SPOMS? $spoms"
             
-            #Stage 1a Continuing with creating a Solutions Site from scratch
-            If($script:doSiteCreation) {
+            #Stage 1a Creating a Solutions Site from scratch
+            If($createSite) {
                 $stage = "Stage 1/3 - Team Site (Modern) creation"
                 Write-Host "`n$stage`n" -ForegroundColor Yellow
                 Write-Progress -Activity "Solutions Site Deployment" -CurrentOperation $stage -PercentComplete (33)
@@ -286,10 +211,7 @@ Try {
                 }
 
                 Try {
-                    If ($script:onlyPnP) {
-                        Connect-PnPOnline -Url $adminSharePoint -UseWebLogin
-                    }
-                    Else {
+                    If ($spoms) {
                         Connect-PnPOnline -Url $adminSharePoint -SPOManagementShell -ClearTokenCache
                         Write-Host "Prompting for SharePoint Online Management Shell Authentication. Please do not continue until you are logged in. If no prompt appears you may already be authenticated to this Tenant."
                         Start-Sleep -Seconds 5
@@ -297,6 +219,9 @@ Try {
                         Pause
                         #See if we can get the current web, throw an exception otherwise so we don't continue without being connected
                         Get-PnPWeb | Out-Null
+                    }
+                    Else {
+                        Connect-PnPOnline -Url $adminSharePoint -UseWebLogin
                     }
                 }
                 Catch {
@@ -307,34 +232,23 @@ Try {
                         Write-Host $filler -ForegroundColor Yellow
                         Write-Host "Please contact OnePlace Solutions Support if you are still encountering difficulties."
                         Write-Log -Level Info -Message $filler
-                        
                     }
-                    Throw $_.Exception.Message
+                    Throw
                 }
 
                 Write-Log -Level Info -Message "Tenant set to $tenant"
                 Write-Log -Level Info -Message "Admin SharePoint set to $adminSharePoint"
                 Write-Log -Level Info -Message "Root SharePoint set to $rootSharePoint"
 
-                $solutionsSite = $solutionsSite.Trim()
-                If ($solutionsSite.Length -eq 0) {
-                    $solutionsSite = Read-Host "Please enter the URL suffix for the Solutions Site you wish to provision, eg to create 'https://contoso.sharepoint.com/sites/oneplacesolutions', just enter 'oneplacesolutions'."
-                    $solutionsSite = $solutionsSite.Trim()
-                    If ($solutionsSite.Length -eq 0) {
-                        Write-Host "Can't have an empty URL. Exiting script"
-                        Write-Log -Level Error -Message "No URL suffix entered. Exiting script."
-                        Exit
-                    }
-                }
-                Write-Log -Level Info -Message "Solutions Site URL suffix set to $solutionsSite"
+                Write-Log -Level Info -Message "Solutions Site URL suffix set to $script:solutionsSite"
 
-                $SolutionsSiteUrl = $rootSharePoint + '/sites/' + $solutionsSite
+                $SolutionsSiteUrl = $rootSharePoint + '/sites/' + $script:solutionsSite
                 $LicenseListUrl = $SolutionsSiteUrl + '/lists/Licenses'
 
                 Try {
                     $ownerEmail = Read-Host "Please enter the email address of the owner-to-be for this site. This should be your current credentials."
                     $ownerEmail = $ownerEmail.Trim()
-                    If ($ownerEmail.Length -eq 0) {
+                    If ([string]::IsNullOrWhiteSpace($ownerEmail)) {
                         $filler = 'No Site Collection owner has been entered. Exiting script.'
                         Write-Host $filler
                         Write-Log -Level Error -Message $filler
@@ -370,19 +284,19 @@ Try {
                         Write-Host $exMessage -ForegroundColor Red
                         Write-Log -Level Error -Message $exMessage
                         Write-Host "Site with URL $SolutionsSiteUrl already exists. Please run the script again and choose a different Solutions Site suffix, or opt to deploy to an existing Site." -ForegroundColor Red
-                        Throw $_.Exception.Message
+                        Throw
                     }
-                    ElseIf (($exMessage -match '401') -and (-not $script:onlyPnP)) {
-                        $filler = "Auth issue with SharePoint Online Management Shell. Re-run script with '`$script:onlyPnP' flag set to `$true. `nIf the Solutions Site does show in your SharePoint Online admin center, re-run the script and opt to deploy to an existing site."
+                    ElseIf (($exMessage -match '401') -and ($spoms)) {
+                        $filler = "Auth issue with SharePoint Online Management Shell. `nIf the newly created Site Collection is visible in your SharePoint Online admin center, re-run the script and select Option 1 to deploy to that site."
                         Write-Log -Level Error -Message $filler
                     }
                     Else {
-                        Throw $_.Exception.Message
+                        Throw
                     }
                 }
                 Catch {
                     Write-Log -level Info -Message "Something went wrong during Site Creation. Details following"
-                    Throw $_.Exception.Message
+                    Throw
                 }
                 
             }
@@ -392,7 +306,7 @@ Try {
                 Write-Host "`n$stage`n" -ForegroundColor Yellow
                 Write-Progress -Activity "Solutions Site Deployment" -CurrentOperation $stage -PercentComplete (33)
                 
-                $input = Read-Host "What is the URL of the existing Site Collection? `nEg, 'https://contoso.sharepoint.com/sites/oneplacesolutions'. Do not include trailing view information such as '/AllItems.aspx'."
+                $input = Read-Host "What is the URL of the existing Site Collection you have created? `nEg, 'https://contoso.sharepoint.com/sites/oneplacesolutions'. Do not include trailing view information such as '/AllItems.aspx'."
                 $input = $input.Trim()
                 If($input.Length -ne 0){
                     $solutionsSiteUrl = $input.TrimEnd('/')
@@ -412,23 +326,24 @@ Try {
                 Write-Progress -Activity "Solutions Site Deployment" -CurrentOperation $stage -PercentComplete (66)
 
                 #Connecting to the site collection to apply the template
-                If ($script:onlyPnP) {
-                    Write-Host  "Please authenticate against the Site Collection"
-                    Start-Sleep -Seconds 3
-                    Connect-PnPOnline -Url $SolutionsSiteUrl -UseWebLogin
-                }
-                Else {
-                    If($script:doSiteCreation) {
+                If ($spoms) {
+                    If($createSite) {
                         Write-Host "Attempting to use existing SPO Management Shell Authentication..."
                         Connect-PnPOnline -Url $SolutionsSiteUrl -SPOManagementShell
+                        Start-Sleep -Seconds 5
                     }
                     Else {
                         Write-Host "Attempting to use new SPO Management Shell Authentication..."
                         Connect-PnPOnline -Url $SolutionsSiteUrl -SPOManagementShell -ClearTokenCache
+                        Start-Sleep -Seconds 5
+                        Pause
                     }
                     #PnP doesn't wait for SPO Management Shell to complete it's login, have to pause here
-                    Start-Sleep -Seconds 5
-                    Pause
+                }
+                Else {
+                    Write-Host "Please authenticate against the Site Collection"
+                    Start-Sleep -Seconds 3
+                    Connect-PnPOnline -Url $SolutionsSiteUrl -UseWebLogin
                 }
 
                 If ($script:doModern) {
@@ -482,36 +397,43 @@ Try {
                 Start-Sleep -Seconds 2															
 
                 Try{
-                    Apply-PnPProvisioningTemplate -path $Script:TemplatePath -Handlers SiteSecurity, Pages -Parameters @{"licenseListID" = $licenseListId; "site" = $SolutionsSiteUrl }
+                    Apply-PnPProvisioningTemplate -path $Script:TemplatePath -Handlers SiteSecurity, Pages -Parameters @{"licenseListID" = $licenseListId; "site" = $SolutionsSiteUrl }	-ClearNavigation -WarningAction Ignore											  
                 }
-                #If this is a GROUP#0 Site we can continue, just no Site Page unfortunately
+
                 Catch [System.Management.Automation.RuntimeException] {
+                    #If this is a GROUP#0 Site we can continue, just need to adjust some things
                     If((Get-PnPProperty -ClientObject (Get-PnPWeb) -Property WebTemplate) -eq 'GROUP'){
-                        Write-Log -Level Warn -Message "Team Site with Group (GROUP#0) Site detected, non terminating error, adjusting and continuing script."
-                        Get-PnPNavigationNode | Where-Object {@('2004','2005','1033','1034') -contains $_.Id} | Remove-PnPNavigationNode -Force
+                        Write-Log -Message "GROUP#0 Site detected, non terminating error, continuing."
                     }
                     Else {
-                        Throw $_.Exception.Message
+                        Throw
                     }
                 }
                 Catch {
-                    Throw $_.Exception.Message
+                    Throw
+                }
+
+                Try {
+                    Write-Log -Message "Removing some navigation nodes"
+                    Get-PnPNavigationNode | ForEach-Object {
+                        If(@(2002,2004,2005,1033).Contains($_.Id)){
+                            $_ | Remove-PnPNavigationNode -Force
+                        }
+                    }
+                }
+                Catch {
+                    #Couldn't remove the nodes, not an issue though.
                 }
                     
                 #Upload logo to Solutions Site
-                Try {
-                    $addLogo = Add-PnPfile -Path $PathImage -Folder "SiteAssets"
-                }
-                Catch {
-                    Throw $_.Exception.Message
-                }
+                $addLogo = Add-PnPfile -Path $PathImage -Folder "SiteAssets"
 
                 $filler = "Template Application complete!"
                 Write-Host $filler -ForeGroundColor Green
                 Write-Log -Level Info -Message $filler
                 }
             Catch {
-                Throw $_.Exception.Message
+                Throw
             }
 
             #Stage 3 Create the License Item and clean up
@@ -533,6 +455,7 @@ Try {
                     $filler = "License Item created!"
                     Write-Host "`n$filler" -ForegroundColor Green
                     Write-Log -Level Info -Message $filler
+                    Add-PnPListItem -List "Licenses" -Values @{"Title" = "If you do not have a Production license, this list will appear blank for now. You can safely delete this message." } | Out-Null
                 }
                 Else {
                     $filler = "License Item not created or is duplicate!"
@@ -567,12 +490,9 @@ Try {
                 Write-Log -Level Info -Message "Uploading log file to $SolutionsSiteUrl/Shared%20Documents"
 
                 #Upload log file to Solutions Site
-                Try {
-                    $logToSharePoint = Add-PnPfile -Path $script:LogPath -Folder "Shared Documents"
-                }
-                Catch {
-                    Throw $_.Exception.Message
-                }
+
+                $logToSharePoint = Add-PnPfile -Path $script:LogPath -Folder "Shared Documents"
+
 
                 Write-Progress -Activity "Completed" -Completed
 
@@ -614,10 +534,14 @@ Try {
             Write-Host "`n--------------------------------------------------------------------------------`n" -ForegroundColor Red
             Write-Host 'Welcome to the Solutions Site Deployment Script for OnePlace Solutions' -ForegroundColor Green
             Write-Host "`n--------------------------------------------------------------------------------`n" -ForegroundColor Red
-            Write-Host 'Please make a selection:' -ForegroundColor Yellow
-            Write-Host "1: Deploy a new Solutions Site" 
-            Write-Host "2: Deploy the Solutions Site template to an existing Site Collection"
-            Write-Host "Q: Press 'Q' to quit." 
+            Write-Host "Please make a selection:" -ForegroundColor Yellow
+            Write-Host "1: Deploy the Solutions Site template to an existing Group or Modern Team Site Collection"
+            Write-Host "2: Create a new Modern Team Site Collection and deploy the Solutions Site template"
+            Write-Host "`nAdditional Configuration Options:" -ForegroundColor Yellow
+            Write-Host "L: Change Log file path (currently: '$script:logPath')"
+            Write-Host "S: Toggle SharePoint Online Management Shell Authentication (currently: $script:forceSPOMS)"
+
+            Write-Host "`nQ: Press 'Q' to quit." 
             Write-Log -Level Info -Message "Displaying Menu"
         }
 
@@ -626,15 +550,31 @@ Try {
         do {
             showMenu
             $userInput = Read-Host "Please select an option" 
-            Write-Log -Level Info -Message "User has entered option '$userInput'"
+            Write-Log -Message "User has entered option '$userInput'"
             switch ($userInput) { 
+                #Apply site template (SPOMS not required, this can be selected with only PnP installed)
                 '1' {
-                    Deploy
+                    Deploy -createSite $false -spoms $script:forceSPOMS
                 }
+                #Create site and deploy (SPOMS + PnP required)
                 '2' {
-                    $script:doSiteCreation = $false
-                    $script:onlyPnP = $true
-                    Deploy
+                    Deploy -createSite $true -spoms $true
+                }
+                'l' {
+                    $newLogPath = (Read-Host "Please enter a new path including 'OPSScriptLog.txt' and quotes for the new log file. Eg, 'C:\Users\John\Documents\OPSScriptLog.txt'.")
+                    $newLogPath = $newLogPath.Replace('\\','\')
+                    If ([string]::IsNullOrWhiteSpace($newLogPath)) {
+                        Write-Host "No path entered, keeping default '$script:logPath'"
+                    }
+                    Else {
+                        Move-Item -Path $script:logPath -Destination $newLogPath
+                        $script:logPath = $newLogPath
+                    }
+                    Pause
+                }
+                's'{
+                    $script:forceSPOMS = -not $script:forceSPOMS
+                    Write-Log -Message "Toggling SPOMS to $script:forceSPOMS"
                 }
                 'q' {Exit}
             }
@@ -646,7 +586,7 @@ Try {
         $exMessage = $($_.Exception.Message)
         Write-Host "`nCaught an exception, further debugging information below:" -ForegroundColor Red
         Write-Log -Level Error -Message "Caught an exception. Exception Type: $exType. $exMessage"
-        Write-Host $exMessage -ForegroundColor Red
+        Write-Host "`nActual Error encountered: $exMessage" -ForegroundColor Red
         Write-Host "`nPlease send the log file at '$script:logPath' to 'support@oneplacesolutions.com' for assistance." -ForegroundColor Yellow
         Pause
     }
