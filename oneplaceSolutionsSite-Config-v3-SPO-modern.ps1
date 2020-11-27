@@ -112,84 +112,6 @@ Start-Sleep -Seconds 2
 
 Write-Host "Beginning script. Logging script actions to $script:logPath" -ForegroundColor Cyan
 
-Write-Host "Performing Pre-Requisite checks, please wait..." -ForeGroundColor Yellow
-Start-Sleep -Seconds 3
-
-#Check for module versions of PnP / SPOMS
-Try {
-    Write-Host "Checking if PnP / SPOMS installed via Module..." -ForegroundColor Cyan
-    $pnpModule = Get-InstalledModule SharePointPnPPowerShell* | Select-Object Name, Version
-    $spomsModule = Get-InstalledModule Microsoft.Online.SharePoint.PowerShell | Select-Object Name, Version
-    Start-Sleep -Seconds 1
-}
-Catch {
-    #Couldn't check PNP or SPOMS Module versions, Package Manager may be absent
-}
-Finally {
-    Write-Log -Level Info -Message "PnP Module Installed: $pnpModule"
-    Write-Log -Level Info -Message "SPOMS Module Installed: $spomsModule"
-}
-
-#Check for MSI versions of PnP / SPOMS
-Try {
-    Write-Host "Checking if PnP / SPOMS installed via MSI..." -ForegroundColor Cyan
-    $installedProducts = Get-ItemProperty HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* | Select-Object DisplayName, DisplayVersion
-    $pnpMSI =  $installedProducts | Where-Object {$_.DisplayName -match "PnP PowerShell*"}
-    $spomsMSI = $installedProducts | Where-Object {$_.DisplayName -match "SharePoint Online Management Shell"}
-}
-Catch {
-    #Couldn't check PNP or SPOMS MSI versions
-}
-Finally {
-    Write-Log -Level Info -Message "PnP MSI Installed: $pnpMSI"
-    Write-Log -Level Info -Message "SPOMS MSI Installed: $spomsMSI"
-}
-
-#count the versions we found
-$pnpversionsInstalled = 0
-
-#assume no pre-requisites are missing yet
-$preReqMissing = $false
-If ($null -ne $pnpMsi) {
-    If ($null -eq $pnpMsi.Count) {
-        $pnpVersionsInstalled++
-    }
-    Else {
-        $pnpVersionsInstalled += $pnpMsi.Count
-    }
-}
-
-If ($null -ne $pnpModule) {
-    If ($null -eq $pnpModule.Count) {
-        $pnpVersionsInstalled++
-    }
-    Else {
-        $pnpVersionsInstalled += $pnpModule.Count
-    }
-}
-
-Write-Log -Level Info -Message "Count of PnP versions installed: $pnpVersionsInstalled"
-
-If ($pnpVersionsInstalled -gt 1) {
-    Write-Log -Level Warn -Message "Multiple versions of PnP may be installed. This is not supported by PnP and will likely cause issues when running this script.`nPlease uninstall the versions not applicable to your SharePoint version and re-run this script."
-    Pause
-}
-ElseIf (($pnpVersionsInstalled -lt 1) -or (($pnpMsi -notlike "*Online*") -and ($pnpModule -notlike "*Online*"))) {
-    Write-Log -Level Warn -Message "No SharePoint Online PnP Cmdlets installation detected! This is required for all options."
-    $preReqMissing = $true
-}
-
-If ($preReqMissing) {
-    Write-Host "`nPlease ensure you have checked and installed the pre-requisites listed in the GitHub documentation prior to running this script."
-    Write-Host "!!! If pre-requisites for the Solutions Site Deployment have not been completed this script/process may fail !!!" -ForegroundColor Yellow
-    Pause
-}
-
-If (($null -eq $spomsModule) -and ($null -eq $spomsMSI)) {
-    Write-Log -Message "No SharePoint Online Management Shell installation detected! Cannot force SPOMS Authentication."
-    $script:missingSPOMS = $true
-}
-
 #First Try statement is to set the execution policy
 Try {
     Set-ExecutionPolicy Bypass -Scope Process
@@ -629,7 +551,6 @@ Try {
             Write-Host "1: Deploy the Solutions Site template to an existing Group or Modern Team Site Collection"
             Write-Host "2: Create a new Modern Team Site Collection and deploy the Solutions Site template"
             Write-Host "`nAdditional Configuration Options:" -ForegroundColor Yellow
-            Write-Host "P: List Pre-Requisite PnP Cmdlets / SharePoint Online Management Shell version(s) detected"
             Write-Host "L: Change Log file path (currently: '$script:logPath')"
             Write-Host "S: Toggle SharePoint Online Management Shell Authentication (currently: $script:forceSPOMS)"
 
@@ -650,23 +571,7 @@ Try {
                 }
                 #Create site and deploy (SPOMS + PnP required)
                 '2' {
-                    If ($false -eq $script:missingSPOMS) {
-                        Deploy -createSite $true -spoms $true
-                    }
-                    Else {
-                        Write-Log -Level Warn -Message "No SharePoint Online Management Shell installation detected! Cannot automatically create the Site Collection. Please install this from the pre-requisites on GitHub and re-run this script."
-                    }
-                }
-                'p' {
-                    Write-Host "`nPnP Cmdlets detected via Module:" -ForegroundColor Yellow
-                    Write-Host $pnpModule
-                    Write-Host "`nPnP Cmdlets detected via MSI:" -ForegroundColor Yellow
-                    Write-Host $pnpMSI
-                    Write-Host "`nSharePoint Online Management Shell detected via Module:" -ForegroundColor Yellow
-                    Write-Host $spomsModule
-                    Write-Host "`nSharePoint Online Management Shell detected via MSI:" -ForegroundColor Yellow
-                    Write-Host $spomsMSI
-                    Pause
+                    Deploy -createSite $true -spoms $true
                 }
                 'l' {
                     $newLogPath = (Read-Host "Please enter a new path including 'OPSScriptLog.txt' and quotes for the new log file. Eg, 'C:\Users\John\Documents\OPSScriptLog.txt'.")
@@ -681,13 +586,8 @@ Try {
                     Pause
                 }
                 's'{
-                    If ($true -eq $script:missingSPOMS) {
-                        Write-Log -Level Warn -Message "No SharePoint Online Management Shell installation detected! Cannot force SPOMS Authentication. Please install this from the pre-requisites on GitHub and re-run this script."
-                    }
-                    Else{
-                        $script:forceSPOMS = -not $script:forceSPOMS
-                        Write-Log -Message "Toggling SPOMS to $script:forceSPOMS"
-                    }
+                    $script:forceSPOMS = -not $script:forceSPOMS
+                    Write-Log -Message "Toggling SPOMS to $script:forceSPOMS"
                 }
                 'q' {Exit}
             }
