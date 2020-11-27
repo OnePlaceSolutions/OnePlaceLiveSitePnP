@@ -138,8 +138,7 @@ Try {
                 [System.Runtime.Interopservices.Marshal]::ReleaseComObject($Outlook) | Out-Null
             }
             Catch {
-                Write-Host "Failed to open a new email in Outlook." -ForegroundColor Red
-                Write-Log -Level Error -Message $_
+                Write-Log -Level Error -Message "Failed to open a new email in Outlook."
             }
         }
     
@@ -171,7 +170,7 @@ Try {
                     }
                 }
                 Else {
-                    Throw $_.Exception.Message
+                    Throw
                 }
             }
             Catch [System.Management.Automation.RuntimeException] {
@@ -179,11 +178,11 @@ Try {
                     Write-Log -Message "GROUP#0 Site, non terminating error, continuing."
                 }
                 Else {
-                    Throw $_.Exception.Message
+                    Throw
                 }
             }
             Catch {
-                Throw $_.Exception.Message
+                Throw
             }
         }
 
@@ -236,9 +235,8 @@ Try {
                         Write-Host $filler -ForegroundColor Yellow
                         Write-Host "Please contact OnePlace Solutions Support if you are still encountering difficulties."
                         Write-Log -Level Info -Message $filler
-                        
                     }
-                    Throw $_.Exception.Message
+                    Throw
                 }
 
                 Write-Log -Level Info -Message "Tenant set to $tenant"
@@ -289,19 +287,19 @@ Try {
                         Write-Host $exMessage -ForegroundColor Red
                         Write-Log -Level Error -Message $exMessage
                         Write-Host "Site with URL $SolutionsSiteUrl already exists. Please run the script again and choose a different Solutions Site suffix, or opt to deploy to an existing Site." -ForegroundColor Red
-                        Throw $_.Exception.Message
+                        Throw
                     }
                     ElseIf (($exMessage -match '401') -and ($spoms)) {
                         $filler = "Auth issue with SharePoint Online Management Shell. `nIf the newly created Site Collection is visible in your SharePoint Online admin center, re-run the script and select Option 1 to deploy to that site."
                         Write-Log -Level Error -Message $filler
                     }
                     Else {
-                        Throw $_.Exception.Message
+                        Throw
                     }
                 }
                 Catch {
                     Write-Log -level Info -Message "Something went wrong during Site Creation. Details following"
-                    Throw $_.Exception.Message
+                    Throw
                 }
                 
             }
@@ -411,11 +409,11 @@ Try {
                         Write-Log -Message "GROUP#0 Site detected, non terminating error, continuing."
                     }
                     Else {
-                        Throw $_.Exception.Message
+                        Throw
                     }
                 }
                 Catch {
-                    Throw $_.Exception.Message
+                    Throw
                 }
 
                 Try {
@@ -431,19 +429,14 @@ Try {
                 }
                     
                 #Upload logo to Solutions Site
-                Try {
-                    $addLogo = Add-PnPfile -Path $PathImage -Folder "SiteAssets"
-                }
-                Catch {
-                    Throw $_.Exception.Message
-                }
+                $addLogo = Add-PnPfile -Path $PathImage -Folder "SiteAssets"
 
                 $filler = "Template Application complete!"
                 Write-Host $filler -ForeGroundColor Green
                 Write-Log -Level Info -Message $filler
                 }
             Catch {
-                Throw $_.Exception.Message
+                Throw
             }
 
             #Stage 3 Create the License Item and clean up
@@ -500,12 +493,9 @@ Try {
                 Write-Log -Level Info -Message "Uploading log file to $SolutionsSiteUrl/Shared%20Documents"
 
                 #Upload log file to Solutions Site
-                Try {
-                    $logToSharePoint = Add-PnPfile -Path $script:LogPath -Folder "Shared Documents"
-                }
-                Catch {
-                    Throw $_.Exception.Message
-                }
+
+                $logToSharePoint = Add-PnPfile -Path $script:LogPath -Folder "Shared Documents"
+
 
                 Write-Progress -Activity "Completed" -Completed
 
@@ -599,7 +589,7 @@ Try {
         $exMessage = $($_.Exception.Message)
         Write-Host "`nCaught an exception, further debugging information below:" -ForegroundColor Red
         Write-Log -Level Error -Message "Caught an exception. Exception Type: $exType. $exMessage"
-        Write-Host $exMessage -ForegroundColor Red
+        Write-Host "`nActual Error encountered: $exMessage" -ForegroundColor Red
         Write-Host "`nPlease send the log file at '$script:logPath' to 'support@oneplacesolutions.com' for assistance." -ForegroundColor Yellow
         Pause
     }
