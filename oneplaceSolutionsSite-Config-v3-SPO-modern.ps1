@@ -22,9 +22,6 @@ $script:doModern = $true
 #Default: $false
 $script:forceSPOMS = $false
 
-#Store whether we found SharePoint Online Management Shell installed
-$script:missingSPOMS = $false
-
 function Write-Log { 
     <#
     .NOTES 
@@ -93,7 +90,7 @@ function Write-Log {
             } 
         } 
          
-        # Write log entry to $Path 
+        # Write log entry to $Path
         "$FormattedDate $LevelText $Message" | Out-File -FilePath $Path -Append 
     }
     End {
