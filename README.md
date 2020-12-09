@@ -19,12 +19,11 @@
     > ![](./README-Images/image1.png)
 
 3.  The SharePoint PnP PowerShell cmdlets. 
-You will need to install the the cmdlets on the machine you are running the script from that target your version of SharePoint, and we currently recommend using the last MSI release from [June 2020](https://github.com/pnp/PnP-PowerShell/releases/tag/3.22.2006.2). \
-*31/8/2020 - There is a bug in the current release of the PnP Cmdlets that may interupt deployment, so we only advise using the June 2020 release at this time.*
+You will need to install the the cmdlets on the machine you are running the script from that target your version of SharePoint, latest release that covers all SharePoint versions is [December 2020](https://github.com/pnp/PnP-PowerShell). \
 
     > ![](./README-Images/image2.png)
 
-    You will need to logon as a local Administrator to your machine to install the msi file.
+    You will need to run PowerShell as an Administrator on your machine to install the module, and select '\[A\] Yes to All' when prompted.
 
     > ![](./README-Images/image3.png)
 
