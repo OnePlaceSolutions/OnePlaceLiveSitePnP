@@ -18,10 +18,6 @@ $script:solutionsSite = 'oneplacesolutionstest'
 #Default: $true
 $script:doModern = $true
 
-#This handles whether SharePoint Online Management Shell authentication is being forced.
-#Default: $false
-$script:forceSPOMS = $false
-
 function Write-Log { 
     <#
     .NOTES 
@@ -543,11 +539,11 @@ Try {
             $userInput = Read-Host "Please select an option" 
             Write-Log -Message "User has entered option '$userInput'"
             switch ($userInput) { 
-                #Apply site template (SPOMS not required, this can be selected with only PnP installed)
+                #Apply site template
                 '1' {
                     Deploy -createSite $false
                 }
-                #Create site and deploy (SPOMS + PnP required)
+                #Create site and deploy
                 '2' {
                     Deploy -createSite $true
                 }
