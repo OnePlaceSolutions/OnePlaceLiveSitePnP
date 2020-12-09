@@ -21,11 +21,11 @@
 3.  The SharePoint PnP PowerShell cmdlets. 
 You will need to install the the cmdlets on the machine you are running the script from that target your version of SharePoint, latest release that covers all SharePoint versions is [December 2020](https://github.com/pnp/PnP-PowerShell). \
 
-    > ![](./README-Images/image2.png)
+    > ![](./README-Images/installPnP.png)
 
     You will need to run PowerShell as an Administrator on your machine to install the module, and select '\[A\] Yes to All' when prompted.
 
-    > ![](./README-Images/image3.png)
+    > ![](./README-Images/powershellAdmin.png)
 
 4.  (Optional) (SharePoint Online Only) (Multi-Tenant) The latest [SharePoint Online Management Shell](https://www.microsoft.com/en-au/download/details.aspx?id=35588) installed on the machine you are running the script from. This is required if you would like the script to create a Site Collection for you automatically, and/or if you are deploying the template for a different Tenant to your own (eg, you are an Agent or Partner and are logged in to your own Microsoft 365 Tenant on your machine).
 
