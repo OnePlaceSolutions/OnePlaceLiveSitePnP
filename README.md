@@ -23,7 +23,7 @@ You will need to install the the cmdlets on the machine you are running the scri
 
     > ![](./README-Images/image2.png)
 
-    You will need to logon as a local Administrator to your machine to install the msi file.
+    You will need to run PowerShell as an Administrator on your machine to install the module, and select '\[A\] Yes to All' when prompted.
 
     > ![](./README-Images/image3.png)
 
