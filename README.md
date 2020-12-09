@@ -19,7 +19,7 @@
     > ![](./README-Images/image1.png)
 
 3.  The SharePoint PnP PowerShell cmdlets. 
-You will need to install the the cmdlets on the machine you are running the script from that target your version of SharePoint, latest release that covers all SharePoint versions is [December 2020](https://github.com/pnp/PnP-PowerShell). \
+You will need to install the the cmdlets on the machine you are running the script from that target your version of SharePoint, latest release that covers all SharePoint versions is [December 2020](https://github.com/pnp/PnP-PowerShell). 
 
     > ![](./README-Images/image2.png)
 
