@@ -23,7 +23,7 @@ You will need to install the the cmdlets on the machine you are running the scri
 
     > ![](./README-Images/installPnP.png)
 
-    You will need to run PowerShell as an Administrator on your machine to install the module, and select '\[A\] Yes to All' when prompted.
+    You will need to run PowerShell as an Administrator on your machine to install the module, and select '\[Y\] Yes' or '\[A\] Yes to All' when prompted.
 
     > ![](./README-Images/powershellAdmin.png)
 
