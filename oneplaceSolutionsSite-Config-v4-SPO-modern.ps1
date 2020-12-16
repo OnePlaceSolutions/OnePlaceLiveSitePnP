@@ -378,6 +378,9 @@ Try {
                     #If this is a GROUP#0 Site we can continue, just need to adjust some things
                     If((Get-PnPProperty -ClientObject (Get-PnPWeb) -Property WebTemplate) -eq 'GROUP'){
                         Write-Log -Message "GROUP#0 Site detected, non terminating error, continuing."
+                        #Group Site Lists don't work with folders properly, need to explicitly add Folder content type
+                        $folderCT = Get-PnPContentType -Identity 'Folder' 
+                        Add-PnPContentTypeToList -ContentType $folderCT -List 'Licenses'
                     }
                     Else {
                         Throw
