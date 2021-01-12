@@ -410,17 +410,6 @@ Try {
                     #If this is a GROUP#0 Site we can continue, just need to adjust some things
                     If((Get-PnPProperty -ClientObject (Get-PnPWeb) -Property WebTemplate) -eq 'GROUP'){
                         Write-Log -Message "GROUP#0 Site detected, non terminating error, continuing."
-                        Try {
-                        Write-Log -Message "Removing some navigation nodes"
-                        Get-PnPNavigationNode | ForEach-Object {
-                            If(@(2002,2004,2005,1033).Contains($_.Id)){
-                                $_ | Remove-PnPNavigationNode -Force -ErrorAction Continue
-                                }
-                            }
-                        }
-                        Catch {
-                            #Couldn't remove the nodes, not an issue though.
-                        }
                     }
                     Else {
                         Throw
@@ -521,9 +510,25 @@ Try {
                 Else {
                     Write-Host "Script is run as Administrator, cannot compose email details. Please email the above information and the log file generated to 'success@oneplacesolutions.com'." -ForegroundColor Yellow
                 }
-                Write-Host "Opening Solutions Site at $SolutionsSiteUrl..." -ForegroundColor Yellow
 
+                Write-Host "Opening Solutions Site at $SolutionsSiteUrl..." -ForegroundColor Yellow
                 Pause
+
+                #cleaning up the Navigation nodes, doing this late in case there's an issue
+                If((Get-PnPProperty -ClientObject (Get-PnPWeb) -Property WebTemplate) -eq 'GROUP'){
+                    Write-Log -Message "GROUP#0 Site detected, attempting clean up of navigation nodes"
+                    Try {
+                        Get-PnPNavigationNode | ForEach-Object {
+                            If(@(2002,2004,2005,1033).Contains($_.Id)){
+                                $_ | Remove-PnPNavigationNode -Force -ErrorAction Continue
+                                }
+                            }
+                    }
+                    Catch {
+                        #Couldn't remove the nodes, not an issue though.
+                    }
+                }
+
                 Start-Process $SolutionsSiteUrl | Out-Null
             }
             Catch {
