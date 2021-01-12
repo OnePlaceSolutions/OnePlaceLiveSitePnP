@@ -79,7 +79,8 @@ If you would like the script to create the initial Site Collection for you, sele
 	
 	3a.  (**Option 2 Only**) Please enter the SharePoint Root Site Collection URL and press enter. For example, 'htt<span>ps://contoso&#46;sharepoint&#46;com':
 
-	3b.  (**Option 2 Only**) You will be asked to enter your credentials for Microsoft 365 \/ SharePoint Online.
+	3b.  (**Option 2 Only**) You will be asked to authenticate to your SharePoint Admin Site through the PnP Management Shell. Please follow the directions from the script to copy the code into the browser, and if required consent to the PnP Management Shell.
+	> ![](./README-Images/createsitepnpmanagementshelllogin.png)
 
 	3c.  (**Option 2 Only**) You will then be asked to enter an email address for the owner of this Site Collection. Enter the same email address you logged in with, as only the Site Owner can deploy the script to the new Site Collection it's current state. You can change the Site Owner after deployment if you wish:
 
@@ -89,9 +90,9 @@ If you would like the script to create the initial Site Collection for you, sele
 
 	> ![](./README-Images/sitecreationSPO.png)
 
-4.  Once the Site Collection URL has been entered (or the Site Collection has been created as part of Option 2) the script will start configuring it for use.
-
-    > ![](./README-Images/siteconfigurationSPO.png)
+4.  Once the Site Collection URL has been entered (or the Site Collection has been created as part of Option 2) the script will prompt you to authenticate against the Site Collection through the PnP Management Shell. Please follow the directions from the script to copy the code into the browser, and if required consnet to the PnP Management Shell. Afterwards, the script will start configuring the site for use.
+	> ![](./README-Images/pnpmanagementshelllogin.png)
+	> ![](./README-Images/siteconfigurationSPO.png)
 	
 5.  When configuration has completed, your Solutions Site URL, License List URL and License List ID will be displayed (these are also in the log file, and will be visible in the Solutions Site). You may also opt to automatically email these details now to OnePlace Solutions. These URLs will be kept on file for support purposes, and the License List ID will be required for your Production License.
 
