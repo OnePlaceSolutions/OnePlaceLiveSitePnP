@@ -309,6 +309,7 @@ Try {
                 
                 $input = Read-Host "What is the URL of the existing Site Collection you have created? `nEg, 'https://contoso.sharepoint.com/sites/oneplacesolutions'. Do not include trailing view information such as '/AllItems.aspx'."
                 $input = $input.Trim()
+                Write-Log "User has entered $input for Existing Site Collection URL"
                 If($input.Length -ne 0){
                     $solutionsSiteUrl = $input.TrimEnd('/')
                 }
@@ -405,29 +406,25 @@ Try {
                     Apply-PnPProvisioningTemplate -path $Script:TemplatePath -Handlers SiteSecurity, Pages -Parameters @{"licenseListID" = $licenseListId; "site" = $SolutionsSiteUrl }	-ClearNavigation -WarningAction Ignore											  
                 }
 
-                Catch [System.Management.Automation.RuntimeException] {
+                Catch {
                     #If this is a GROUP#0 Site we can continue, just need to adjust some things
                     If((Get-PnPProperty -ClientObject (Get-PnPWeb) -Property WebTemplate) -eq 'GROUP'){
                         Write-Log -Message "GROUP#0 Site detected, non terminating error, continuing."
+                        Try {
+                        Write-Log -Message "Removing some navigation nodes"
+                        Get-PnPNavigationNode | ForEach-Object {
+                            If(@(2002,2004,2005,1033).Contains($_.Id)){
+                                $_ | Remove-PnPNavigationNode -Force -ErrorAction Continue
+                                }
+                            }
+                        }
+                        Catch {
+                            #Couldn't remove the nodes, not an issue though.
+                        }
                     }
                     Else {
                         Throw
                     }
-                }
-                Catch {
-                    Throw
-                }
-
-                Try {
-                    Write-Log -Message "Removing some navigation nodes"
-                    Get-PnPNavigationNode | ForEach-Object {
-                        If(@(2002,2004,2005,1033).Contains($_.Id)){
-                            $_ | Remove-PnPNavigationNode -Force
-                        }
-                    }
-                }
-                Catch {
-                    #Couldn't remove the nodes, not an issue though.
                 }
                     
                 #Upload logo to Solutions Site
