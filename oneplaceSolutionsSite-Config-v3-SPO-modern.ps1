@@ -142,7 +142,8 @@ Try {
         function Attempt-Provision ([int]$count) {
             #Our first provisioning run can encounter a 403 if SharePoint has incorrectly told us the site is ready, this function will retry 
             Try {
-                Write-Log -Message "Provisioning attempt $count-1"
+                
+                Write-Log -Message "Provisioning attempt $($count-1)"
                 Apply-PnPProvisioningTemplate -path $Script:TemplatePath -ExcludeHandlers Pages, SiteSecurity -ClearNavigation -WarningAction Ignore
             }
             Catch [System.Net.WebException] {
@@ -154,7 +155,7 @@ Try {
 
                     If ($count -lt 4) {
                         Start-Sleep -Seconds 300
-                        $count = $count + 1
+                        [int]$count += 1
                         Attempt-Provision -count $count
                     }
                     Else {
@@ -334,6 +335,10 @@ Try {
                     }
                     Else {
                         Write-Host "Attempting to use new SPO Management Shell Authentication..."
+                        Try {Disconnect-SPOService}
+                        Catch {}
+                        Try {Disconnect-PnPOnline}
+                        Catch {}
                         Connect-PnPOnline -Url $SolutionsSiteUrl -SPOManagementShell -ClearTokenCache
                         Start-Sleep -Seconds 5
                         Pause
