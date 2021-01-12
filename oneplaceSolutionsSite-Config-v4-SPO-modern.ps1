@@ -179,9 +179,8 @@ Try {
             }
         }
 
-        function Deploy ([boolean]$spoms, $createSite) {
+        function Deploy ($createSite) {
             Write-Log -Level Info -Message "Creating Site from scratch? $createSite"
-            Write-Log -Level Info -Message "Are we using SPOMS? $spoms"
             
             #Stage 1a Creating a Solutions Site from scratch
             If($createSite) {
@@ -274,8 +273,8 @@ Try {
                         Write-Host "Site with URL $SolutionsSiteUrl already exists. Please run the script again and choose a different Solutions Site suffix, or opt to deploy to an existing Site." -ForegroundColor Red
                         Throw
                     }
-                    ElseIf (($exMessage -match '401') -and ($spoms)) {
-                        $filler = "Auth issue with SharePoint Online Management Shell. `nIf the newly created Site Collection is visible in your SharePoint Online admin center, re-run the script and select Option 1 to deploy to that site."
+                    ElseIf ($exMessage -match '401') {
+                        $filler = "Auth issue with SharePoint Online. `nIf the newly created Site Collection is visible in your SharePoint Online admin center, re-run the script and select Option 1 to deploy to that site."
                         Write-Log -Level Error -Message $filler
                     }
                     Else {
@@ -294,10 +293,10 @@ Try {
                 Write-Host "`n$stage`n" -ForegroundColor Yellow
                 Write-Progress -Activity "Solutions Site Deployment" -CurrentOperation $stage -PercentComplete (33)
                 
-                $input = Read-Host "What is the URL of the existing Site Collection you have created? `nEg, 'https://contoso.sharepoint.com/sites/oneplacesolutions'. Do not include trailing view information such as '/AllItems.aspx'."
-                $input = $input.Trim()
-                If($input.Length -ne 0){
-                    $solutionsSiteUrl = $input.TrimEnd('/')
+                $tempinput = Read-Host "What is the URL of the existing Site Collection you have created? `nEg, 'https://contoso.sharepoint.com/sites/oneplacesolutions'. Do not include trailing view information such as '/AllItems.aspx'."
+                $tempinput = $tempinput.Trim()
+                If($tempinput.Length -ne 0){
+                    $solutionsSiteUrl = $tempinput.TrimEnd('/')
                 }
                 Else {
                     Write-Host "Can't have an empty URL. Exiting script"
@@ -481,7 +480,6 @@ Try {
                 Write-Log -Level Info -Message "Uploading log file to $SolutionsSiteUrl/Shared%20Documents"
 
                 #Upload log file to Solutions Site
-
                 $logToSharePoint = Add-PnPfile -Path $script:LogPath -Folder "Shared Documents"
 
 
@@ -500,9 +498,8 @@ Try {
                 $currentPrincipal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
         
                 If ($false -eq $currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
-                    $input = Read-Host "Would you like to email this information and Log file to OnePlace Solutions now? (yes or no)"
-                    $input = $input[0]
-                    If ($input -eq 'y') {
+                    $tempinput = Read-Host "Would you like to email this information and Log file to OnePlace Solutions now? (yes or no)"
+                    If ($tempinput[0] -eq 'y') {
                         $file = Get-ChildItem $script:logPath
                         Send-OutlookEmail -attachment $file.FullName -body $importants
                     }
