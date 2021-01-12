@@ -18,9 +18,8 @@
 
     > ![](./README-Images/image1.png)
 
-3.  The SharePoint PnP PowerShell cmdlets. 
-You will need to install the the cmdlets on the machine you are running the script from that target your version of SharePoint, and we currently recommend using the last MSI release from [June 2020](https://github.com/pnp/PnP-PowerShell/releases/tag/3.22.2006.2). \
-*31/8/2020 - There is a bug in the current release of the PnP Cmdlets that may interupt deployment, so we only advise using the June 2020 release at this time.*
+3.  (SharePoint On-Premise Only) The SharePoint PnP PowerShell cmdlets. 
+You will need to install the the cmdlets on the machine you are running the script from that target your version of SharePoint. If you are using SharePoint Online, the classic PnP Cmdlets will not work. Please see point 4 below.
 
     > ![](./README-Images/image2.png)
 
@@ -28,7 +27,15 @@ You will need to install the the cmdlets on the machine you are running the scri
 
     > ![](./README-Images/image3.png)
 
-4.  (Optional) (SharePoint Online Only) (Multi-Tenant) The latest [SharePoint Online Management Shell](https://www.microsoft.com/en-au/download/details.aspx?id=35588) installed on the machine you are running the script from. This is required if you would like the script to create a Site Collection for you automatically, and/or if you are deploying the template for a different Tenant to your own (eg, you are an Agent or Partner and are logged in to your own Microsoft 365 Tenant on your machine).
+4.  (SharePoint Online Only) (Multi-Tenant) The latest [PnP.PowerShell](https://pnp.github.io/powershell/articles/installation.html) installed on the machine you are running the script from. You can run this command in PowerShell to install it. 
+*Note that you will need to ensure you have uninstalled any previous PnP Cmdlets prior to running this.*
+    ```
+    Install-Module -Name "PnP.PowerShell" -AllowPrerelease
+    ```
+    This will also require your Microsoft 365 Administrator to grant App access to the PnP Management Shell in your 365 Tenant. You can check for this ahead of running the script by entering this command in PowerShell
+    ```
+    Register-PnPManagementShellAccess
+    ```
 
 5.  If you need to deploy this Site without GitHub Access (eg, On-Premise deployment without internet access, secure environment), please download the applicable PowerShell Script ([SharePoint 2013/2016/2019](./oneplaceSolutionsSite-Config-v2-onPrem-classic.ps1) or [SharePoint Online](./oneplaceSolutionsSite-Config-v3-SPO-modern.ps1)), template XML ([SharePoint 2013/2016/2019](./oneplaceSolutionsSite-template-v2.xml) or [SharePoint Online](./oneplaceSolutionsSite-template-v3-modern.xml)) and [logo PNG](./oneplacesolutions-logo.png) and place them in '%LocalAppData%\Temp' on the machine you plan to run the script offline from. You must deploy from the downloaded templates within 7 days, or the script will consider them to be stale and attempt to download current versions from GitHub.
 	
@@ -36,21 +43,15 @@ You will need to install the the cmdlets on the machine you are running the scri
 ## SharePoint Online
 
 
-If you are deploying the Solutions Site to your own Microsoft 365 Tenant, please create a Team/Group Site from your SharePoint Home as below. Note it's URL, and select **Option 1** in the script when prompted.
+If you do not want the script to create a Site Collection automatically for you, please create a Team/Group Site from your SharePoint Home as below or create a Team Site(no group) in the SharePoint Admin Center. Note it's URL, and select **Option 1** in the script when prompted.
 > ![](./README-Images/createSite.png)
 > ![](./README-Images/configureSite.png)
 
-If either of the following applies to you:
-- You are logged in to your own Microsoft 365 Tenant on your machine and are deploying this Solutions Site in a different Tenant (Multi-tenant scenario)
-- You want the script to create a Site Collection for you (requires SharePoint Administrator privileges)
-
- You *must* install the SharePoint Online Management Shell pre-requisite. 
- For multi-tenant scenarios where you want to deploy the template to an existing Site Collection (**Option 1**), please toggle SharePoint Online Management Shell Authentication to 'True' in the script by selecting 'S' in the menu before selecting another option.
- If you would like the script to create the initial Site Collection for you, select **Option 2** in the script when prompted. The site will be created at 'https://&lt;yourTenant&gt;&#46;sharepoint&#46;com/sites/<b>oneplacesolutions</b>'.
+If you would like the script to create the initial Site Collection for you, select **Option 2** in the script when prompted. A Team Site(no group) will be created at 'https://&lt;yourTenant&gt;&#46;sharepoint&#46;com/sites/<b>oneplacesolutions</b>'.
 
 *Note: Option 1 will fail if the site named (by default '\*/oneplacesolutions') already exists.*
 
-*All actions performed with the script will be logged to 'OPSScriptLog.txt' in your Documents folder (or under the Administrator account's Documents if running PowerShell as an Administrator). When requesting assistance with this script please send this log file as an attachment. This directory can be changed in-script.*
+*All actions performed with the script will be logged to 'OPSScriptLog.txt' in your Documents folder (or possibly under the Administrator account's Documents if running PowerShell as an Administrator). When requesting assistance with this script please send this log file as an attachment. This directory can be changed in-script.*
 
 *The log file will be uploaded to the Documents folder in the Solutions Site at the end of deployment for your record keeping.*
 
@@ -63,7 +64,7 @@ If either of the following applies to you:
     window and hit enter:
 
     ```PowerShell
-    Invoke-Expression (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/master/oneplaceSolutionsSite-Config-v3-SPO-modern.ps1')
+    Invoke-Expression (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/master/oneplaceSolutionsSite-Config-v4-SPO-modern.ps1')
     ```
 
     > ![](./README-Images/invokestringSPO.png)
