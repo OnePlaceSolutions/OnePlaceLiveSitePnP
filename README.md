@@ -18,21 +18,17 @@
 
     > ![](./README-Images/image1.png)
 
-3.  (SharePoint On-Premise Only) The SharePoint PnP PowerShell cmdlets. 
-You will need to install the the cmdlets on the machine you are running the script from that target your version of SharePoint. If you are using SharePoint Online, the classic PnP Cmdlets will not work. Please see point 4 below.
+3.  (SharePoint On-Premise Only) The [SharePoint PnP PowerShell cmdlets](https://github.com/pnp/PnP-PowerShell). 
+You will need to install the the cmdlets on the machine you are running the script from that target your version of SharePoint. If you are using SharePoint Online, the classic PnP Cmdlets may not work as these have been deprecated in favour of PnP.PowerShell. Please see point 4 below.
 
-    > ![](./README-Images/image2.png)
-
-    You will need to logon as a local Administrator to your machine to install the msi file.
-
-    > ![](./README-Images/image3.png)
+    > ![](./README-Images/installPnPClassic.png)
 
 4.  (SharePoint Online Only) (Multi-Tenant) The latest [PnP.PowerShell](https://pnp.github.io/powershell/articles/installation.html) installed on the machine you are running the script from. You can run this command in PowerShell to install it. 
-*Note that you will need to ensure you have uninstalled any previous PnP Cmdlets prior to running this.*
+*Note that you will need to ensure you have uninstalled any previous 'Classic' PnP Cmdlets prior to installing this.*
     ```
     Install-Module -Name "PnP.PowerShell" -AllowPrerelease
     ```
-    This will also require your Microsoft 365 Administrator to grant App access to the PnP Management Shell in your 365 Tenant. You can check for this ahead of running the script by entering this command in PowerShell
+    This will also require your Microsoft 365 Administrator to grant App access to the PnP Management Shell in your 365 Tenant. You can check and grant this ahead of running the script by entering this command in PowerShell and following the directions. Documentation and more information [here](https://pnp.github.io/powershell/articles/authentication.html).
     ```
     Register-PnPManagementShellAccess
     ```
