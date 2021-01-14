@@ -101,7 +101,7 @@ If you would like the script to create the initial Site Collection for you, sele
 
 	> ![](./README-Images/sitecreationSPO.png)
 
-4.  Once the Site Collection URL has been entered (or the Site Collection has been created as part of Option 2) the script may prompt you to authenticate against the Site Collection through the PnP Management Shell. Please follow the directions from the script to copy the code into the browser, and if required consnet to the PnP Management Shell. Afterwards, the script will start configuring the site for use.
+4.  Once the Site Collection URL has been entered (or the Site Collection has been created as part of Option 2) the script may prompt you to authenticate against the Site Collection through the PnP Management Shell. Please follow the directions from the script to copy the code into the browser, and if required consent to the PnP Management Shell. Afterwards, the script will start configuring the site for use.
 	> ![](./README-Images/pnpmanagementshelllogin.png)
 	> ![](./README-Images/siteconfigurationSPO.png)
 	
