@@ -101,7 +101,7 @@ Write-Host "`n------------------------------------------------------------------
 Write-Host 'Welcome to the Solutions Site Deployment Script for OnePlace Solutions' -ForegroundColor Green
 Write-Host "`n--------------------------------------------------------------------------------`n" -ForegroundColor Red
 
-Start-Sleep -Seconds 2
+Start-Sleep -Seconds 1
 
 Write-Host "Beginning script. Logging script actions to $script:logPath" -ForegroundColor Cyan
 
@@ -138,13 +138,13 @@ Try {
         function Attempt-Provision ([int]$count) {
             #Our first provisioning run can encounter a 403 if SharePoint has incorrectly told us the site is ready, this function will retry 
             Try {
-                Write-Log -Message "Provisioning attempt $count-1"
+                Write-Log -Message "Provisioning attempt $($count-1)"
                 Invoke-PnPSiteTemplate -path $Script:TemplatePath -ExcludeHandlers Pages, SiteSecurity -ClearNavigation -WarningAction Ignore
             }
             Catch [System.Net.WebException] {
                 If ($($_.Exception.Message) -match '(403)') {
                     #SPO returning a trigger happy ready response, sleep for a bit...
-                    $filler = "SharePoint Online incorrectly indicated the site is ready to provision, pausing the script to wait for it to catch up. Retrying in 5 minutes. Retry $count/4"
+                    $filler = "SharePoint Online incorrectly indicated the site is ready to provision, pausing the script to wait for it to catch up. Retrying in 5 minutes. Retry $($count)/4"
                     Write-Host $filler -ForegroundColor Yellow
                     Write-Log -Level Info -Message $filler
 
@@ -207,7 +207,7 @@ Try {
 
                 Try {
                     Write-Host "Prompting for PnP Management Shell Authentication. Please copy the code displayed into the browser as directed and log in."
-                    Start-Sleep -Seconds 5
+                    Start-Sleep -Seconds 1
                     Connect-PnPOnline -Url $adminSharePoint -PnPManagementShell -LaunchBrowser
                     Get-PnPWeb | Out-Null
                 }
@@ -239,6 +239,7 @@ Try {
                         $filler = 'No Site Collection owner has been entered. Exiting script.'
                         Write-Host $filler
                         Write-Log -Level Error -Message $filler
+                        Pause
                         Exit
                     }
                     #Creating the site collection
@@ -315,7 +316,7 @@ Try {
                 #Connecting to the site collection to apply the template
 
                 Write-Host "Prompting for PnP Management Shell Authentication. Please copy the code displayed into the browser as directed and log in.`nIf no prompt appears you may already be authenticated."
-                Start-Sleep -Seconds 5
+                Start-Sleep -Seconds 1
                 Connect-PnPOnline -Url $SolutionsSiteUrl -PnPManagementShell -LaunchBrowser
 
                 If ($script:doModern) {
