@@ -22,7 +22,7 @@ A script to create the required Lists in a Site Collection for licensing and oth
 
     > ![](./README-Images/image1.png)
 
-3.  (SharePoint On-Premise Only) [The SharePoint PnP PowerShell cmdlets](https://github.com/pnp/PnP-PowerShell). 
+3.  **(SharePoint On-Premise Only)** [The SharePoint PnP PowerShell cmdlets](https://github.com/pnp/PnP-PowerShell). 
     You will need to install **only the the cmdlets that target your version of SharePoint** on the machine you are running the script from. If you have installed the cmdlets previously using an MSI file these need to be uninstalled from Control Panel, but if you have installed the cmdlets previously using PowerShell Get you can update them with this command:
     ```
     Update-Module SharePointPnPPowerShell<version>
@@ -34,7 +34,7 @@ A script to create the required Lists in a Site Collection for licensing and oth
     ```
     > ![](./README-Images/installPnPClassic.png)
 
-4.  (SharePoint Online Only) (Multi-Tenant supported) [The latest PnP.PowerShell](https://pnp.github.io/powershell/articles/installation.html) installed on the machine you are running the script from. You can run the below command in PowerShell (as Administrator) to install it. 
+4.  **(SharePoint Online Only)** (Multi-Tenant supported) [The latest PnP.PowerShell](https://pnp.github.io/powershell/articles/installation.html) installed on the machine you are running the script from. You can run the below command in PowerShell (as Administrator) to install it. 
 
     Install new PnP.PowerShell Cmdlets:
     ```
