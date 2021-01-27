@@ -1,5 +1,7 @@
 # OnePlaceLiveSitePnP ReadMe
 
+A script to create the required Lists in a Site Collection for licensing and other uses by the OnePlace Solutions clients.
+
 ## Table of Contents
 
 1. [Pre-Requisites](#pre-requisites)
@@ -25,8 +27,6 @@
     ```
     Update-Module SharePointPnPPowerShell<version>
     ```
-
-    If you are using SharePoint Online, the classic PnP Cmdlets may not work as these have been deprecated in favour of PnP.PowerShell and no longer receive updates. Please uninstall them using command 'Uninstall-Module SharePointPnPPowerShellOnline', and see point 4.
     
     This is the command pictured to install the PnP Cmdlets via PowerShell Get:
     ```
