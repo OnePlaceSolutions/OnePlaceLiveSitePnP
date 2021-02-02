@@ -12,7 +12,7 @@ $script:logFile = "OPSScriptLog.txt"
 $script:logPath = "$env:userprofile\Documents\$script:logFile"
 
 #URL suffix of the Site Collection to create (if we create one)
-$script:solutionsSite = 'oneplacesolutionstest'
+$script:solutionsSite = 'oneplacesolutions'
 
 #Set this to $false to create and/or provision to a classic site (STS#0) and template (v2 SPO) instead of a modern site (STS#3) and template (v3 SPO). v3 SPO is required for deployment to Group Sites (GROUP#0).
 #Default: $true
@@ -315,9 +315,10 @@ Try {
 
                 #Connecting to the site collection to apply the template
 
-                Write-Host "Prompting for PnP Management Shell Authentication. Please copy the code displayed into the browser as directed and log in.`nIf no prompt appears you may already be authenticated."
+                #Write-Host "Prompting for PnP Management Shell Authentication. Please copy the code displayed into the browser as directed and log in.`nIf no prompt appears you may already be authenticated."
+                Write-Host "Prompting for authentication to Site Collection..."
                 Start-Sleep -Seconds 1
-                Connect-PnPOnline -Url $SolutionsSiteUrl -PnPManagementShell -LaunchBrowser
+                Connect-PnPOnline -Url $SolutionsSiteUrl -UseWebLogin
 
                 If ($script:doModern) {
                     $Url = "https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/master/oneplaceSolutionsSite-template-v3-modern.xml"    
