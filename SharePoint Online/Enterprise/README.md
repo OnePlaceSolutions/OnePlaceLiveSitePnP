@@ -13,16 +13,7 @@ A script to create the required Lists in a Site Collection for licensing and oth
 
 1.  The following SharePoint environments: SharePoint Online
 
-2.  PowerShell v3.0 or greater installed on your work environment. 
-
-    If you are using Windows 10/8.1/Server 2012 you will already have a compatible version of PowerShell and can skip this point.
-    
-    If you are using Windows 7, this is preinstalled with PowerShell v2.0 and will need to be  upgraded. This can be done by [downloading and installing the Windows Management Framework 4.0](https://www.microsoft.com/en-au/download/details.aspx?id=40855). Download and install either the x64 or x86 version based on your version of Windows 7.
-
-    > ![](./README-Images/image1.png)
-
-
-3.  **(SharePoint Online Only)** (Multi-Tenant supported) [The latest PnP.PowerShell](https://pnp.github.io/powershell/articles/installation.html) installed on the machine you are running the script from. You can run the below command in PowerShell (as Administrator) to install it. 
+2.  **(SharePoint Online Only)** (Multi-Tenant supported) [The latest PnP.PowerShell](https://pnp.github.io/powershell/articles/installation.html) installed on the machine you are running the script from. You can run the below command in PowerShell (as Administrator) to install it. 
 
     Install new PnP.PowerShell Cmdlets:
     ```
