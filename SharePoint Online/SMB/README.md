@@ -38,7 +38,7 @@ A script to create the required Lists in a Site Collection for licensing and oth
     window and hit enter:
 
     ```PowerShell
-    Invoke-Expression (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/master/oneplaceSolutionsSite-Config-v4-SPO-modern.ps1')
+    Invoke-Expression (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/master/SharePoint%20Online/SMB/oneplaceSolutionsSite-Config-v4-SPO-modern.ps1')
     ```
 
     > ![](./README-Images/invokestringSPO.png)
