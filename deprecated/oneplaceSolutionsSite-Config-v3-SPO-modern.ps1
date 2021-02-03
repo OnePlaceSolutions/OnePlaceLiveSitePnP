@@ -142,7 +142,8 @@ Try {
         function Attempt-Provision ([int]$count) {
             #Our first provisioning run can encounter a 403 if SharePoint has incorrectly told us the site is ready, this function will retry 
             Try {
-                Write-Log -Message "Provisioning attempt $count-1"
+                
+                Write-Log -Message "Provisioning attempt $($count-1)"
                 Apply-PnPProvisioningTemplate -path $Script:TemplatePath -ExcludeHandlers Pages, SiteSecurity -ClearNavigation -WarningAction Ignore
             }
             Catch [System.Net.WebException] {
@@ -154,7 +155,7 @@ Try {
 
                     If ($count -lt 4) {
                         Start-Sleep -Seconds 300
-                        $count = $count + 1
+                        [int]$count += 1
                         Attempt-Provision -count $count
                     }
                     Else {
@@ -308,6 +309,7 @@ Try {
                 
                 $input = Read-Host "What is the URL of the existing Site Collection you have created? `nEg, 'https://contoso.sharepoint.com/sites/oneplacesolutions'. Do not include trailing view information such as '/AllItems.aspx'."
                 $input = $input.Trim()
+                Write-Log "User has entered $input for Existing Site Collection URL"
                 If($input.Length -ne 0){
                     $solutionsSiteUrl = $input.TrimEnd('/')
                 }
@@ -334,6 +336,10 @@ Try {
                     }
                     Else {
                         Write-Host "Attempting to use new SPO Management Shell Authentication..."
+                        Try {Disconnect-SPOService}
+                        Catch {}
+                        Try {Disconnect-PnPOnline}
+                        Catch {}
                         Connect-PnPOnline -Url $SolutionsSiteUrl -SPOManagementShell -ClearTokenCache
                         Start-Sleep -Seconds 5
                         Pause
@@ -400,7 +406,7 @@ Try {
                     Apply-PnPProvisioningTemplate -path $Script:TemplatePath -Handlers SiteSecurity, Pages -Parameters @{"licenseListID" = $licenseListId; "site" = $SolutionsSiteUrl }	-ClearNavigation -WarningAction Ignore											  
                 }
 
-                Catch [System.Management.Automation.RuntimeException] {
+                Catch {
                     #If this is a GROUP#0 Site we can continue, just need to adjust some things
                     If((Get-PnPProperty -ClientObject (Get-PnPWeb) -Property WebTemplate) -eq 'GROUP'){
                         Write-Log -Message "GROUP#0 Site detected, non terminating error, continuing."
@@ -408,21 +414,6 @@ Try {
                     Else {
                         Throw
                     }
-                }
-                Catch {
-                    Throw
-                }
-
-                Try {
-                    Write-Log -Message "Removing some navigation nodes"
-                    Get-PnPNavigationNode | ForEach-Object {
-                        If(@(2002,2004,2005,1033).Contains($_.Id)){
-                            $_ | Remove-PnPNavigationNode -Force
-                        }
-                    }
-                }
-                Catch {
-                    #Couldn't remove the nodes, not an issue though.
                 }
                     
                 #Upload logo to Solutions Site
@@ -519,9 +510,25 @@ Try {
                 Else {
                     Write-Host "Script is run as Administrator, cannot compose email details. Please email the above information and the log file generated to 'success@oneplacesolutions.com'." -ForegroundColor Yellow
                 }
-                Write-Host "Opening Solutions Site at $SolutionsSiteUrl..." -ForegroundColor Yellow
 
+                Write-Host "Opening Solutions Site at $SolutionsSiteUrl..." -ForegroundColor Yellow
                 Pause
+
+                #cleaning up the Navigation nodes, doing this late in case there's an issue
+                If((Get-PnPProperty -ClientObject (Get-PnPWeb) -Property WebTemplate) -eq 'GROUP'){
+                    Write-Log -Message "GROUP#0 Site detected, attempting clean up of navigation nodes"
+                    Try {
+                        Get-PnPNavigationNode | ForEach-Object {
+                            If(@(2002,2004,2005,1033).Contains($_.Id)){
+                                $_ | Remove-PnPNavigationNode -Force -ErrorAction Continue
+                                }
+                            }
+                    }
+                    Catch {
+                        #Couldn't remove the nodes, not an issue though.
+                    }
+                }
+
                 Start-Process $SolutionsSiteUrl | Out-Null
             }
             Catch {
