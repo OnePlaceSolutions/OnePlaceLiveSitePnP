@@ -58,7 +58,7 @@ If you would like the script to create the initial Site Collection for you, sele
     window and hit enter:
 
     ```PowerShell
-    Invoke-Expression (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/master/SharePoint%20Online/Enterprise/oneplaceSolutionsSite-Config-v4-SPO-modern.ps1')
+    Invoke-Expression (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/master/SharePoint%20Online/Enterprise/oneplaceSolutionsSite-Config-v4-SPO-modern-create.ps1')
     ```
 
     > ![](./README-Images/invokestringSPO.png)
