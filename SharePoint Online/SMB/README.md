@@ -19,7 +19,7 @@ A script to create the required Lists in a Site Collection for licensing and oth
     ```
     Install-Module -Name "PnP.PowerShell"
     ```
-    
+   
 ## SharePoint Online
 
 *All actions performed with the script will be logged to 'OPSScriptLog.txt' in your Documents folder (or possibly under the Administrator account's Documents if running PowerShell as an Administrator). When requesting assistance with this script please send this log file as an attachment. This directory can be changed in-script.*
@@ -49,6 +49,8 @@ A script to create the required Lists in a Site Collection for licensing and oth
 
 5.  Once the Site Collection URL has been entered (or the Site Collection has been created as part of Option 2) the script will prompt you to authenticate against the Site Collection through PnP. Afterwards the script will start configuring the site for use.
 	> ![](./README-Images/siteconfigurationSPO.png)
+	
+	*If the script reports an issue downloading the template resources from GitHub, please download this [OfflineBundle.zip](../OfflineBundle.zip) and extract it's contents to %localappdata%/Temp on your machine.*
 	
 6.  When configuration has completed, your Solutions Site URL, License List URL and License List ID will be displayed (these are also in the log file noted earlier, and will be visible in the Solutions Site). You may be presented with the option to automatically email these details now to OnePlace Solutions. These URLs will be kept on file for support purposes, and the License List ID will be required for provisioning your Production License.
 

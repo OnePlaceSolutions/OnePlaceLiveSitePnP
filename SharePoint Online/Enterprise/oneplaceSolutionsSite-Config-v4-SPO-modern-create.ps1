@@ -332,18 +332,28 @@ Try {
                 $PathImage = "$env:temp\oneplacesolutions-logo.png" 
 
                 #Check if resources already exist
-                If((-not (Test-Path $Script:templatePath -NewerThan (Get-Date).AddDays(-7))) -or (-not (Test-Path $PathImage))) {
-                    Write-Log -Level Info -Message 'Local resources not present or older than 7 days.'
+                If((-not (Test-Path $Script:templatePath )) -or (-not (Test-Path $PathImage))) {
+                    Write-Log -Level Info -Message 'Local resources not present.'
                     #Download OnePlace Solutions Site provisioning template
-                    $WebClient = New-Object System.Net.WebClient
-                    $filler = "Downloading provisioning xml template to: $Script:templatePath"
-                    Write-Host $filler -ForegroundColor Yellow  
-                    Write-Log -Level Info -Message $filler
-                    $WebClient.DownloadFile( $Url, $Script:TemplatePath )
-        
-                    #Download OnePlace Solutions Company logo to be used as Site logo    
-                    $WebClient.DownloadFile( $UrlSiteImage, $PathImage )
-                    Write-Log -Level Info -Message "Downloading OPS logo for Solutions Site"
+                    Try {
+                        $WebClient = New-Object System.Net.WebClient
+                        $filler = "Downloading provisioning xml template to: $Script:templatePath"
+                        Write-Host $filler -ForegroundColor Yellow  
+                        Write-Log -Level Info -Message $filler
+                        $WebClient.DownloadFile( $Url, $Script:TemplatePath )
+            
+                        #Download OnePlace Solutions Company logo to be used as Site logo    
+                        $WebClient.DownloadFile( $UrlSiteImage, $PathImage )
+                        Write-Log -Level Info -Message "Downloading OPS logo for Solutions Site"
+                    }
+                    Catch {
+                        Write-Log -Level Info -Message "Cannot download template resources from GitHub. Please download the OfflineBundle.zip from GitHub separately and place the contents in $($env:temp) on this machine before continuing."
+                        Pause
+                        If((-not (Test-Path $Script:templatePath )) -or (-not (Test-Path $PathImage))) {
+                            Write-Log -Level Error -Message "Local resources have not been added to this machine. Exiting script."
+                            Throw "Local template resources not present."
+                        }
+                    }
                 }
                 Else {
                     Write-Log -Level Info -Message 'Local resources present, skipping download.' -Verbose

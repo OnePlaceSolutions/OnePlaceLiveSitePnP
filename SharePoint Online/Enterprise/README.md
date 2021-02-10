@@ -88,6 +88,8 @@ If you would like the script to create the initial Site Collection for you, sele
 	> ![](./README-Images/pnpmanagementshelllogin.png)
 	> ![](./README-Images/siteconfigurationSPO.png)
 	
+	*If the script reports an issue downloading the template resources from GitHub, please download this [OfflineBundle.zip](../OfflineBundle.zip) and extract it's contents to %localappdata%/Temp on your machine.*
+	
 5.  When configuration has completed, your Solutions Site URL, License List URL and License List ID will be displayed (these are also in the log file noted earlier, and will be visible in the Solutions Site). You may be presented with the option to automatically email these details now to OnePlace Solutions. These URLs will be kept on file for support purposes, and the License List ID will be required for provisioning your Production License.
 
     > ![](./README-Images/configurationcompleteSPO.png)
