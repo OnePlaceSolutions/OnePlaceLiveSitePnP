@@ -18,6 +18,9 @@ $script:solutionsSite = 'oneplacesolutions'
 #Default: $true
 $script:doModern = $true
 
+#Set this to $true to use cookie based authentication instead of the PnP Management Shell. This will also hide automated Site Creation options.
+$script:cookieAuth = $false
+
 function Write-Log { 
     <#
     .NOTES 
@@ -315,9 +318,16 @@ Try {
 
                 #Connecting to the site collection to apply the template
 
-                Write-Host "Prompting for PnP Management Shell Authentication. Please copy the code displayed into the browser as directed and log in.`nIf no prompt appears you may already be authenticated."
-                Start-Sleep -Seconds 1
-                Connect-PnPOnline -Url $SolutionsSiteUrl -PnPManagementShell -LaunchBrowser
+                If($script:cookieAuth) {
+                    Write-Host "Prompting for cookie-based authentication to Site Collection..."
+                    Start-Sleep -Seconds 1
+                    Connect-PnPOnline -Url $SolutionsSiteUrl -UseWebLogin -ForceAuthentication
+                }
+                Else {
+                    Write-Host "Prompting for PnP Management Shell Authentication. Please copy the code displayed into the browser as directed and log in.`nIf no prompt appears you may already be authenticated."
+                    Start-Sleep -Seconds 1
+                    Connect-PnPOnline -Url $SolutionsSiteUrl -PnPManagementShell -LaunchBrowser
+                }
 
                 If ($script:doModern) {
                     $Url = "https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/master/oneplaceSolutionsSite-template-v3-modern.xml"    
@@ -525,7 +535,9 @@ Try {
             Write-Host "`n--------------------------------------------------------------------------------`n" -ForegroundColor Red
             Write-Host "Please make a selection:" -ForegroundColor Yellow
             Write-Host "1: Deploy the Solutions Site template to an existing Group or Modern Team Site Collection"
-            Write-Host "2: Create a new Modern Team Site Collection and deploy the Solutions Site template"
+            If(-not $script:cookieAuth) {
+                Write-Host "2: Create a new Modern Team Site Collection and deploy the Solutions Site template"
+            }
             Write-Host "`nAdditional Configuration Options:" -ForegroundColor Yellow
             Write-Host "L: Change Log file path (currently: '$script:logPath')"
 
