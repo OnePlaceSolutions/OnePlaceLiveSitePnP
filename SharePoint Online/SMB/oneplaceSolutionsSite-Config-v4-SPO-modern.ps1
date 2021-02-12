@@ -19,7 +19,7 @@ $script:solutionsSite = 'oneplacesolutions'
 $script:doModern = $true
 
 #Set this to $true to use cookie based authentication instead of the PnP Management Shell. This will also hide automated Site Creation options.
-$script:cookieAuth = true
+$script:cookieAuth = $true
 
 function Write-Log { 
     <#
