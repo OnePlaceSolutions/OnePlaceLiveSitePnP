@@ -8,7 +8,7 @@
     All major actions are logged to 'OPSScriptLog.txt' in the user's or Administrators Documents folder, and it is uploaded to the Solutions Site at the end of provisioning.
 #>
 $ErrorActionPreference = 'Stop'
-$script:logFile = "OPSScriptLog.txt"
+$script:logFile = "OPSScriptLog$(Get-Date -Format "MMddyyyy").txt"
 $script:logPath = "$env:userprofile\Documents\$script:logFile"
 
 #URL suffix of the Site Collection to create (if we create one)
@@ -71,7 +71,7 @@ function Write-Log {
         } 
  
         # Format Date for our Log File 
-        $FormattedDate = Get-Date -Format "yyyy-MM-dd HH:mm:ss K" 
+        $FormattedDate = Get-Date -Format "MM-dd-yyyy HH:mm:ss K" 
  
         # Write message to error, warning, or verbose pipeline and specify $LevelText 
         Switch ($Level) { 
@@ -374,6 +374,9 @@ Try {
                 $licenseListId = $licenseListId.ToString()
                 Write-Log -Level Info -Message "License List ID retrieved: $licenseListId"
 
+                Write-Log "Setting 'Licenses' list to Classic Experience"
+                Set-PnPList -Identity "Licenses" -ListExperience ClassicExperience
+
                 $filler = "Applying Site Security and Page changes separately..."
                 Write-Host $filler -ForegroundColor Yellow
                 Write-Log -Level Info -Message $filler
@@ -457,6 +460,7 @@ Try {
                     Write-Host "`n$filler" -ForegroundColor Green
                     Write-Log -Level Info -Message $filler
                     Add-PnPListItem -List "Licenses" -Values @{"Title" = "If you do not have a Production license, this list will appear blank for now. You can safely delete this message." } | Out-Null
+                    Add-PnPListItem -List "Licenses" -Values @{"Title" = "If you have just added a License file, you can return to the 'Home' page. You can safely delete this message." } | Out-Null
                 }
                 Else {
                     $filler = "License Item not created or is duplicate!"
