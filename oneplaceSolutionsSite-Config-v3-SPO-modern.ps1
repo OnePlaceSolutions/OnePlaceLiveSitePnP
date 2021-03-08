@@ -213,7 +213,7 @@ Try {
 
                 Try {
                     If ($spoms) {
-                        Connect-PnPOnline -Url $adminSharePoint -SPOManagementShell -ClearTokenCache
+                        Connect-PnPOnline -Url $adminSharePoint -SPOManagementShell -ClearTokenCache -WarningAction Ignore
                         Write-Host "Prompting for SharePoint Online Management Shell Authentication. Please do not continue until you are logged in. If no prompt appears you may already be authenticated to this Tenant."
                         Start-Sleep -Seconds 5
                         #PnP doesn't wait for SPO Management Shell to complete it's login, have to pause here
@@ -331,7 +331,7 @@ Try {
                 If ($spoms) {
                     If($createSite) {
                         Write-Host "Attempting to use existing SPO Management Shell Authentication..."
-                        Connect-PnPOnline -Url $SolutionsSiteUrl -SPOManagementShell
+                        Connect-PnPOnline -Url $SolutionsSiteUrl -SPOManagementShell -WarningAction Ignore
                         Start-Sleep -Seconds 5
                     }
                     Else {
@@ -340,7 +340,7 @@ Try {
                         Catch {}
                         Try {Disconnect-PnPOnline}
                         Catch {}
-                        Connect-PnPOnline -Url $SolutionsSiteUrl -SPOManagementShell -ClearTokenCache
+                        Connect-PnPOnline -Url $SolutionsSiteUrl -SPOManagementShell -ClearTokenCache -WarningAction Ignore
                         Start-Sleep -Seconds 5
                         Pause
                     }
@@ -365,8 +365,8 @@ Try {
                 $PathImage = "$env:temp\oneplacesolutions-logo.png" 
 
                 #Check if resources already exist
-                If((-not (Test-Path $Script:templatePath -NewerThan (Get-Date).AddDays(-7))) -or (-not (Test-Path $PathImage))) {
-                    Write-Log -Level Info -Message 'Local resources not present or older than 7 days.'
+                If(-not (Test-Path $Script:templatePath)) {
+                    Write-Log -Level Info -Message 'Local resources not present.'
                     #Download OnePlace Solutions Site provisioning template
                     $WebClient = New-Object System.Net.WebClient
                     $filler = "Downloading provisioning xml template to: $Script:templatePath"
