@@ -404,6 +404,8 @@ Try {
 
                 Try{
                     Apply-PnPProvisioningTemplate -path $Script:TemplatePath -Handlers SiteSecurity, Pages -Parameters @{"licenseListID" = $licenseListId; "site" = $SolutionsSiteUrl }	-ClearNavigation -WarningAction Ignore											  
+                    #Upload logo to Solutions Site
+                    $addLogo = Add-PnPfile -Path $PathImage -Folder "SiteAssets"
                 }
 
                 Catch {
@@ -415,9 +417,6 @@ Try {
                         Throw
                     }
                 }
-                    
-                #Upload logo to Solutions Site
-                $addLogo = Add-PnPfile -Path $PathImage -Folder "SiteAssets"
 
                 $filler = "Template Application complete!"
                 Write-Host $filler -ForeGroundColor Green
