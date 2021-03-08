@@ -222,7 +222,7 @@ Try {
                         Get-PnPWeb | Out-Null
                     }
                     Else {
-                        Connect-PnPOnline -Url $adminSharePoint -UseWebLogin
+                        Connect-PnPOnline -Url $adminSharePoint -UseWebLogin -WarningAction Ignore
                     }
                 }
                 Catch {
@@ -349,7 +349,7 @@ Try {
                 Else {
                     Write-Host "Please authenticate against the Site Collection"
                     Start-Sleep -Seconds 3
-                    Connect-PnPOnline -Url $SolutionsSiteUrl -UseWebLogin
+                    Connect-PnPOnline -Url $SolutionsSiteUrl -UseWebLogin -WarningAction Ignore
                 }
 
                 If ($script:doModern) {
