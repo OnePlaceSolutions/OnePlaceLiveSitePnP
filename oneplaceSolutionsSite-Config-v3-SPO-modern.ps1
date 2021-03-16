@@ -12,7 +12,7 @@ $script:logFile = "OPSScriptLog.txt"
 $script:logPath = "$env:userprofile\Documents\$script:logFile"
 
 #URL suffix of the Site Collection to create (if we create one)
-$script:solutionsSite = 'anotheroneplacesolutions'
+$script:solutionsSite = 'oneplacesolutions'
 
 #Set this to $false to create and/or provision to a classic site (STS#0) and template (v2 SPO) instead of a modern site (STS#3) and template (v3 SPO). v3 SPO is required for deployment to Group Sites (GROUP#0).
 #Default: $true
