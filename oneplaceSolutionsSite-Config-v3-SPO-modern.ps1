@@ -12,7 +12,7 @@ $script:logFile = "OPSScriptLog.txt"
 $script:logPath = "$env:userprofile\Documents\$script:logFile"
 
 #URL suffix of the Site Collection to create (if we create one)
-$script:solutionsSite = 'oneplacesolutions'
+$script:solutionsSite = 'anotheroneplacesolutions'
 
 #Set this to $false to create and/or provision to a classic site (STS#0) and template (v2 SPO) instead of a modern site (STS#3) and template (v3 SPO). v3 SPO is required for deployment to Group Sites (GROUP#0).
 #Default: $true
@@ -142,9 +142,13 @@ Try {
         function Attempt-Provision ([int]$count) {
             #Our first provisioning run can encounter a 403 if SharePoint has incorrectly told us the site is ready, this function will retry 
             Try {
-                
                 Write-Log -Message "Provisioning attempt $($count-1)"
-                Apply-PnPProvisioningTemplate -path $Script:TemplatePath -ExcludeHandlers Pages, SiteSecurity -ClearNavigation -WarningAction Ignore
+                If($null -eq (Get-InstalledModule PnP.PowerShell)){
+                    Apply-PnPProvisioningTemplate -path $Script:TemplatePath -ExcludeHandlers Pages, SiteSecurity -ClearNavigation -WarningAction Ignore
+                }
+                Else {
+                    Invoke-PnPSiteTemplate -path $Script:TemplatePath -ExcludeHandlers Pages, SiteSecurity -ClearNavigation -WarningAction Ignore
+                }
             }
             Catch [System.Net.WebException] {
                 If ($($_.Exception.Message) -match '(403)') {
@@ -164,7 +168,12 @@ Try {
                         Write-Log -Level Info -Message $filler
                         Write-Host "`n"
                         Pause
-                        Apply-PnPProvisioningTemplate -Path $Script:templatePath -ExcludeHandlers Pages, SiteSecurity -ClearNavigation -WarningAction Ignore
+                        If($null -eq (Get-InstalledModule PnP.PowerShell)){
+                            Apply-PnPProvisioningTemplate -path $Script:TemplatePath -ExcludeHandlers Pages, SiteSecurity -ClearNavigation -WarningAction Ignore
+                        }
+                        Else {
+                            Invoke-PnPSiteTemplate -path $Script:TemplatePath -ExcludeHandlers Pages, SiteSecurity -ClearNavigation -WarningAction Ignore
+                        }
                     }
                 }
                 Else {
@@ -403,7 +412,13 @@ Try {
                 Start-Sleep -Seconds 2															
 
                 Try{
-                    Apply-PnPProvisioningTemplate -path $Script:TemplatePath -Handlers SiteSecurity, Pages -Parameters @{"licenseListID" = $licenseListId; "site" = $SolutionsSiteUrl }	-ClearNavigation -WarningAction Ignore											  
+                    If($null -eq (Get-InstalledModule PnP.PowerShell)){
+                        Apply-PnPProvisioningTemplate -path $Script:TemplatePath -Handlers SiteSecurity, Pages -Parameters @{"licenseListID" = $licenseListId; "site" = $SolutionsSiteUrl }	-ClearNavigation -WarningAction Ignore											  
+                    }
+                    Else {
+                        Invoke-PnPSiteTemplate -path $Script:TemplatePath -Handlers SiteSecurity, Pages -Parameters @{"licenseListID" = $licenseListId; "site" = $SolutionsSiteUrl }	-ClearNavigation -WarningAction Ignore											  
+                    }
+                    
                     #Upload logo to Solutions Site
                     $addLogo = Add-PnPfile -Path $PathImage -Folder "SiteAssets"
                 }
@@ -542,7 +557,9 @@ Try {
             Write-Host "`n--------------------------------------------------------------------------------`n" -ForegroundColor Red
             Write-Host "Please make a selection:" -ForegroundColor Yellow
             Write-Host "1: Deploy the Solutions Site template to an existing Group or Modern Team Site Collection"
-            Write-Host "2: Create a new Modern Team Site Collection and deploy the Solutions Site template"
+            Write-Host "2: Create a new Modern Team Site Collection automatically and deploy the Solutions Site template (requires Tenancy Admin rights + SPOMS or PnP.PowerShell)"
+            #Write-Host "3: Install Legacy SharePoint PnP PowerShell Cmdlets"
+            #Write-Host "4: Install New PnP.PowerShell Cmdlets"
             Write-Host "`nAdditional Configuration Options:" -ForegroundColor Yellow
             Write-Host "L: Change Log file path (currently: '$script:logPath')"
             Write-Host "S: Toggle SharePoint Online Management Shell Authentication (currently: $script:forceSPOMS)"
@@ -562,9 +579,37 @@ Try {
                 '1' {
                     Deploy -createSite $false -spoms $script:forceSPOMS
                 }
-                #Create site and deploy (SPOMS + PnP required)
+                #Create site and deploy (SPOMS + PnP required, or just PnP.PowerShell)
                 '2' {
-                    Deploy -createSite $true -spoms $true
+                    If($null -ne (Get-InstalledModule PnP.PowerShell)){
+                        Deploy -createSite $true -spoms $false
+                    }
+                    Else {
+                        Deploy -createSite $true -spoms $true
+                    }
+                }
+                '3' {
+                    Clear-Host
+                    $installPnP = Read-Host "Please enter the SharePoint version you are using (2013, 2016, 2019, or Online)"
+                    If($null -eq (Get-Module "SharePointPnPPowerShell*")){
+                        Write-Host "Invoking installation of the SharePoint PnP PowerShell Module for SharePoint $($installPnP), please accept the prompts for installation."
+                        Invoke-Expression -Command "Install-Module SharePointPnPPowerShell$($installPnP) -Scope CurrentUser"
+                    }
+                    Else {
+                        Write-Host "Existing SharePointPnPPowerShell detected, skipping installation."
+                    }
+                    Pause
+                }
+                '4' {
+                    Clear-Host
+                    If($null -eq (Get-Module "PnP.PowerShell")){
+                        Write-Host "Invoking installation of the PnP.PowerShell for SharePoint Online, please accept the prompts for installation."
+                        Invoke-Expression -Command "Install-Module PnP.PowerShell -Scope CurrentUser"
+                    }
+                    Else {
+                        Write-Host "Existing PnP.PowerShell detected, skipping installation."
+                    }
+                    Pause
                 }
                 'l' {
                     $newLogPath = (Read-Host "Please enter a new path including 'OPSScriptLog.txt' and quotes for the new log file. Eg, 'C:\Users\John\Documents\OPSScriptLog.txt'.")
