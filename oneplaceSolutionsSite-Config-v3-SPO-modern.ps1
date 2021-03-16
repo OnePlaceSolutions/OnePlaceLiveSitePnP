@@ -22,6 +22,8 @@ $script:doModern = $true
 #Default: $false
 $script:forceSPOMS = $false
 
+$script:PnPPowerShell = $false
+
 function Write-Log { 
     <#
     .NOTES 
@@ -143,7 +145,7 @@ Try {
             #Our first provisioning run can encounter a 403 if SharePoint has incorrectly told us the site is ready, this function will retry 
             Try {
                 Write-Log -Message "Provisioning attempt $($count-1)"
-                If($null -eq (Get-InstalledModule PnP.PowerShell)){
+                If($null -eq $script:PnPPowerShell){
                     Apply-PnPProvisioningTemplate -path $Script:TemplatePath -ExcludeHandlers Pages, SiteSecurity -ClearNavigation -WarningAction Ignore
                 }
                 Else {
@@ -168,7 +170,7 @@ Try {
                         Write-Log -Level Info -Message $filler
                         Write-Host "`n"
                         Pause
-                        If($null -eq (Get-InstalledModule PnP.PowerShell)){
+                        If($null -eq $script:PnPPowerShell){
                             Apply-PnPProvisioningTemplate -path $Script:TemplatePath -ExcludeHandlers Pages, SiteSecurity -ClearNavigation -WarningAction Ignore
                         }
                         Else {
@@ -412,7 +414,7 @@ Try {
                 Start-Sleep -Seconds 2															
 
                 Try{
-                    If($null -eq (Get-InstalledModule PnP.PowerShell)){
+                    If($null -eq $script:PnPPowerShell){
                         Apply-PnPProvisioningTemplate -path $Script:TemplatePath -Handlers SiteSecurity, Pages -Parameters @{"licenseListID" = $licenseListId; "site" = $SolutionsSiteUrl }	-ClearNavigation -WarningAction Ignore											  
                     }
                     Else {
@@ -570,6 +572,8 @@ Try {
 
         Write-Log -Level Info -Message "Logging script actions to $script:logPath"
         
+        $script:PnPPowerShell = Get-Module PnP.PowerShell
+
         do {
             showMenu
             $userInput = Read-Host "Please select an option" 
@@ -581,7 +585,7 @@ Try {
                 }
                 #Create site and deploy (SPOMS + PnP required, or just PnP.PowerShell)
                 '2' {
-                    If($null -ne (Get-InstalledModule PnP.PowerShell)){
+                    If($null -ne $script:PnPPowerShell){
                         Deploy -createSite $true -spoms $false
                     }
                     Else {
@@ -602,7 +606,7 @@ Try {
                 }
                 '4' {
                     Clear-Host
-                    If($null -eq (Get-Module "PnP.PowerShell")){
+                    If($null -eq $script:PnPPowerShell){
                         Write-Host "Invoking installation of the PnP.PowerShell for SharePoint Online, please accept the prompts for installation."
                         Invoke-Expression -Command "Install-Module PnP.PowerShell -Scope CurrentUser"
                     }
