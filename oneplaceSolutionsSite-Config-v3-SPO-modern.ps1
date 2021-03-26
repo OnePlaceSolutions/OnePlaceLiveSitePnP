@@ -19,8 +19,8 @@ $script:solutionsSite = 'oneplacesolutions'
 $script:doModern = $true
 
 #This handles whether SharePoint Online Management Shell authentication is being forced.
-#Default: $false
-$script:forceSPOMS = $false
+#Default: $true
+$script:forceSPOMS = $true
 
 #This handles whether PnPManagementShell is being forced (PnP.PowerShell only)
 $script:forcePnPMS = $false
@@ -199,9 +199,10 @@ Try {
             }
         }
 
-        function Deploy ([boolean]$spoms, $createSite) {
+        function Deploy ($createSite) {
             Write-Log -Level Info -Message "Creating Site from scratch? $createSite"
-            Write-Log -Level Info -Message "Are we using SPOMS? $spoms"
+            Write-Log -Level Info -Message "Are we using SPOMS? $($script:forceSPOMS)"
+            Write-Log -Level Info -Message "Are we forcing PnP MS? $($script:forcePnPMS)"
             
             #Stage 1a Creating a Solutions Site from scratch
             If($createSite) {
@@ -227,7 +228,7 @@ Try {
                 }
 
                 Try {
-                    If ($spoms) {
+                    If ($script:forceSPOMS) {
                         Connect-PnPOnline -Url $adminSharePoint -SPOManagementShell -ClearTokenCache -WarningAction Ignore
                         Write-Host "Prompting for SharePoint Online Management Shell Authentication. Please do not continue until you are logged in. If no prompt appears you may already be authenticated to this Tenant."
                         Start-Sleep -Seconds 5
@@ -307,8 +308,8 @@ Try {
                         Write-Host "Site with URL $SolutionsSiteUrl already exists. Please run the script again and choose a different Solutions Site suffix, or opt to deploy to an existing Site." -ForegroundColor Red
                         Throw
                     }
-                    ElseIf (($exMessage -match '401') -and ($spoms)) {
-                        $filler = "Auth issue with SharePoint Online Management Shell. `nIf the newly created Site Collection is visible in your SharePoint Online admin center, re-run the script and select Option 1 to deploy to that site."
+                    ElseIf ($exMessage -match '401') {
+                        $filler = "Authentication issue. `nIf the newly created Site Collection is visible in your SharePoint Online admin center, re-run the script and select Option 1 to deploy to that site."
                         Write-Log -Level Error -Message $filler
                     }
                     Else {
@@ -327,11 +328,11 @@ Try {
                 Write-Host "`n$stage`n" -ForegroundColor Yellow
                 Write-Progress -Activity "Solutions Site Deployment" -CurrentOperation $stage -PercentComplete (33)
                 
-                $input = Read-Host "What is the URL of the existing Site Collection you have created? `nEg, 'https://contoso.sharepoint.com/sites/oneplacesolutions'. Do not include trailing view information such as '/AllItems.aspx'."
-                $input = $input.Trim()
-                Write-Log "User has entered $input for Existing Site Collection URL"
-                If($input.Length -ne 0){
-                    $solutionsSiteUrl = $input.TrimEnd('/')
+                $tempinput = Read-Host "What is the URL of the existing Site Collection you have created? `nEg, 'https://contoso.sharepoint.com/sites/oneplacesolutions'. Do not include trailing view information such as '/AllItems.aspx'."
+                $tempinput = $tempinput.Trim()
+                Write-Log "User has entered $tempinput for Existing Site Collection URL"
+                If($tempinput.Length -ne 0){
+                    $solutionsSiteUrl = $tempinput.TrimEnd('/')
                 }
                 Else {
                     Write-Host "Can't have an empty URL. Exiting script"
@@ -348,7 +349,7 @@ Try {
                 Write-Progress -Activity "Solutions Site Deployment" -CurrentOperation $stage -PercentComplete (66)
 
                 #Connecting to the site collection to apply the template
-                If ($spoms) {
+                If ($script:forceSPOMS) {
                     If($createSite) {
                         Write-Host "Attempting to use existing SPO Management Shell Authentication..."
                         Connect-PnPOnline -Url $SolutionsSiteUrl -SPOManagementShell -WarningAction Ignore
@@ -529,9 +530,9 @@ Try {
                 $currentPrincipal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
         
                 If ($false -eq $currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
-                    $input = Read-Host "Would you like to email this information and Log file to OnePlace Solutions now? (yes or no)"
-                    $input = $input[0]
-                    If ($input -eq 'y') {
+                    $tempinput = Read-Host "Would you like to email this information and Log file to OnePlace Solutions now? (yes or no)"
+                    $tempinput = $input[0]
+                    If ($tempinput -eq 'y') {
                         $file = Get-ChildItem $script:logPath
                         Send-OutlookEmail -attachment $file.FullName -body $importants
                     }
@@ -572,13 +573,12 @@ Try {
             Write-Host "`n--------------------------------------------------------------------------------`n" -ForegroundColor Red
             Write-Host "Please make a selection:" -ForegroundColor Yellow
             Write-Host "1: Deploy the Solutions Site template to an existing Group or Modern Team Site Collection"
-            Write-Host "2: Create a new Modern Team Site Collection automatically and deploy the Solutions Site template `n`t^^(requires Tenancy Admin rights + Legacy PnP + SPOMS, or just PnP.PowerShell)^^"
+            Write-Host "2: Create a new Modern Team Site Collection automatically and deploy the Solutions Site template"
             Write-Host "3: Install Legacy SharePoint PnP PowerShell Cmdlets"
-            Write-Host "4: Install SharePoint Online Management Shell (SPOMS)"
-            Write-Host "5: Install New PnP.PowerShell Cmdlets"
+            Write-Host "4: Install Current PnP.PowerShell Cmdlets"
             Write-Host "`nAdditional Configuration Options:" -ForegroundColor Yellow
             Write-Host "L: Change Log file path (currently: '$script:logPath')"
-            Write-Host "S: Toggle Force SharePoint Online Management Shell Authentication (currently: $script:forceSPOMS)"
+            Write-Host "S: Toggle Force SharePoint Online Management Shell Authentication for Legacy PnP (currently: $script:forceSPOMS)"
             Write-Host "P: Toggle Force PnP Management Shell Authentication (currently: $script:forcePnPMS)"
 
             Write-Host "`nQ: Press 'Q' to quit." 
@@ -594,25 +594,22 @@ Try {
             $userInput = Read-Host "Please select an option" 
             Write-Log -Message "User has entered option '$userInput'"
             switch ($userInput) { 
-                #Apply site template (SPOMS not required, this can be selected with only PnP installed)
+                #Apply site template 
                 '1' {
-                    Deploy -createSite $false -spoms $script:forceSPOMS
+                    Deploy -createSite $false
                 }
-                #Create site and deploy (SPOMS + PnP required, or just PnP.PowerShell)
+                #Create site and deploy (may need to force SPOMS / PNPMS)
                 '2' {
-                    If($null -ne $script:PnPPowerShell){
-                        Deploy -createSite $true -spoms $false
-                    }
-                    Else {
-                        Deploy -createSite $true -spoms $true
-                    }
+                    Deploy -createSite $true
+
                 }
                 '3' {
                     Clear-Host
                     $installPnP = Read-Host "Please enter the SharePoint version you are using (2013, 2016, 2019, or Online)"
+
                     If($null -eq (Get-Module "SharePointPnPPowerShell*")){
                         Write-Host "Invoking installation of the SharePoint PnP PowerShell Module for SharePoint $($installPnP), please accept the prompts for installation."
-                        Write-Host "If you do not use PowerShell modules often, you will likely see a message related to an 'Untrusted Repository', this is PowerShell Gallery where the PnP Modules are downloaded from."
+                        Write-Host "If you do not use PowerShell modules often, you will likely see a message related to an 'Untrusted Repository', this is PowerShell Gallery where the PnP Modules are downloaded from. Please selection option 'Y' or 'A'."
                         Invoke-Expression -Command "Install-Module SharePointPnPPowerShell$($installPnP) -Scope CurrentUser"
                     }
                     Else {
@@ -621,19 +618,11 @@ Try {
                     Pause
                 }
                 '4' {
-                    If($null -eq (Get-Module "Microsoft.Online.SharePoint.PowerShell")){
-                        Write-Host "Invoking installation of the SharePoint Online Management Shell, please accept the prompts for installation."
-                        Invoke-Expression -Command "Install-Module -Name Microsoft.Online.SharePoint.PowerShell -Scope CurrentUser"
-                    }
-                    Else {
-                        Write-Host "Existing SharePoint Online Management Shell detected, skipping installation."
-                    }
-                    Pause
-                }
-                '5' {
                     Clear-Host
                     If($null -eq $script:PnPPowerShell){
                         Write-Host "Invoking installation of the PnP.PowerShell for SharePoint Online, please accept the prompts for installation."
+                        Write-Host "If you do not use PowerShell modules often, you will likely see a message related to an 'Untrusted Repository', this is PowerShell Gallery where the PnP Modules are downloaded from. Please selection option 'Y' or 'A'."
+                        
                         Invoke-Expression -Command "Install-Module PnP.PowerShell -Scope CurrentUser"
                     }
                     Else {
