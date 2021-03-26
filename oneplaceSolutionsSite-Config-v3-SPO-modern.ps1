@@ -370,10 +370,10 @@ Try {
                     Write-Host "Please authenticate against the Site Collection"
                     Start-Sleep -Seconds 2
                     If ($script:forcePnPMS) {
-                        Connect-PnPOnline -Url $adminSharePoint -Interactive
+                        Connect-PnPOnline -Url $SolutionsSiteUrl -Interactive
                     }
                     Else {
-                        Connect-PnPOnline -Url $adminSharePoint -UseWebLogin -WarningAction Ignore
+                        Connect-PnPOnline -Url $SolutionsSiteUrl -UseWebLogin -WarningAction Ignore
                     }
                 }
 
@@ -612,6 +612,7 @@ Try {
                     $installPnP = Read-Host "Please enter the SharePoint version you are using (2013, 2016, 2019, or Online)"
                     If($null -eq (Get-Module "SharePointPnPPowerShell*")){
                         Write-Host "Invoking installation of the SharePoint PnP PowerShell Module for SharePoint $($installPnP), please accept the prompts for installation."
+                        Write-Host "If you do not use PowerShell modules often, you will likely see a message related to an 'Untrusted Repository', this is PowerShell Gallery where the PnP Modules are downloaded from."
                         Invoke-Expression -Command "Install-Module SharePointPnPPowerShell$($installPnP) -Scope CurrentUser"
                     }
                     Else {
