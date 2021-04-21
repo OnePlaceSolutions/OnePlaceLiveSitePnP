@@ -209,9 +209,9 @@ Try {
                 }
 
                 Try {
-                    Write-Host "Prompting for PnP Management Shell Authentication. Please copy the code displayed into the browser as directed and log in."
+                    Write-Host "Prompting for PnP Management Shell Authentication."
                     Start-Sleep -Seconds 1
-                    Connect-PnPOnline -Url $adminSharePoint -PnPManagementShell -LaunchBrowser
+                    Connect-PnPOnline -Url $adminSharePoint -Interactive
                     Get-PnPWeb | Out-Null
                 }
                 Catch {
@@ -324,9 +324,9 @@ Try {
                     Connect-PnPOnline -Url $SolutionsSiteUrl -UseWebLogin -ForceAuthentication
                 }
                 Else {
-                    Write-Host "Prompting for PnP Management Shell Authentication. Please copy the code displayed into the browser as directed and log in.`nIf no prompt appears you may already be authenticated."
+                    Write-Host "Prompting for PnP Management Shell Authentication. If no prompt appears you may already be authenticated."
                     Start-Sleep -Seconds 1
-                    Connect-PnPOnline -Url $SolutionsSiteUrl -PnPManagementShell -LaunchBrowser
+                    Connect-PnPOnline -Url $SolutionsSiteUrl -Interactive
                 }
 
                 If ($script:doModern) {
@@ -342,8 +342,8 @@ Try {
                 $PathImage = "$env:temp\oneplacesolutions-logo.png" 
 
                 #Check if resources already exist
-                If((-not (Test-Path $Script:templatePath -NewerThan (Get-Date).AddDays(-7))) -or (-not (Test-Path $PathImage))) {
-                    Write-Log -Level Info -Message 'Local resources not present or older than 7 days.'
+                If(-not (Test-Path $Script:templatePath)) {
+                    Write-Log -Level Info -Message 'Local resources not present.'
                     #Download OnePlace Solutions Site provisioning template
                     $WebClient = New-Object System.Net.WebClient
                     $filler = "Downloading provisioning xml template to: $Script:templatePath"

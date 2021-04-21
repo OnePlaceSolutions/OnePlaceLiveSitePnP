@@ -229,7 +229,8 @@ Try {
 
                 Try {
                     If ($script:forceSPOMS) {
-                        Connect-PnPOnline -Url $adminSharePoint -SPOManagementShell -ClearTokenCache -WarningAction Ignore
+                        Connect-PnPOnline -Url $adminSharePoint -SPOManagementShell -WarningAction Ignore
+
                         Write-Host "Prompting for SharePoint Online Management Shell Authentication. Please do not continue until you are logged in. If no prompt appears you may already be authenticated to this Tenant."
                         Start-Sleep -Seconds 5
                         #Legacy PnP doesn't wait for SPO Management Shell to complete it's login, have to pause here
