@@ -575,8 +575,8 @@ Try {
             Write-Host "Please make a selection:" -ForegroundColor Yellow
             Write-Host "1: Deploy the Solutions Site template to an existing Group or Modern Team Site Collection"
             Write-Host "2: Create a new Modern Team Site Collection automatically and deploy the Solutions Site template"
-            Write-Host "3: Install Legacy SharePoint PnP PowerShell Cmdlets"
-            Write-Host "4: Install Current PnP.PowerShell Cmdlets"
+            #Write-Host "3: Install Legacy SharePoint PnP PowerShell Cmdlets"
+            #Write-Host "4: Install Current PnP.PowerShell Cmdlets"
             Write-Host "`nAdditional Configuration Options:" -ForegroundColor Yellow
             Write-Host "L: Change Log file path (currently: '$script:logPath')"
             Write-Host "S: Toggle Force SharePoint Online Management Shell Authentication for Legacy PnP (currently: $script:forceSPOMS)"
