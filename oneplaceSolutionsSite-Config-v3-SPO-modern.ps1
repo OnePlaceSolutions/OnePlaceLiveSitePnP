@@ -277,7 +277,7 @@ Try {
                 $LicenseListUrl = $SolutionsSiteUrl + '/lists/Licenses'
 
                 Try {
-                    $ownerEmail = Read-Host "Please enter the email address of the owner-to-be for this site. This should be your current credentials."
+                    $ownerEmail = Read-Host "Please enter the email address of the owner-to-be for this site. This should be your current credentials or the user you just logged in as."
                     $ownerEmail = $ownerEmail.Trim()
                     If ([string]::IsNullOrWhiteSpace($ownerEmail)) {
                         $filler = 'No Site Collection owner has been entered. Exiting script.'
@@ -474,13 +474,16 @@ Try {
 
             #Stage 3 Create the License Item and clean up
             Try {
-                $stage = "Stage 3/3 - License Item creation"
+                $stage = "Stage 3/3 - License Item creation and URL / ID retrieval"
                 Write-Host "`n$stage`n" -ForegroundColor Yellow
                 Write-Progress -Activity "Solutions Site Deployment" -CurrentOperation $stage -PercentComplete (100)
 
                 $filler = "Creating License Item..."
                 Write-Host $filler -ForegroundColor Yellow
                 Write-Log -Level Info -Message $filler
+
+                #Wait for SPO to catch up
+                Start-Sleep -Seconds 2
 
                 #Check if License Item exists
                 $licenseItemCount = ((Get-PnPListItem -List "Licenses" -Query "<View><Query><Where><Eq><FieldRef Name='Title'/><Value Type='Text'>License</Value></Eq></Where></Query></View>").Count)
@@ -595,20 +598,25 @@ Try {
             Write-Host "L: Change Log file path (currently: '$script:logPath')"
             Write-Host "S: Toggle Force SharePoint Online Management Shell Authentication for Legacy PnP (currently: $script:forceSPOMS)"
             Write-Host "P: Toggle Force 365 App / PnP Management Shell Authentication (currently: $script:forcePnPMS) (App permissions will be prompted for if required)"
-            Write-Host "U: Uninstall all PnP Cmdlets (Legacy/Current) for current user"
 
             Write-Host "`nQ: Press 'Q' to quit." 
             Write-Log -Level Info -Message "Displaying Menu"
         }
 
         Write-Log -Level Info -Message "Logging script actions to $script:logPath"
-        $script:PnPPowerShell = Get-Module PnP.PowerShell
+        $script:PnPPowerShell = Get-Module "PnP.PowerShell"
         If($null -ne $script:PnPPowerShell) {
             $script:forceSPOMS = $false
+            Write-Host "Current PnP.PowerShell PnP Cmdlets installed" -ForegroundColor Green
+            Start-Sleep -Seconds 2
         }
         Write-Log -Level Info -Message "PnP.PowerShell Version: $([string]$script:PnPPowerShell)"
 
         $script:LegacyPnPPowerShell = Get-Module "SharePointPnPPowerShellOnline"
+        If($null -ne $script:LegacyPnPPowerShell) {
+            Write-Host "Legacy PnP Cmdlets installed" -ForegroundColor Green
+            Start-Sleep -Seconds 2
+        }
         Write-Log -Level Info -Message "Legacy PnP PowerShell Version: $([string]$script:LegacyPnPPowerShell)"
 
         [string]$script:PSVersion = (Get-Host | Select-Object Version)
@@ -634,14 +642,16 @@ Try {
                 }
                 '3' {
                     Clear-Host
-                    If($null -eq (Get-Module "SharePointPnPPowerShellOnline")) {
-                        Write-Host "Invoking installation of the SharePoint PnP PowerShell Module for SharePoint Online, please accept the prompts for installation."
+                    If($null -eq $script:LegacyPnPPowerShell) {
+                        Write-Host "Invoking installation of the Legacy SharePoint PnP PowerShell Module for SharePoint Online, please accept the prompts for installation."
                         Write-Host "If you do not use PowerShell modules often, you will likely see a message related to an 'Untrusted Repository', this is PowerShell Gallery where the PnP Modules are downloaded from. Please selection option 'Y' or 'A'.`n"
+                        
                         Invoke-Expression -Command "Install-Module SharePointPnPPowerShellOnline -Scope CurrentUser"
                     }
                     Else {
                         Write-Host "Existing SharePointPnPPowerShell detected, skipping installation."
                     }
+                    $script:LegacyPnPPowerShell = Get-Module "SharePointPnPPowerShellOnline"
                     Pause
                 }
                 '4' {
@@ -655,7 +665,7 @@ Try {
                     Else {
                         Write-Host "Existing PnP.PowerShell detected, skipping installation."
                     }
-                    $script:PnPPowerShell = Get-Module PnP.PowerShell
+                    $script:PnPPowerShell = Get-Module "PnP.PowerShell"
                     Pause
                 }
                 'l' {
@@ -697,28 +707,6 @@ Try {
                         Write-Host "PnP.PowerShell not installed, can't force PnP Management Shell Authentication..."
                         Pause
                     }
-                }
-                'u' {
-                    Write-Log "Uninstalling any PnP Cmdlets found"
-                    Write-Host "Uninstalling Legacy PnP Cmdlets if found..."
-                    Try {
-                        Remove-Module "SharePointPnPPowerShellOnline" -Force
-                        Get-InstalledModule "SharePointPnPPowerShellOnline" | Uninstall-Module
-                    }
-                    Catch {
-                        Write-Host "Error encountered, Legacy PnP (SharePointPnPPowerShellOnline) likely not installed."
-                        $_
-                    }
-                    Write-Host "Uninstalling Current PnP Cmdlets if found..."
-                    Try {
-                        Remove-Module "PnP.PowerShell" -Force
-                        Get-InstalledModule "PnP.PowerShell" | Uninstall-Module
-                    }
-                    Catch {
-                        Write-Host "Error encountered, Current PnP Cmdlets (PnP.PowerShell) likely not installed."
-                        $_
-                    }
-                    Start-Sleep -Seconds 3
                 }
                 'q' {Exit}
             }
