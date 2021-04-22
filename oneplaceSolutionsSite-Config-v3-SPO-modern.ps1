@@ -228,6 +228,7 @@ Try {
                 If (([string]::IsNullOrWhiteSpace($rootSharePoint)) -or ([string]::IsNullOrWhiteSpace($tenant))) {
                     Write-Host "Root SharePoint URL invalid. Exiting script."
                     Write-Log -Level Error -Message "No valid Root Site Collection URL entered. Exiting script."
+                    Pause
                     Exit
                 }
 
@@ -283,6 +284,7 @@ Try {
                         $filler = 'No Site Collection owner has been entered. Exiting script.'
                         Write-Host $filler
                         Write-Log -Level Error -Message $filler
+                        Pause
                         Exit
                     }
                     #Creating the site collection
@@ -346,6 +348,7 @@ Try {
                 Else {
                     Write-Host "Can't have an empty URL. Exiting script"
                     Write-Log -Level Error -Message "No Solutions Site URL  entered. Exiting script."
+                    Pause
                     Exit
                 }
                 $LicenseListUrl = $SolutionsSiteUrl + '/lists/Licenses'
