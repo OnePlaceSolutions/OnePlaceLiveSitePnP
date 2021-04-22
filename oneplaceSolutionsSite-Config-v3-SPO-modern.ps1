@@ -606,7 +606,7 @@ Try {
         Write-Log -Level Info -Message "Legacy PnP PowerShell Version: $([string]$script:LegacyPnPPowerShell)"
         [string]$script:PSVersion = (Get-Host | Select-Object Version)
         Write-Log "PowerShell Version: $([string]$script:PSVersion)"
-        If(($script:PSVersion -match "7*") -or ((Get-Host | Select-Object Name) -match "Visual Studio Code Host")) {
+        If(($script:PSVersion -like "7.*") -or ((Get-Host | Select-Object Name) -match "Visual Studio Code Host")) {
             Write-Log -Level Warn "PowerShell version $($script:PSVersion) requires using Current PnP Cmdlets (PnP.PowerShell). Using this version with Legacy PnP will result in script failure."
             Pause
         }
