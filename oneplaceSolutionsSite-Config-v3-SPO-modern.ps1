@@ -253,14 +253,14 @@ Try {
                 }
                 Catch {
                     $exMessage = $($_.Exception.Message)
-                    If ($exMessage -match "*(403)*") {
+                    If ($exMessage -like "*(403)*") {
                         Write-Log -Level Error -Message $exMessage
                         $filler = "Error connecting to '$adminSharePoint'. Please ensure you have sufficient rights to create Site Collections in your Microsoft 365 Tenant. `nThis usually requires Global Administrative rights, or alternatively ask your SharePoint Administrator to perform the Solutions Site Setup."
                         Write-Host $filler -ForegroundColor Yellow
                         Write-Host "Please contact OnePlace Solutions Support if you are still encountering difficulties."
                         Write-Log -Level Info -Message $filler
                     }
-                    ElseIf ($exMessage -match "*Connect-PnPOnline*") {
+                    ElseIf ($exMessage -like "*'Connect-PnPOnline'*") {
                         Write-Log -Level Error -Message "Pre-requisite PnP Cmdlets likely not installed. Please review documentation and try again."
                         Pause
                     }
@@ -317,7 +317,7 @@ Try {
                         Write-Host "Site with URL $SolutionsSiteUrl already exists. Please run the script again and choose a different Solutions Site suffix, or opt to deploy to an existing Site." -ForegroundColor Red
                         Throw
                     }
-                    ElseIf ($exMessage -match '401') {
+                    ElseIf ($exMessage -like '*401*') {
                         $filler = "Authentication issue. `nIf the newly created Site Collection is visible in your SharePoint Online admin center, re-run the script and select Option 1 to deploy to that site."
                         Write-Log -Level Error -Message $filler
                     }
@@ -359,22 +359,15 @@ Try {
 
                 #Connecting to the site collection to apply the template
                 If ($script:forceSPOMS) {
-                    If($createSite) {
-                        Write-Host "Attempting to use existing SPO Management Shell Authentication..."
-                        Connect-PnPOnline -Url $SolutionsSiteUrl -SPOManagementShell -WarningAction Ignore
-                        Start-Sleep -Seconds 5
-                    }
-                    Else {
-                        Write-Host "Attempting to use new SPO Management Shell Authentication..."
-                        Try {Disconnect-SPOService}
-                        Catch {}
-                        Try {Disconnect-PnPOnline}
-                        Catch {}
-                        Connect-PnPOnline -Url $SolutionsSiteUrl -SPOManagementShell -WarningAction Ignore
+                    Write-Host "Attempting to use SPO Management Shell Authentication..."
+                    Connect-PnPOnline -Url $SolutionsSiteUrl -SPOManagementShell -WarningAction Ignore
+                    If(-not $createSite) {
+                        #If we created the site we are likely already authenticated, only pause if we didn't
                         Start-Sleep -Seconds 5
                         Pause
+                        #PnP doesn't wait for SPO Management Shell to complete it's login, have to pause here
                     }
-                    #PnP doesn't wait for SPO Management Shell to complete it's login, have to pause here
+                    
                 }
                 Else {
                     Write-Host "Please authenticate against the Site Collection"
@@ -422,7 +415,7 @@ Try {
                 Write-Host $filler -ForegroundColor Yellow
                 Write-Log -Level Info -Message $filler
 
-                Attempt-Provision -count 0
+                Invoke-Provision -count 0
 
                 Write-Log -Level Info -Message "Templated applied without SiteSecurity, Pages"
 
@@ -464,6 +457,18 @@ Try {
                 Write-Log -Level Info -Message $filler
                 }
             Catch {
+                $exMessage = $($_.Exception.Message)
+                If ($exMessage -like "*(403)*") {
+                    Write-Log -Level Error -Message $exMessage
+                    $filler = "Error connecting to '$adminSharePoint'. Please ensure you have sufficient rights to create Site Collections in your Microsoft 365 Tenant. `nThis usually requires Global Administrative rights, or alternatively ask your SharePoint Administrator to perform the Solutions Site Setup."
+                    Write-Host $filler -ForegroundColor Yellow
+                    Write-Host "Please contact OnePlace Solutions Support if you are still encountering difficulties."
+                    Write-Log -Level Info -Message $filler
+                }
+                ElseIf ($exMessage -like "*'Connect-PnPOnline'*") {
+                    Write-Log -Level Error -Message "Pre-requisite PnP Cmdlets likely not installed. Please review documentation and try again."
+                    Pause
+                }
                 Throw
             }
 
@@ -602,8 +607,10 @@ Try {
             $script:forceSPOMS = $false
         }
         Write-Log -Level Info -Message "PnP.PowerShell Version: $([string]$script:PnPPowerShell)"
+
         $script:LegacyPnPPowerShell = Get-Module "SharePointPnPPowerShellOnline"
         Write-Log -Level Info -Message "Legacy PnP PowerShell Version: $([string]$script:LegacyPnPPowerShell)"
+
         [string]$script:PSVersion = (Get-Host | Select-Object Version)
         Write-Log "PowerShell Version: $([string]$script:PSVersion)"
         If(($script:PSVersion -like "7.*") -or ((Get-Host | Select-Object Name) -match "Visual Studio Code Host")) {
@@ -695,7 +702,8 @@ Try {
                     Write-Log "Uninstalling any PnP Cmdlets found"
                     Write-Host "Uninstalling Legacy PnP Cmdlets if found..."
                     Try {
-                        Get-InstalledModule "SharePointPnPPowerShell*" | Uninstall-Module
+                        Remove-Module "SharePointPnPPowerShellOnline" -Force
+                        Get-InstalledModule "SharePointPnPPowerShellOnline" | Uninstall-Module
                     }
                     Catch {
                         Write-Host "Error encountered, Legacy PnP (SharePointPnPPowerShellOnline) likely not installed."
@@ -703,6 +711,7 @@ Try {
                     }
                     Write-Host "Uninstalling Current PnP Cmdlets if found..."
                     Try {
+                        Remove-Module "PnP.PowerShell" -Force
                         Get-InstalledModule "PnP.PowerShell" | Uninstall-Module
                     }
                     Catch {
