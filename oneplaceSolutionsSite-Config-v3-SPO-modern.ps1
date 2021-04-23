@@ -278,7 +278,7 @@ Try {
                 $LicenseListUrl = $SolutionsSiteUrl + '/lists/Licenses'
 
                 Try {
-                    $ownerEmail = Read-Host "Please enter the email address of the owner-to-be for this site. This should be your current credentials or the user you just logged in as."
+                    $ownerEmail = Read-Host "Please enter the email address of the user you just logged in as"
                     $ownerEmail = $ownerEmail.Trim()
                     If ([string]::IsNullOrWhiteSpace($ownerEmail)) {
                         $filler = 'No Site Collection owner has been entered. Exiting script.'
@@ -607,22 +607,33 @@ Try {
         }
 
         Write-Log -Level Info -Message "Logging script actions to $script:logPath"
-        $script:PnPPowerShell = Get-Module "PnP.PowerShell"
-        If($null -ne $script:PnPPowerShell) {
-            $script:forceSPOMS = $false
-            Write-Host "Current PnP.PowerShell PnP Cmdlets installed" -ForegroundColor Green
-            Start-Sleep -Seconds 2
+        Try{
+            $script:PnPPowerShell = Get-InstalledModule "PnP.PowerShell" -ErrorAction SilentlyContinue
+            If($null -ne $script:PnPPowerShell) {
+                $script:forceSPOMS = $false
+                Write-Host "Current PnP.PowerShell PnP Cmdlets detected" -ForegroundColor Green
+                Write-Log -Level Info -Message "PnP.PowerShell Version: $([string]$script:PnPPowerShell)"
+            }
         }
-        Write-Log -Level Info -Message "PnP.PowerShell Version: $([string]$script:PnPPowerShell)"
-
-        $script:LegacyPnPPowerShell = Get-Module "SharePointPnPPowerShellOnline"
-        If($null -ne $script:LegacyPnPPowerShell) {
-            Write-Host "Legacy PnP Cmdlets installed" -ForegroundColor Green
-            Start-Sleep -Seconds 2
+        Catch {
+            Write-Log "PnP.PowerShell not found"
         }
-        Write-Log -Level Info -Message "Legacy PnP PowerShell Version: $([string]$script:LegacyPnPPowerShell)"
+        
+        Try{
+            $script:LegacyPnPPowerShell = Get-InstalledModule "SharePointPnPPowerShellOnline" -ErrorAction SilentlyContinue
+            If($null -ne $script:LegacyPnPPowerShell) {
+                Write-Host "Legacy PnP Cmdlets detected" -ForegroundColor Green
+                Write-Log -Level Info -Message "Legacy PnP PowerShell Version: $([string]$script:LegacyPnPPowerShell)"
+            }
+        }
+        Catch {
+            Write-Log "SharePointPnPPowerShellOnline not found"
+        }
 
-        [string]$script:PSVersion = (Get-Host | Select-Object Version)
+        Start-Sleep -Seconds 2
+
+        $script:PSVersion = (Get-Host | Select-Object Version)
+        $script:PSVersion = [string]$script:PSVersion
         Write-Log "PowerShell Version: $([string]$script:PSVersion)"
         If(($script:PSVersion -like "7.*") -or ((Get-Host | Select-Object Name) -match "Visual Studio Code Host")) {
             Write-Log -Level Warn "PowerShell version $($script:PSVersion) requires using Current PnP Cmdlets (PnP.PowerShell). Using this version with Legacy PnP will result in script failure."
