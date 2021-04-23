@@ -27,7 +27,8 @@ A script to create the required Lists in a Site Collection for licensing and oth
     
 3.  **(Optional Multi-Tenant / Modern Authentication support)**
 	
-	If you are working in a multi-tenanted scenario, we recommend having your Microsoft 365 Administrator grant App access to the PnP Management Shell in your 365 Tenant(s). It is recommended that you check and grant this ahead of running the script by entering this command in PowerShell and following the directions. Documentation and more information [here](https://pnp.github.io/powershell/articles/authentication.html).
+	If you are working in a multi-tenanted scenario, we recommend having your Microsoft 365 Administrator grant App access to the PnP Management Shell in your 365 Tenant(s), and toggle 'Force 365 App / PnP Management Shell Authentication to 'True' by entering 'P' in the script menu. 
+	It is recommended that you check and grant this ahead of running the script by entering this command in PowerShell and following the directions. Documentation and more information [here](https://pnp.github.io/powershell/articles/authentication.html).
     ```
     Register-PnPManagementShellAccess
     ```
