@@ -48,9 +48,9 @@ If you do not want the script to create a Site Collection automatically for you,
 > ![](./README-Images/createSite.png)
 > ![](./README-Images/configureSite.png)
 
-If you would like the script to create the initial Site Collection for you, select **Option 2** in the script when prompted. A Team Site(no group) will be created at 'https://&lt;yourTenant&gt;&#46;sharepoint&#46;com/sites/<b>oneplacesolutions</b>'.
+If you are a Global Administrator and would like the script to create the initial Site Collection for you, select **Option 2** in the script when prompted. A Team Site(no group) will be created at 'https://&lt;yourTenant&gt;&#46;sharepoint&#46;com/sites/<b>oneplacesolutions</b>'.
 
-*Note: Option 2 will fail if the site named (by default '\*/oneplacesolutions') already exists.*
+*Note: Option 2 will fail if the site named (by default '\*/oneplacesolutions') already exists, or you do not have permissions to create Sites from your SharePoint Admin Center*
 
 1.  Start PowerShell on your machine:
 
@@ -73,16 +73,13 @@ If you would like the script to create the initial Site Collection for you, sele
     
 	If you are deploying to an existing Site and have selected **Option 1** please move on to Step 4.
 	
-	3a.  (**Option 2 Only**) Please enter the SharePoint Root Site Collection URL and press enter. For example, 'htt<span>ps://contoso&#46;sharepoint&#46;com':
+	3a.  (**Option 2 Only**) Please enter the SharePoint Root Site Collection URL and press enter. For example, 'htt<span>ps://contoso&#46;sharepoint&#46;com', you will then be asked to authenticate to your SharePoint Admin Site. 
 
-	3b.  (**Option 2 Only**) You will be asked to authenticate to your SharePoint Admin Site through the PnP Management Shell. Please follow the directions from the script to copy the code into the browser, and if required consent to the PnP Management Shell.
-	> ![](./README-Images/createsitepnpmanagementshelllogin.png)
-
-	3c.  (**Option 2 Only**) You will then be asked to enter an email address for the owner of this Site Collection. Enter the same email address you logged in with, as only the Site Owner can deploy the script to the new Site Collection it's current state. You can change the Site Owner after deployment if you wish:
+	3b.  (**Option 2 Only**) Please enter the email address of the user you just logged in as, this will be the owner of this Site Collection. Only the Site Owner can deploy the template to the new Site Collection it's current state, but you can change the Site Owner after deployment if you wish:
 
 	> ![](./README-Images/enterownerSPO.png)
 
-	3d.  (**Option 2 Only**) SharePoint will start provisioning the Site. Please leave the PowerShell window open while this happens, it will automatically resume the script when the Site is ready to configure. Depending on Microsoft service usage this can take up to 30 minutes, but creation usually occurs in less than 10 minutes.
+	3c.  (**Option 2 Only**) SharePoint will start provisioning the Site. Please leave the PowerShell window open while this happens, it will automatically resume the script when the Site is ready to configure. Depending on Microsoft service usage this can take up to 30 minutes, but creation usually occurs in less than 10 minutes.
 
 	> ![](./README-Images/sitecreationSPO.png)
 
