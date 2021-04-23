@@ -61,7 +61,7 @@ If you are a Global Administrator and would like the script to create the initia
     window and hit enter:
 
     ```PowerShell
-    Invoke-Expression (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/ash-dev-unifipnp/oneplaceSolutionsSite-Config-v3-SPO-modern.ps1')
+    Invoke-Expression (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/master/oneplaceSolutionsSite-Config-v3-SPO-modern.ps1')
     ```
 
     > ![](./README-Images/invokestringSPO.png)
