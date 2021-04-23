@@ -8,7 +8,7 @@
     All major actions are logged to 'OPSScriptLog.txt' in the user's or Administrators Documents folder, and it is uploaded to the Solutions Site at the end of provisioning.
 #>
 $ErrorActionPreference = 'Stop'
-$script:logFile = "OPSScriptLog.txt"
+$script:logFile = "OPSScriptLog$(Get-Date -Format "MMddyyyy").txt"
 $script:logPath = "$env:userprofile\Documents\$script:logFile"
 
 #URL suffix of the Site Collection to create (if we create one)
@@ -18,11 +18,19 @@ $script:solutionsSite = 'oneplacesolutions'
 #Default: $true
 $script:doModern = $true
 
-#This handles whether SharePoint Online Management Shell authentication is being forced.
-#Default: $false
-$script:forceSPOMS = $false
+#This handles whether SharePoint Online Management Shell authentication is being forced (Legacy PnP only)
+#Default: $true
+$script:forceSPOMS = $true
 
-$script:PnPPowerShell = $false
+#This handles whether PnPManagementShell is being forced (PnP.PowerShell only)
+#Default: $false
+$script:forcePnPMS = $false
+
+#Keep track of whether PnP.PowerShell is installed, otherwise we will default to Legacy PnP cmdlets
+$script:PnPPowerShell = $null
+
+#Keep track of whether Legacy PnP Cmdlets are installed.
+$script:LegacyPnPPowerShell = $null
 
 function Write-Log { 
     <#
@@ -141,10 +149,10 @@ Try {
             }
         }
     
-        function Attempt-Provision ([int]$count) {
+        function Invoke-Provision ([int]$count) {
             #Our first provisioning run can encounter a 403 if SharePoint has incorrectly told us the site is ready, this function will retry 
             Try {
-                Write-Log -Message "Provisioning attempt $($count-1)"
+                Write-Log -Message "Provisioning attempt $($count)"
                 If($null -eq $script:PnPPowerShell){
                     Apply-PnPProvisioningTemplate -path $Script:TemplatePath -ExcludeHandlers Pages, SiteSecurity -ClearNavigation -WarningAction Ignore
                 }
@@ -162,7 +170,7 @@ Try {
                     If ($count -lt 4) {
                         Start-Sleep -Seconds 300
                         [int]$count += 1
-                        Attempt-Provision -count $count
+                        Invoke-Provision -count $count
                     }
                     Else {
                         $filler = "SharePoint Online is taking an unusual amount of time to create the site. Please check your SharePoint Admin Site in Office 365, and when the site is created please continue the script. Do not press Enter until you have confirmed the site has been completely created."
@@ -195,9 +203,10 @@ Try {
             }
         }
 
-        function Deploy ([boolean]$spoms, $createSite) {
+        function Deploy ($createSite) {
             Write-Log -Level Info -Message "Creating Site from scratch? $createSite"
-            Write-Log -Level Info -Message "Are we using SPOMS? $spoms"
+            Write-Log -Level Info -Message "Are we using SPOMS? $($script:forceSPOMS)"
+            Write-Log -Level Info -Message "Are we forcing PnP MS? $($script:forcePnPMS)"
             
             #Stage 1a Creating a Solutions Site from scratch
             If($createSite) {
@@ -216,34 +225,45 @@ Try {
 
                 $adminSharePoint = "https://$tenant-admin.sharepoint.com"
 
-                If (($rootSharePoint.Length -eq 0) -or ($tenant.Length -eq 0)) {
+                If (([string]::IsNullOrWhiteSpace($rootSharePoint)) -or ([string]::IsNullOrWhiteSpace($tenant))) {
                     Write-Host "Root SharePoint URL invalid. Exiting script."
                     Write-Log -Level Error -Message "No valid Root Site Collection URL entered. Exiting script."
+                    Pause
                     Exit
                 }
 
                 Try {
-                    If ($spoms) {
+                    If ($script:forceSPOMS) {
                         Connect-PnPOnline -Url $adminSharePoint -SPOManagementShell -WarningAction Ignore
+
                         Write-Host "Prompting for SharePoint Online Management Shell Authentication. Please do not continue until you are logged in. If no prompt appears you may already be authenticated to this Tenant."
                         Start-Sleep -Seconds 5
-                        #PnP doesn't wait for SPO Management Shell to complete it's login, have to pause here
+                        #Legacy PnP doesn't wait for SPO Management Shell to complete it's login, have to pause here
                         Pause
                         #See if we can get the current web, throw an exception otherwise so we don't continue without being connected
                         Get-PnPWeb | Out-Null
                     }
                     Else {
-                        Connect-PnPOnline -Url $adminSharePoint -UseWebLogin -WarningAction Ignore
+                        If ($script:forcePnPMS) {
+                            Connect-PnPOnline -Url $adminSharePoint -Interactive
+                        }
+                        Else {
+                            Connect-PnPOnline -Url $adminSharePoint -UseWebLogin -WarningAction Ignore
+                        }
                     }
                 }
                 Catch {
                     $exMessage = $($_.Exception.Message)
-                    If ($exMessage -match "(403)") {
+                    If ($exMessage -like "*(403)*") {
                         Write-Log -Level Error -Message $exMessage
                         $filler = "Error connecting to '$adminSharePoint'. Please ensure you have sufficient rights to create Site Collections in your Microsoft 365 Tenant. `nThis usually requires Global Administrative rights, or alternatively ask your SharePoint Administrator to perform the Solutions Site Setup."
                         Write-Host $filler -ForegroundColor Yellow
                         Write-Host "Please contact OnePlace Solutions Support if you are still encountering difficulties."
                         Write-Log -Level Info -Message $filler
+                    }
+                    ElseIf ($exMessage -like "*'Connect-PnPOnline'*") {
+                        Write-Log -Level Error -Message "Pre-requisite PnP Cmdlets likely not installed. Please review documentation and try again."
+                        Pause
                     }
                     Throw
                 }
@@ -258,12 +278,13 @@ Try {
                 $LicenseListUrl = $SolutionsSiteUrl + '/lists/Licenses'
 
                 Try {
-                    $ownerEmail = Read-Host "Please enter the email address of the owner-to-be for this site. This should be your current credentials."
+                    $ownerEmail = Read-Host "Please enter the email address of the user you just logged in as"
                     $ownerEmail = $ownerEmail.Trim()
                     If ([string]::IsNullOrWhiteSpace($ownerEmail)) {
                         $filler = 'No Site Collection owner has been entered. Exiting script.'
                         Write-Host $filler
                         Write-Log -Level Error -Message $filler
+                        Pause
                         Exit
                     }
                     #Creating the site collection
@@ -298,8 +319,8 @@ Try {
                         Write-Host "Site with URL $SolutionsSiteUrl already exists. Please run the script again and choose a different Solutions Site suffix, or opt to deploy to an existing Site." -ForegroundColor Red
                         Throw
                     }
-                    ElseIf (($exMessage -match '401') -and ($spoms)) {
-                        $filler = "Auth issue with SharePoint Online Management Shell. `nIf the newly created Site Collection is visible in your SharePoint Online admin center, re-run the script and select Option 1 to deploy to that site."
+                    ElseIf ($exMessage -like '*401*') {
+                        $filler = "Authentication issue. `nIf the newly created Site Collection is visible in your SharePoint Online admin center, re-run the script and select Option 1 to deploy to that site."
                         Write-Log -Level Error -Message $filler
                     }
                     Else {
@@ -318,15 +339,16 @@ Try {
                 Write-Host "`n$stage`n" -ForegroundColor Yellow
                 Write-Progress -Activity "Solutions Site Deployment" -CurrentOperation $stage -PercentComplete (33)
                 
-                $input = Read-Host "What is the URL of the existing Site Collection you have created? `nEg, 'https://contoso.sharepoint.com/sites/oneplacesolutions'. Do not include trailing view information such as '/AllItems.aspx'."
-                $input = $input.Trim()
-                Write-Log "User has entered $input for Existing Site Collection URL"
-                If($input.Length -ne 0){
-                    $solutionsSiteUrl = $input.TrimEnd('/')
+                $tempinput = Read-Host "What is the URL of the existing Site Collection you have created? `nEg, 'https://contoso.sharepoint.com/sites/oneplacesolutions'. Do not include trailing view information such as '/AllItems.aspx'."
+                $tempinput = $tempinput.Trim()
+                Write-Log "User has entered $tempinput for Existing Site Collection URL"
+                If($tempinput.Length -ne 0){
+                    $solutionsSiteUrl = $tempinput.TrimEnd('/')
                 }
                 Else {
                     Write-Host "Can't have an empty URL. Exiting script"
                     Write-Log -Level Error -Message "No Solutions Site URL  entered. Exiting script."
+                    Pause
                     Exit
                 }
                 $LicenseListUrl = $SolutionsSiteUrl + '/lists/Licenses'
@@ -339,28 +361,26 @@ Try {
                 Write-Progress -Activity "Solutions Site Deployment" -CurrentOperation $stage -PercentComplete (66)
 
                 #Connecting to the site collection to apply the template
-                If ($spoms) {
-                    If($createSite) {
-                        Write-Host "Attempting to use existing SPO Management Shell Authentication..."
-                        Connect-PnPOnline -Url $SolutionsSiteUrl -SPOManagementShell -WarningAction Ignore
-                        Start-Sleep -Seconds 5
-                    }
-                    Else {
-                        Write-Host "Attempting to use new SPO Management Shell Authentication..."
-                        Try {Disconnect-SPOService}
-                        Catch {}
-                        Try {Disconnect-PnPOnline}
-                        Catch {}
-                        Connect-PnPOnline -Url $SolutionsSiteUrl -SPOManagementShell -ClearTokenCache -WarningAction Ignore
+                If ($script:forceSPOMS) {
+                    Write-Host "Attempting to use SPO Management Shell Authentication..."
+                    Connect-PnPOnline -Url $SolutionsSiteUrl -SPOManagementShell -WarningAction Ignore
+                    If(-not $createSite) {
+                        #If we created the site we are likely already authenticated, only pause if we didn't
                         Start-Sleep -Seconds 5
                         Pause
+                        #PnP doesn't wait for SPO Management Shell to complete it's login, have to pause here
                     }
-                    #PnP doesn't wait for SPO Management Shell to complete it's login, have to pause here
+                    
                 }
                 Else {
                     Write-Host "Please authenticate against the Site Collection"
-                    Start-Sleep -Seconds 3
-                    Connect-PnPOnline -Url $SolutionsSiteUrl -UseWebLogin -WarningAction Ignore
+                    Start-Sleep -Seconds 2
+                    If ($script:forcePnPMS) {
+                        Connect-PnPOnline -Url $SolutionsSiteUrl -Interactive
+                    }
+                    Else {
+                        Connect-PnPOnline -Url $SolutionsSiteUrl -UseWebLogin -WarningAction Ignore
+                    }
                 }
 
                 If ($script:doModern) {
@@ -398,7 +418,7 @@ Try {
                 Write-Host $filler -ForegroundColor Yellow
                 Write-Log -Level Info -Message $filler
 
-                Attempt-Provision -count 0
+                Invoke-Provision -count 0
 
                 Write-Log -Level Info -Message "Templated applied without SiteSecurity, Pages"
 
@@ -422,7 +442,7 @@ Try {
                     }
                     
                     #Upload logo to Solutions Site
-                    $addLogo = Add-PnPfile -Path $PathImage -Folder "SiteAssets"
+                    Add-PnPfile -Path $PathImage -Folder "SiteAssets"
                 }
 
                 Catch {
@@ -440,18 +460,33 @@ Try {
                 Write-Log -Level Info -Message $filler
                 }
             Catch {
+                $exMessage = $($_.Exception.Message)
+                If ($exMessage -like "*(403)*") {
+                    Write-Log -Level Error -Message $exMessage
+                    $filler = "Error connecting to '$adminSharePoint'. Please ensure you have sufficient rights to create Site Collections in your Microsoft 365 Tenant. `nThis usually requires Global Administrative rights, or alternatively ask your SharePoint Administrator to perform the Solutions Site Setup."
+                    Write-Host $filler -ForegroundColor Yellow
+                    Write-Host "Please contact OnePlace Solutions Support if you are still encountering difficulties."
+                    Write-Log -Level Info -Message $filler
+                }
+                ElseIf ($exMessage -like "*'Connect-PnPOnline'*") {
+                    Write-Log -Level Error -Message "Pre-requisite PnP Cmdlets likely not installed. Please review documentation and try again."
+                    Pause
+                }
                 Throw
             }
 
             #Stage 3 Create the License Item and clean up
             Try {
-                $stage = "Stage 3/3 - License Item creation"
+                $stage = "Stage 3/3 - License Item creation and URL / ID retrieval"
                 Write-Host "`n$stage`n" -ForegroundColor Yellow
                 Write-Progress -Activity "Solutions Site Deployment" -CurrentOperation $stage -PercentComplete (100)
 
                 $filler = "Creating License Item..."
                 Write-Host $filler -ForegroundColor Yellow
                 Write-Log -Level Info -Message $filler
+
+                #Wait for SPO to catch up
+                Start-Sleep -Seconds 2
 
                 #Check if License Item exists
                 $licenseItemCount = ((Get-PnPListItem -List "Licenses" -Query "<View><Query><Where><Eq><FieldRef Name='Title'/><Value Type='Text'>License</Value></Eq></Where></Query></View>").Count)
@@ -498,8 +533,7 @@ Try {
 
                 #Upload log file to Solutions Site
 
-                $logToSharePoint = Add-PnPfile -Path $script:LogPath -Folder "Shared Documents"
-
+                Add-PnPfile -Path $script:LogPath -Folder "Shared Documents"
 
                 Write-Progress -Activity "Completed" -Completed
 
@@ -516,9 +550,9 @@ Try {
                 $currentPrincipal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
         
                 If ($false -eq $currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
-                    $input = Read-Host "Would you like to email this information and Log file to OnePlace Solutions now? (yes or no)"
-                    $input = $input[0]
-                    If ($input -eq 'y') {
+                    $tempinput = Read-Host "Would you like to email this information and Log file to OnePlace Solutions now? (yes or no)"
+                    $tempinput = $input[0]
+                    If ($tempinput -eq 'y') {
                         $file = Get-ChildItem $script:logPath
                         Send-OutlookEmail -attachment $file.FullName -body $importants
                     }
@@ -557,62 +591,95 @@ Try {
             Write-Host "`n--------------------------------------------------------------------------------`n" -ForegroundColor Red
             Write-Host 'Welcome to the Solutions Site Deployment Script for OnePlace Solutions' -ForegroundColor Green
             Write-Host "`n--------------------------------------------------------------------------------`n" -ForegroundColor Red
-            Write-Host "Please make a selection:" -ForegroundColor Yellow
+            Write-Host "Site Deployment:" -ForegroundColor Yellow
             Write-Host "1: Deploy the Solutions Site template to an existing Group or Modern Team Site Collection"
-            Write-Host "2: Create a new Modern Team Site Collection automatically and deploy the Solutions Site template (requires Tenancy Admin rights + SPOMS or PnP.PowerShell)"
-            #Write-Host "3: Install Legacy SharePoint PnP PowerShell Cmdlets"
-            #Write-Host "4: Install New PnP.PowerShell Cmdlets"
-            Write-Host "`nAdditional Configuration Options:" -ForegroundColor Yellow
+            Write-Host "2: Create a new Modern Team Site Collection automatically and deploy the Solutions Site template"
+            Write-Host "`nPnP Pre-Requisite Installation (only one set of PnP Cmdlets required):" -ForegroundColor Yellow
+            Write-Host "3: Install Legacy SharePoint PnP PowerShell Cmdlets for current user"
+            Write-Host "4: Install Current PnP.PowerShell Cmdlets for current user"
+            Write-Host "`nAdditional Configuration:" -ForegroundColor Yellow
             Write-Host "L: Change Log file path (currently: '$script:logPath')"
-            Write-Host "S: Toggle SharePoint Online Management Shell Authentication (currently: $script:forceSPOMS)"
+            Write-Host "S: Toggle Force SharePoint Online Management Shell Authentication for Legacy PnP (currently: $script:forceSPOMS)"
+            Write-Host "P: Toggle Force 365 App / PnP Management Shell Authentication (currently: $script:forcePnPMS)"
 
             Write-Host "`nQ: Press 'Q' to quit." 
             Write-Log -Level Info -Message "Displaying Menu"
         }
 
         Write-Log -Level Info -Message "Logging script actions to $script:logPath"
+        Try{
+            $script:PnPPowerShell = Get-InstalledModule "PnP.PowerShell" -ErrorAction SilentlyContinue
+            If($null -ne $script:PnPPowerShell) {
+                $script:forceSPOMS = $false
+                Write-Host "Current PnP.PowerShell PnP Cmdlets detected" -ForegroundColor Green
+                Write-Log -Level Info -Message "PnP.PowerShell Version: $([string]$script:PnPPowerShell)"
+            }
+        }
+        Catch {
+            Write-Log "PnP.PowerShell not found"
+        }
         
-        $script:PnPPowerShell = Get-Module PnP.PowerShell
+        Try{
+            $script:LegacyPnPPowerShell = Get-InstalledModule "SharePointPnPPowerShellOnline" -ErrorAction SilentlyContinue
+            If($null -ne $script:LegacyPnPPowerShell) {
+                Write-Host "Legacy PnP Cmdlets detected" -ForegroundColor Green
+                Write-Log -Level Info -Message "Legacy PnP PowerShell Version: $([string]$script:LegacyPnPPowerShell)"
+            }
+        }
+        Catch {
+            Write-Log "SharePointPnPPowerShellOnline not found"
+        }
+
+        Start-Sleep -Seconds 2
+
+        $script:PSVersion = (Get-Host | Select-Object Version)
+        $script:PSVersion = [string]$script:PSVersion
+        Write-Log "PowerShell Version: $([string]$script:PSVersion)"
+        If(($script:PSVersion -like "7.*") -or ((Get-Host | Select-Object Name) -match "Visual Studio Code Host")) {
+            Write-Log -Level Warn "PowerShell version $($script:PSVersion) requires using Current PnP Cmdlets (PnP.PowerShell). Using this version with Legacy PnP will result in script failure."
+            Pause
+        }
 
         do {
             showMenu
             $userInput = Read-Host "Please select an option" 
             Write-Log -Message "User has entered option '$userInput'"
             switch ($userInput) { 
-                #Apply site template (SPOMS not required, this can be selected with only PnP installed)
+                #Apply site template 
                 '1' {
-                    Deploy -createSite $false -spoms $script:forceSPOMS
+                    Deploy -createSite $false
                 }
-                #Create site and deploy (SPOMS + PnP required, or just PnP.PowerShell)
+                #Create site and deploy (may need to force SPOMS / PNPMS)
                 '2' {
-                    If($null -ne $script:PnPPowerShell){
-                        Deploy -createSite $true -spoms $false
-                    }
-                    Else {
-                        Deploy -createSite $true -spoms $true
-                    }
+                    Deploy -createSite $true
+
                 }
                 '3' {
                     Clear-Host
-                    $installPnP = Read-Host "Please enter the SharePoint version you are using (2013, 2016, 2019, or Online)"
-                    If($null -eq (Get-Module "SharePointPnPPowerShell*")){
-                        Write-Host "Invoking installation of the SharePoint PnP PowerShell Module for SharePoint $($installPnP), please accept the prompts for installation."
-                        Invoke-Expression -Command "Install-Module SharePointPnPPowerShell$($installPnP) -Scope CurrentUser"
+                    If($null -eq $script:LegacyPnPPowerShell) {
+                        Write-Host "Invoking installation of the Legacy SharePoint PnP PowerShell Module for SharePoint Online, please accept the prompts for installation."
+                        Write-Host "If you do not use PowerShell modules often, you will likely see a message related to an 'Untrusted Repository', this is PowerShell Gallery where the PnP Modules are downloaded from. Please selection option 'Y' or 'A'.`n"
+                        
+                        Invoke-Expression -Command "Install-Module SharePointPnPPowerShellOnline -Scope CurrentUser"
                     }
                     Else {
                         Write-Host "Existing SharePointPnPPowerShell detected, skipping installation."
                     }
+                    $script:LegacyPnPPowerShell = Get-Module "SharePointPnPPowerShellOnline"
                     Pause
                 }
                 '4' {
                     Clear-Host
-                    If($null -eq $script:PnPPowerShell){
+                    If($null -eq $script:PnPPowerShell) {
                         Write-Host "Invoking installation of the PnP.PowerShell for SharePoint Online, please accept the prompts for installation."
+                        Write-Host "If you do not use PowerShell modules often, you will likely see a message related to an 'Untrusted Repository', this is PowerShell Gallery where the PnP Modules are downloaded from. Please selection option 'Y' or 'A'.`n"
+                        
                         Invoke-Expression -Command "Install-Module PnP.PowerShell -Scope CurrentUser"
                     }
                     Else {
                         Write-Host "Existing PnP.PowerShell detected, skipping installation."
                     }
+                    $script:PnPPowerShell = Get-Module "PnP.PowerShell"
                     Pause
                 }
                 'l' {
@@ -628,8 +695,32 @@ Try {
                     Pause
                 }
                 's'{
-                    $script:forceSPOMS = -not $script:forceSPOMS
-                    Write-Log -Message "Toggling SPOMS to $script:forceSPOMS"
+                    If($null -eq $script:PnPPowerShell) {
+                        $script:forceSPOMS = -not $script:forceSPOMS
+                        If($script:forceSPOMS) {
+                            $script:forcePnPMS = -not $script:forceSPOMS
+                            Write-Log -Message "Toggling PnPMS to $($script:forcePnPMS)"
+                        }
+                        Write-Log -Message "Toggling SPOMS to $($script:forceSPOMS)"
+                    }
+                    Else {
+                        Write-Host "PnP.PowerShell installed, can't force SharePoint Online Management Shell Authentication..."
+                        Pause
+                    }
+                }
+                'p'{
+                    If($null -ne $script:PnPPowerShell) {
+                        $script:forcePnPMS = -not $script:forcePnPMS
+                        If($script:forcePnPMS) {
+                            $script:forceSPOMS = -not $script:forcePnPMS
+                            Write-Log -Message "Toggling SPOMS to $($script:forceSPOMS)"
+                        }
+                        Write-Log -Message "Toggling PnPMS to $($script:forcePnPMS)"
+                    }
+                    Else {
+                        Write-Host "PnP.PowerShell not installed, can't force PnP Management Shell Authentication..."
+                        Pause
+                    }
                 }
                 'q' {Exit}
             }
@@ -645,14 +736,10 @@ Try {
         Write-Host "`nPlease send the log file at '$script:logPath' to 'support@oneplacesolutions.com' for assistance." -ForegroundColor Yellow
         Pause
     }
-    #Clean up and disconnect any leftover PnPOnline or SPOService sessions
+    #Clean up and disconnect any leftover PnPOnline sessions
     Finally {
         Try {
             Disconnect-PnPOnline -ErrorAction SilentlyContinue
-        }
-        Catch {}
-        Try {
-            Disconnect-SPOService -ErrorAction SilentlyContinue
         }
         Catch {}
         Write-Log -Level Info -Message "End of script. End of log."
