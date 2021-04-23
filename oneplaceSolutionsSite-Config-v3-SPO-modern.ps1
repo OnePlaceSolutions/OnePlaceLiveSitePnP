@@ -600,7 +600,7 @@ Try {
             Write-Host "`nAdditional Configuration:" -ForegroundColor Yellow
             Write-Host "L: Change Log file path (currently: '$script:logPath')"
             Write-Host "S: Toggle Force SharePoint Online Management Shell Authentication for Legacy PnP (currently: $script:forceSPOMS)"
-            Write-Host "P: Toggle Force 365 App / PnP Management Shell Authentication (currently: $script:forcePnPMS) (App permissions will be prompted for if required)"
+            Write-Host "P: Toggle Force 365 App / PnP Management Shell Authentication (currently: $script:forcePnPMS)"
 
             Write-Host "`nQ: Press 'Q' to quit." 
             Write-Log -Level Info -Message "Displaying Menu"

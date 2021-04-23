@@ -25,7 +25,7 @@ A script to create the required Lists in a Site Collection for licensing and oth
     Uninstall-Module 'SharePointPnPPowerShellOnline'
     ```
     
-3.  **(Multi-Tenant support)**
+3.  **(Optional Multi-Tenant / Modern Authentication support)**
 	
 	If you are working in a multi-tenanted scenario, we recommend having your Microsoft 365 Administrator grant App access to the PnP Management Shell in your 365 Tenant(s). It is recommended that you check and grant this ahead of running the script by entering this command in PowerShell and following the directions. Documentation and more information [here](https://pnp.github.io/powershell/articles/authentication.html).
     ```
@@ -86,8 +86,7 @@ If you would like the script to create the initial Site Collection for you, sele
 
 	> ![](./README-Images/sitecreationSPO.png)
 
-4.  Once the Site Collection URL has been entered (or the Site Collection has been created as part of Option 2) the script may prompt you to authenticate against the Site Collection through the PnP Management Shell. Please follow the directions from the script to copy the code into the browser, and if required consent to the PnP Management Shell. Afterwards, the script will start configuring the site for use.
-	> ![](./README-Images/pnpmanagementshelllogin.png)
+4.  Once the Site Collection URL has been entered (or the Site Collection has been created as part of Option 2) the script will start configuring the site for use.
 	> ![](./README-Images/siteconfigurationSPO.png)
 	
 5.  When configuration has completed, your Solutions Site URL, License List URL and License List ID will be displayed (these are also in the log file noted earlier, and will be visible in the Solutions Site). You may be presented with the option to automatically email these details now to OnePlace Solutions. These URLs will be kept on file for support purposes, and the License List ID will be required for provisioning your Production License.
