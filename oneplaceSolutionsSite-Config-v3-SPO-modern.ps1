@@ -265,6 +265,12 @@ Try {
                         Write-Log -Level Error -Message "Pre-requisite PnP Cmdlets likely not installed. Please review documentation and try again."
                         Pause
                     }
+                    ElseIf ($exMessage -like "*SPOManagementShell*") {
+                        Write-Log -level Warn -Message "Error calling SPOManagementShell Authentication. Retrying deployment with Force SPOMS `$False"
+                        Start-Sleep -Seconds 2
+                        $script:forceSPOMS = $false
+                        Deploy -createSite $createSite
+                    }
                     Throw
                 }
 
@@ -471,6 +477,12 @@ Try {
                 ElseIf ($exMessage -like "*'Connect-PnPOnline'*") {
                     Write-Log -Level Error -Message "Pre-requisite PnP Cmdlets likely not installed. Please review documentation and try again."
                     Pause
+                }
+                ElseIf ($exMessage -like "*SPOManagementShell*") {
+                    Write-Log -level Warn -Message "Error calling SPOManagementShell Authentication. Retrying deployment with Force SPOMS `$False"
+                    Start-Sleep -Seconds 2
+                    $script:forceSPOMS = $false
+                    Deploy -createSite $createSite
                 }
                 Throw
             }
