@@ -423,7 +423,14 @@ Try {
                 Write-Log -Level Info -Message "Templated applied without SiteSecurity, Pages"
 
                 Write-Log -Level Info -Message "Retrieving License List ID"
-                $licenseList = Get-PnPList -Identity "Licenses"
+                Try {
+                    $licenseList = Get-PnPList -Identity "Licenses" -ThrowExceptionIfListNotFound
+                }
+                Catch {
+                    Write-Log "License List not ready yet, backing off for 5 seconds."
+                    Start-Sleep -Seconds 5
+                    $licenseList = Get-PnPList -Identity "Licenses" -ThrowExceptionIfListNotFound
+                }
                 $licenseListId = $licenseList.ID
                 $licenseListId = $licenseListId.ToString()
                 Write-Log -Level Info -Message "License List ID retrieved: $licenseListId"
@@ -493,7 +500,10 @@ Try {
                 
                 #Create License item if it does not exist
                 If ($licenseItemCount -eq 0) {
-                    Add-PnPListItem -List "Licenses" -Values @{"Title" = "License" } | Out-Null
+                    Add-PnPField -List 'Licenses' -DisplayName "License Helper" -InternalName "LicenseHelper" -Type Text
+                    
+                    Add-PnPListItem -List "Licenses" -Values @{"Title" = "License"; "LicenseHelper" =  "Please do not rename the 'License' item, as this will break your OnePlace licensing. Only replace the file attachment."} | Out-Null
+
                     $filler = "License Item created!"
                     Write-Host "`n$filler" -ForegroundColor Green
                     Write-Log -Level Info -Message $filler
