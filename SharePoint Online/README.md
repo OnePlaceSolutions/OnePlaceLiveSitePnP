@@ -91,7 +91,5 @@ If you are a Global Administrator and would like the script to create the initia
 
     > ![](./README-Images/configurationcompleteSPO.png)
 6.  Finally, press Enter to open your Solutions Site.\
-    The homepage contains some useful links for training and support resources, and when you have a Production license an overview of your License usage.\
+    The homepage contains some useful links for training and support resources. Scrolling down you can always find your Client Configuration Details, and if you have received a Legacy License Key you may also attach it here.
     > ![](./README-Images/solutionssiteSPO.png)
-    Scrolling down you can always find your Client Configuration Details. If you have received a Legacy License Key, you may also attach it here.\
-    > ![](./README-Images/solutionssitedetailsSPO.png)
