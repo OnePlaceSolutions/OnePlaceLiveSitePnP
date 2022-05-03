@@ -87,11 +87,11 @@ If you are a Global Administrator and would like the script to create the initia
 4.  Once the Site Collection URL has been entered (or the Site Collection has been created as part of Option 2) the script will start configuring the site for use.
 	> ![](./README-Images/siteconfigurationSPO.png)
 	
-5.  When configuration has completed, your Solutions Site URL, License List URL and License List ID will be displayed (these are also in the log file noted earlier, and will be visible in the Solutions Site). You may be presented with the option to automatically email these details now to OnePlace Solutions. These URLs will be kept on file for support purposes, and the License List ID will be required for provisioning your Production License.
+5.  When configuration has completed, your Solutions Site URL will be displayed (which is the URL to the Site Collection). All script actions will be logged to the text file in the Documents Library on the Solutions Site.
 
     > ![](./README-Images/configurationcompleteSPO.png)
 6.  Finally, press Enter to open your Solutions Site.\
     The homepage contains some useful links for training and support resources, and when you have a Production license an overview of your License usage.\
     > ![](./README-Images/solutionssiteSPO.png)
-    Scrolling down you can always find your Client Configuration Details (The License List URL and Solutions Site URL), and your License List ID. If you did not opt to email these automatically in the previous step, please email the License List ID to 'success@oneplacesolutions.com' when procuring a Production License. If you have received a Production license or Time Expiry Key, you may attach it here.\
+    Scrolling down you can always find your Client Configuration Details. If you have received a Legacy License Key, you may also attach it here.\
     > ![](./README-Images/solutionssitedetailsSPO.png)
