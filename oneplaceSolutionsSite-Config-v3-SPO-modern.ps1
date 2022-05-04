@@ -653,6 +653,9 @@ Try {
                 '3' {
                     Clear-Host
                     If($null -eq $script:LegacyPnPPowerShell) {
+                        
+                        Write-Host "`n!!!Use of the Legacy PnP Cmdlets for SharePoint Online is deprecated and often will not deploy cleanly or successfully. Use at your own risk.!!!`n"
+                        Pause
                         Write-Host "Invoking installation of the Legacy SharePoint PnP PowerShell Module for SharePoint Online, please accept the prompts for installation."
                         Write-Host "If you do not use PowerShell modules often, you will likely see a message related to an 'Untrusted Repository', this is PowerShell Gallery where the PnP Modules are downloaded from. Please selection option 'Y' or 'A'.`n"
                         
