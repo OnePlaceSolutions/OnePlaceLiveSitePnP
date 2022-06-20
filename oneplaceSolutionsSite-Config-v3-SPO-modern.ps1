@@ -19,12 +19,12 @@ $script:solutionsSite = 'oneplacesolutions'
 $script:doModern = $true
 
 #This handles whether SharePoint Online Management Shell authentication is being forced (Legacy PnP only)
-#Default: $true
-$script:forceSPOMS = $true
+#Default: $false
+$script:forceSPOMS = $false
 
 #This handles whether PnPManagementShell is being forced (PnP.PowerShell only)
-#Default: $false
-$script:forcePnPMS = $false
+#Default: $true
+$script:forcePnPMS = $true
 
 #Keep track of whether PnP.PowerShell is installed, otherwise we will default to Legacy PnP cmdlets
 $script:PnPPowerShell = $null
@@ -588,12 +588,12 @@ Try {
             Write-Host "1: Deploy the Solutions Site template to an existing Group or Modern Team Site Collection"
             Write-Host "2: Create a new Modern Team Site Collection automatically and deploy the Solutions Site template"
             Write-Host "`nPnP Pre-Requisite Installation (only one set of PnP Cmdlets required):" -ForegroundColor Yellow
-            Write-Host "3: Install Legacy SharePoint PnP PowerShell Cmdlets for current user"
-            Write-Host "4: Install Current PnP.PowerShell Cmdlets for current user"
+            #Write-Host "3: Install Legacy SharePoint PnP PowerShell Cmdlets for current user"
+            Write-Host "3: Install Current PnP.PowerShell Cmdlets for current user"
             Write-Host "`nAdditional Configuration:" -ForegroundColor Yellow
             Write-Host "L: Change Log file path (currently: '$script:logPath')"
-            Write-Host "S: Toggle Force SharePoint Online Management Shell Authentication for Legacy PnP (currently: $script:forceSPOMS)"
-            Write-Host "P: Toggle Force 365 App / PnP Management Shell Authentication (currently: $script:forcePnPMS)"
+            #Write-Host "S: Toggle Force SharePoint Online Management Shell Authentication for Legacy PnP (currently: $script:forceSPOMS)"
+            #Write-Host "P: Toggle Force 365 App / PnP Management Shell Authentication (currently: $script:forcePnPMS)"
 
             Write-Host "`nQ: Press 'Q' to quit." 
             Write-Log -Level Info -Message "Displaying Menu"
@@ -650,7 +650,7 @@ Try {
                     Deploy -createSite $true
 
                 }
-                '3' {
+                '4' {
                     Clear-Host
                     If($null -eq $script:LegacyPnPPowerShell) {
                         
@@ -667,7 +667,7 @@ Try {
                     $script:LegacyPnPPowerShell = Get-Module "SharePointPnPPowerShellOnline"
                     Pause
                 }
-                '4' {
+                '3' {
                     Clear-Host
                     If($null -eq $script:PnPPowerShell) {
                         Write-Host "Invoking installation of the PnP.PowerShell for SharePoint Online, please accept the prompts for installation."
