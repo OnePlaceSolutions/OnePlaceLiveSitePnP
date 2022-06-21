@@ -25,17 +25,17 @@ A script to create the required Lists in a Site Collection for licensing and oth
     Uninstall-Module 'SharePointPnPPowerShellOnline'
     ```
     
-3.  **(Optional Multi-Tenant / Modern Authentication support)**
+3.  PnP Management Shell Permission Consent
 	
-	If you are working in a multi-tenanted scenario, we recommend having your Microsoft 365 Administrator grant App access to the PnP Management Shell in your 365 Tenant(s), and toggle 'Force 365 App / PnP Management Shell Authentication to 'True' by entering 'P' in the script menu. 
-	It is recommended that you check and grant this ahead of running the script by entering this command in PowerShell and following the directions. Documentation and more information [here](https://pnp.github.io/powershell/articles/authentication.html).
+	Your Microsoft 365 Administrator must grant access to the PnP Management Shell in your 365 Tenant(s).
+	It is recommended that you check and grant this ahead of running the script by entering this command in PowerShell and following the directions, alternatively this will be prompted for automatically. Documentation and more information [here](https://pnp.github.io/powershell/articles/authentication.html).
     ```
     Register-PnPManagementShellAccess
     ```
     > ![](./README-Images/pnpmanagementshellperms.png)
     
     * We recommend only granting this App access for your account, and if you no longer require running the script you can delete it from your Microsoft 365 Tenant which will revoke it's permissions. [Microsoft Documentation on Deleting Enterprise Applications](https://docs.microsoft.com/en-us/azure/active-directory/manage-apps/delete-application-portal).
-    * The PnP Management Shell is created by the PnP project to facilitate authentication and access control to your 365 Tenant, and is not published by OnePlace Solutions. Granting permissions for the PnP Management shell to a user/users only allows **delegated access**, the user must still authenticate and have the adequate permissions to perform any actions through the PnP Management Shell. In previous versions of the PnP Cmdlets these permissions did not need to be requested, but with the move to Modern Authentication these permissions are now explicitly requested.
+    * The PnP Management Shell is created by the PnP project to facilitate authentication and access control to your 365 Tenant, and is not published by OnePlace Solutions. Granting permissions for the PnP Management shell to a user/users only allows **delegated access**, the user must still authenticate and have the adequate permissions to perform any actions through the PnP Management Shell. In previous versions of the PnP Cmdlets these permissions did not need to be requested, but with the move to Modern Authentication these permissions are now explicitly requested and thus also auditable.
     * This script only intends to utilize the 'Have full control of all Site Collections' permission pictured above, and this is restricted by the delegated permissions of the user that is authenticating. PnP.PowerShell updates may require usage of other permissions to complete templating functions, but the template has been written with the intent of not requiring any other permissions.
 	
 
