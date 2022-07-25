@@ -322,18 +322,28 @@ Try {
                 Write-Host "`n$stage`n" -ForegroundColor Yellow
                 Write-Progress -Activity "Solutions Site Deployment" -CurrentOperation $stage -PercentComplete (33)
                 
-                $tempinput = Read-Host "What is the URL of the existing Site Collection you have created? `nEg, 'https://contoso.sharepoint.com/sites/oneplacesolutions'. Do not include trailing view information such as '/AllItems.aspx'."
-                $tempinput = $tempinput.Trim()
-                Write-Log "User has entered $tempinput for Existing Site Collection URL"
-                If($tempinput.Length -ne 0){
-                    $solutionsSiteUrl = $tempinput.TrimEnd('/')
+                
+                Do {
+                    $validInput = $true
+                    $tempinput = Read-Host "What is the URL of the existing Site Collection you have created? `nEg, 'https://contoso.sharepoint.com/sites/oneplacesolutions'. Do not include trailing view information such as '/AllItems.aspx'. Do not use your 'root' Site Collection."
+                    $tempinput = $tempinput.Trim()
+
+                    Write-Log "User has entered $tempinput for Existing Site Collection URL"
+                    If($tempinput.Length -ne 0){
+                        $solutionsSiteUrl = $tempinput.TrimEnd('/')
+                    }
+                    Else {
+                        Write-Log -Level Warn -Message "No Solutions Site URL entered."
+                        $validInput = $false
+                    }
+
+                    If($tempinput -notmatch "(sharepoint\.com/sites/.)") {
+                        Write-Log -Level Warn -Message "Root Site Collection URL has been entered. Please create a new Site Collection per the documentation and enter that URL."
+                        $validInput = $false
+                    }
                 }
-                Else {
-                    Write-Host "Can't have an empty URL. Exiting script"
-                    Write-Log -Level Error -Message "No Solutions Site URL  entered. Exiting script."
-                    Pause
-                    Exit
-                }
+                Until ($validInput)
+                
                 $LicenseListUrl = $SolutionsSiteUrl + '/lists/Licenses'
             }
 
