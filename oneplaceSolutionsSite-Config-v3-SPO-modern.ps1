@@ -130,12 +130,9 @@ Try {
             #Our first provisioning run can encounter a 403 if SharePoint has incorrectly told us the site is ready, this function will retry 
             Try {
                 Write-Log -Message "Provisioning attempt $($count)"
-                If($null -eq $script:PnPPowerShell){
-                    Apply-PnPProvisioningTemplate -path $Script:TemplatePath -ExcludeHandlers Pages, SiteSecurity -ClearNavigation -WarningAction Ignore
-                }
-                Else {
-                    Invoke-PnPSiteTemplate -path $Script:TemplatePath -ExcludeHandlers Pages, SiteSecurity -ClearNavigation -WarningAction Ignore
-                }
+
+                Invoke-PnPSiteTemplate -path $Script:TemplatePath -ExcludeHandlers Pages, SiteSecurity -ClearNavigation -WarningAction Ignore
+                
             }
             Catch [System.Net.WebException] {
                 If ($($_.Exception.Message) -match '(403)') {
@@ -155,12 +152,9 @@ Try {
                         Write-Log -Level Info -Message $filler
                         Write-Host "`n"
                         Pause
-                        If($null -eq $script:PnPPowerShell){
-                            Apply-PnPProvisioningTemplate -path $Script:TemplatePath -ExcludeHandlers Pages, SiteSecurity -ClearNavigation -WarningAction Ignore
-                        }
-                        Else {
-                            Invoke-PnPSiteTemplate -path $Script:TemplatePath -ExcludeHandlers Pages, SiteSecurity -ClearNavigation -WarningAction Ignore
-                        }
+
+                        Invoke-PnPSiteTemplate -path $Script:TemplatePath -ExcludeHandlers Pages, SiteSecurity -ClearNavigation -WarningAction Ignore
+                        
                     }
                 }
                 Else {
@@ -682,8 +676,11 @@ Try {
                     If($null -eq $script:PnPPowerShell) {
                         Write-Host "Invoking installation of the PnP.PowerShell for SharePoint Online, please accept the prompts for installation."
                         Write-Host "If you do not use PowerShell modules often, you will likely see a message related to an 'Untrusted Repository', this is PowerShell Gallery where the PnP Modules are downloaded from. Please selection option 'Y' or 'A'.`n"
+                        Write-Host "If you have been prompted as above and have already selected 'Y' or 'A' and nothing happens after a few minutes, please press 'Enter'."
                         
                         Invoke-Expression -Command "Install-Module PnP.PowerShell -Scope CurrentUser"
+                        Write-Host "Importing newly installed PnP.PowerShell module into this session..."
+                        Import-Module "PnP.PowerShell"
                     }
                     Else {
                         Write-Host "Existing PnP.PowerShell detected, skipping installation."
