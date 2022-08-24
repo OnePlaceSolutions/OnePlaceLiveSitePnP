@@ -169,15 +169,15 @@ Try {
                 Write-Progress -Activity "Solutions Site Deployment" -CurrentOperation $stage -PercentComplete (33)
                 
                 $rootSharePoint = Read-Host "Please enter your SharePoint Online Root Site Collection URL, eg (without quotes) 'https://contoso.sharepoint.com'"
-                Write-Log -Level Info -Message "Root SharePoint: $rootSharePoint"
+                Write-Log -Level Info -Message "User entered Root Site Collection: $rootSharePoint"
                 $rootSharePoint = $rootSharePoint.Trim("'")
-                $rootSharePoint = $rootSharePoint.Trim("/")
-                Write-Log -Level Info -Message "Sanitized: $rootSharePoint"
                 
-                $tenant = $rootSharepoint  -match 'https://(?<Tenant>.+)\.sharepoint.com'
+                $tenant = $rootSharepoint  -match 'https://(?<Tenant>.+)\.sharepoint.com.*'
                 $tenant = $Matches.Tenant
 
                 $adminSharePoint = "https://$tenant-admin.sharepoint.com"
+                $rootSharePoint = "https://$tenant.sharepoint.com"
+                Write-Log -Level Info -Message "Sanitized: $rootSharePoint"
 
                 If (([string]::IsNullOrWhiteSpace($rootSharePoint)) -or ([string]::IsNullOrWhiteSpace($tenant))) {
                     Write-Host "Root SharePoint URL invalid. Exiting script."
