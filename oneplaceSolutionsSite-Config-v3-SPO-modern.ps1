@@ -361,12 +361,7 @@ Try {
                 Start-Sleep -Seconds 2															
 
                 Try{
-                    If($null -eq $script:PnPPowerShell){
-                        Apply-PnPProvisioningTemplate -path $Script:TemplatePath -Handlers SiteSecurity, Pages -Parameters @{"licenseListID" = $licenseListId; "site" = $SolutionsSiteUrl }	-ClearNavigation -WarningAction Ignore											  
-                    }
-                    Else {
-                        Invoke-PnPSiteTemplate -path $Script:TemplatePath -Handlers SiteSecurity, Pages -Parameters @{"licenseListID" = $licenseListId; "site" = $SolutionsSiteUrl }	-ClearNavigation -WarningAction Ignore											  
-                    }
+                    Invoke-PnPSiteTemplate -path $Script:TemplatePath -Handlers SiteSecurity, Pages -Parameters @{"licenseListID" = $licenseListId; "site" = $SolutionsSiteUrl }	-ClearNavigation -WarningAction Ignore
                     
                     #Upload logo to Solutions Site
                     Add-PnPfile -Path $PathImage -Folder "SiteAssets"
