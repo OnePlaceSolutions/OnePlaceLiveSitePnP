@@ -222,6 +222,7 @@ Try {
                 $LicenseListUrl = $SolutionsSiteUrl + '/lists/Licenses'
 
                 Try {
+                    <#
                     $ownerEmail = Read-Host "Please enter the email address of the user you just logged in as"
                     $ownerEmail = $ownerEmail.Trim()
                     If ([string]::IsNullOrWhiteSpace($ownerEmail)) {
@@ -231,6 +232,15 @@ Try {
                         Pause
                         Exit
                     }
+                    #>
+
+                    #Get the currently logged in user UPN to make Site Admin
+                    $Context = Get-PnPContext
+                    $Context.Load($Context.Web.CurrentUser)
+                    $Context.ExecuteQuery()
+
+                    $OwnerEmail = $Context.Web.CurrentUser.Email
+
                     #Creating the site collection
                     $filler = "Creating site collection with URL '$SolutionsSiteUrl' for the Solutions Site, and owner '$ownerEmail'. This may take a while, please do not close this window, but feel free to minimize the PowerShell window and check back in 10 minutes."
                     Write-Host $filler -ForegroundColor Yellow
@@ -309,7 +319,7 @@ Try {
                     
                 Connect-PnPOnline -Url $SolutionsSiteUrl -Interactive
 
-                $Url = "https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/master/oneplaceSolutionsSite-template-v3-modern.xml"    
+                $Url = "https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/master/oneplaceSolutionsSite-template-v3-modern-ccm.xml"    
                 $Script:templatePath = "$env:temp\oneplaceSolutionsSite-template-v3-modern.xml" 
 
                 $UrlSiteImage = "https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/master/oneplacesolutions-logo.png"
@@ -438,7 +448,8 @@ Try {
                     $filler = "License Item not created or is duplicate!"
                     Write-Log -Level Info -Message $filler
                 }
-            
+                
+                <#
                 #This sets up a Custom Column Mapping list ready for use if required
                 If($null -eq (Get-PnPList -Identity 'Custom Column Mapping')) {
                     Write-Log -Level Info -Message "Creating Custom Column Mapping list for later use if required."
@@ -460,6 +471,7 @@ Try {
                 Else {
                     Write-Log -Level Info -Message "Custom Column Mapping list already exists by name, skipping creation."
                 }
+                #>
 
                 Write-Log -Level Info -Message "Solutions Site URL = $SolutionsSiteUrl"
                 Write-Log -Level Info -Message "License List URL = $LicenseListUrl"

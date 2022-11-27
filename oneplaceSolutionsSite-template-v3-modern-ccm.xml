@@ -27,6 +27,9 @@
           </pnp:StructuralNavigation>
         </pnp:CurrentNavigation>
       </pnp:Navigation>
+	  <pnp:Files>
+        <pnp:File Src="oneplacesolutions-logo.png" Folder="SiteAssets" Overwrite="true" />
+      </pnp:Files>  
       <pnp:Lists>
         <pnp:ListInstance Title="Configuration Profiles" Description="" DocumentTemplate="" OnQuickLaunch="true" TemplateType="100" Url="Lists/Configuration Profiles" MinorVersionLimit="0" MaxVersionLimit="0" DraftVersionVisibility="0" TemplateFeatureID="00bfea71-de22-43b2-a848-c05709900100" EnableFolderCreation="false" ListExperience="ClassicExperience" DefaultDisplayFormUrl="{site}/Lists/Configuration Profiles/DispForm.aspx" DefaultEditFormUrl="{site}/Lists/Configuration Profiles/EditForm.aspx" DefaultNewFormUrl="{site}/Lists/Configuration Profiles/NewForm.aspx" ImageUrl="/_layouts/15/images/itgen.png?rev=44" IrmExpire="false" IrmReject="false" IsApplicationList="false" ValidationFormula="" ValidationMessage="">
           <pnp:ContentTypeBindings>
