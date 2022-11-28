@@ -320,7 +320,8 @@ Try {
                 Connect-PnPOnline -Url $SolutionsSiteUrl -Interactive
 
                 $Url = "https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/master/oneplaceSolutionsSite-template-v3-modern-ccm.xml"    
-                $Script:templatePath = "$env:temp\oneplaceSolutionsSite-template-v3-modern.xml" 
+                #$Script:templatePath = "$env:temp\oneplaceSolutionsSite-template-v3-modern.xml" 
+                $Script:templatePath = "C:\Users\AshleyGregory\Documents\GitHub\OnePlaceLiveSitePnP\oneplaceSolutionsSite-template-v3-modern-ccm.xml" 
 
                 $UrlSiteImage = "https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/master/oneplacesolutions-logo.png"
                 $PathImage = "$env:temp\oneplacesolutions-logo.png" 
@@ -430,7 +431,7 @@ Try {
 
                 #Check if License Item exists
                 $licenseItemCount = ((Get-PnPListItem -List "Licenses" -Query "<View><Query><Where><Eq><FieldRef Name='Title'/><Value Type='Text'>License</Value></Eq></Where></Query></View>").Count)
-                
+                <#
                 #Create License item if it does not exist
                 If ($licenseItemCount -eq 0) {
                     $sinkOutput = Add-PnPField -List 'Licenses' -DisplayName "License Helper" -InternalName "LicenseHelper" -Type Text
@@ -448,6 +449,7 @@ Try {
                     $filler = "License Item not created or is duplicate!"
                     Write-Log -Level Info -Message $filler
                 }
+                #>
                 
                 <#
                 #This sets up a Custom Column Mapping list ready for use if required
