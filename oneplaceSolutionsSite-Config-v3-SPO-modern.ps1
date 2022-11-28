@@ -116,7 +116,7 @@ Try {
             Try {
                 Write-Log -Message "Provisioning attempt $($count)"
 
-                Invoke-PnPSiteTemplate -path $Script:TemplatePath -ExcludeHandlers Pages, SiteSecurity -ClearNavigation -WarningAction Ignore
+                Invoke-PnPSiteTemplate -path $Script:TemplatePath -ClearNavigation -WarningAction Ignore
                 
             }
             Catch [System.Net.WebException] {
@@ -138,7 +138,7 @@ Try {
                         Write-Host "`n"
                         Pause
 
-                        Invoke-PnPSiteTemplate -path $Script:TemplatePath -ExcludeHandlers Pages, SiteSecurity -ClearNavigation -WarningAction Ignore
+                        Invoke-PnPSiteTemplate -path $Script:TemplatePath -ClearNavigation -WarningAction Ignore
                         
                     }
                 }
@@ -164,7 +164,7 @@ Try {
             
             #Stage 1a Creating a Solutions Site from scratch
             If($createSite) {
-                $stage = "Stage 1/3 - Team Site (Modern) creation"
+                $stage = "Stage 1/2 - Team Site (Modern) creation"
                 Write-Host "`n$stage`n" -ForegroundColor Yellow
                 Write-Progress -Activity "Solutions Site Deployment" -CurrentOperation $stage -PercentComplete (33)
                 
@@ -222,15 +222,13 @@ Try {
                 $LicenseListUrl = $SolutionsSiteUrl + '/lists/Licenses'
 
                 Try {
-                    $ownerEmail = Read-Host "Please enter the email address of the user you just logged in as"
-                    $ownerEmail = $ownerEmail.Trim()
-                    If ([string]::IsNullOrWhiteSpace($ownerEmail)) {
-                        $filler = 'No Site Collection owner has been entered. Exiting script.'
-                        Write-Host $filler
-                        Write-Log -Level Error -Message $filler
-                        Pause
-                        Exit
-                    }
+                    #Get the currently logged in user UPN to make Site Admin
+                    $Context = Get-PnPContext
+                    $Context.Load($Context.Web.CurrentUser)
+                    $Context.ExecuteQuery()
+
+                    $OwnerEmail = $Context.Web.CurrentUser.Email
+
                     #Creating the site collection
                     $filler = "Creating site collection with URL '$SolutionsSiteUrl' for the Solutions Site, and owner '$ownerEmail'. This may take a while, please do not close this window, but feel free to minimize the PowerShell window and check back in 10 minutes."
                     Write-Host $filler -ForegroundColor Yellow
@@ -274,9 +272,8 @@ Try {
             }
             #Stage 1b Skipping Site Creation, identifying Solutions Site instead
             Else {
-                $stage = "Stage 1/3 - Identify Solutions Site"
+                $stage = "Stage 1/2 - Identify Solutions Site"
                 Write-Host "`n$stage`n" -ForegroundColor Yellow
-                Write-Progress -Activity "Solutions Site Deployment" -CurrentOperation $stage -PercentComplete (33)
                 
                 
                 Do {
@@ -299,9 +296,8 @@ Try {
 
             #Stage 2 Applying the template
             Try {
-                $stage = "Stage 2/3 - Apply Solutions Site template"
+                $stage = "Stage 2/2 - Apply Solutions Site template"
                 Write-Host "`n$stage`n" -ForegroundColor Yellow
-                Write-Progress -Activity "Solutions Site Deployment" -CurrentOperation $stage -PercentComplete (66)
 
                 #Connecting to the site collection to apply the template
                 Write-Host "Please authenticate against the Site Collection"
@@ -340,8 +336,6 @@ Try {
 
                 Invoke-Provision -count 0
 
-                Write-Log -Level Info -Message "Templated applied without SiteSecurity, Pages"
-
                 Write-Log -Level Info -Message "Retrieving License List ID"
                 Try {
                     $licenseList = Get-PnPList -Identity "Licenses" -ThrowExceptionIfListNotFound
@@ -360,27 +354,10 @@ Try {
                 Write-Log -Level Info -Message $filler
                 Start-Sleep -Seconds 2															
 
-                Try{
-                    Invoke-PnPSiteTemplate -path $Script:TemplatePath -Handlers SiteSecurity, Pages -Parameters @{"licenseListID" = $licenseListId; "site" = $SolutionsSiteUrl }	-ClearNavigation -WarningAction Ignore
-                    
-                    #Upload logo to Solutions Site
-                    Add-PnPfile -Path $PathImage -Folder "SiteAssets"
-                }
-
-                Catch {
-                    #If this is a GROUP#0 Site we can continue, just need to adjust some things
-                    If((Get-PnPProperty -ClientObject (Get-PnPWeb) -Property WebTemplate) -eq 'GROUP'){
-                        Write-Log -Message "GROUP#0 Site detected, non terminating error, continuing."
-                    }
-                    Else {
-                        Throw
-                    }
-                }
-
                 $filler = "Template Application complete!"
                 Write-Host $filler -ForeGroundColor Green
                 Write-Log -Level Info -Message $filler
-                }
+            }
             Catch {
                 $exMessage = $($_.Exception.Message)
                 If ($exMessage -like "*(403)*") {
@@ -403,63 +380,7 @@ Try {
                 Throw
             }
 
-            #Stage 3 Create the License Item and clean up
             Try {
-                $stage = "Stage 3/3 - Background tasks and cleaning up"
-                Write-Host "`n$stage`n" -ForegroundColor Yellow
-                Write-Progress -Activity "Solutions Site Deployment" -CurrentOperation $stage -PercentComplete (100)
-
-                $filler = "Creating License Item..."
-                If($true -eq $legacyLicensing) {
-                    Write-Host $filler -ForegroundColor Yellow
-                }
-                Write-Log -Level Info -Message $filler
-
-                #Wait for SPO to catch up
-                Start-Sleep -Seconds 2
-
-                #Check if License Item exists
-                $licenseItemCount = ((Get-PnPListItem -List "Licenses" -Query "<View><Query><Where><Eq><FieldRef Name='Title'/><Value Type='Text'>License</Value></Eq></Where></Query></View>").Count)
-                
-                #Create License item if it does not exist
-                If ($licenseItemCount -eq 0) {
-                    $sinkOutput = Add-PnPField -List 'Licenses' -DisplayName "License Helper" -InternalName "LicenseHelper" -Type Text
-                    
-                    $sinkOutput = Add-PnPListItem -List "Licenses" -Values @{"Title" = "License"; "LicenseHelper" =  "Please do not rename the 'License' item, as this will break your OnePlace licensing. Only replace the file attachment."} | Out-Null
-                    
-                    $filler = "License Item created!"
-                    If($true -eq $legacyLicensing) {
-                        Write-Host "`n$filler" -ForegroundColor Green
-                    }
-                    Write-Log -Level Info -Message $filler
-                    $sinkOutput = Add-PnPListItem -List "Licenses" -Values @{"Title" = "If you do not have a Production license, this list will appear blank for now. You can safely delete this message." } | Out-Null
-                }
-                Else {
-                    $filler = "License Item not created or is duplicate!"
-                    Write-Log -Level Info -Message $filler
-                }
-            
-                #This sets up a Custom Column Mapping list ready for use if required
-                If($null -eq (Get-PnPList -Identity 'Custom Column Mapping')) {
-                    Write-Log -Level Info -Message "Creating Custom Column Mapping list for later use if required."
-                    Try {
-                        New-PnPList -Title 'Custom Column Mapping' -Template GenericList | Out-Null
-
-                        Add-PnPField -List 'Custom Column Mapping' -DisplayName 'From Column' -InternalName 'From Column' -Type Text -Required -AddToDefaultView  | Out-Null
-                        Set-PnPField -List 'Custom Column Mapping' -Identity 'From Column' -Values @{Description = "This is the field (by internal name) you want to map from to an existing field" }
-
-                        Add-PnPField -List 'Custom Column Mapping' -DisplayName 'To Column' -InternalName 'To Column' -Type Text -Required -AddToDefaultView  | Out-Null
-                        Set-PnPField -List 'Custom Column Mapping' -Identity 'To Column' -Values @{Description = "This is the field (by internal name) you want to map to. This should already exist" }
-
-                        Set-PnPField -List 'Custom Column Mapping' -Identity 'Title' -Values @{Title = "Scope"; DefaultValue = "Global" }
-                    }
-                    Catch {
-                        Write-Log -Level Warn -Message "Issue creating Custom Column Mapping List. May already exist."
-                    }
-                }
-                Else {
-                    Write-Log -Level Info -Message "Custom Column Mapping list already exists by name, skipping creation."
-                }
 
                 Write-Log -Level Info -Message "Solutions Site URL = $SolutionsSiteUrl"
                 Write-Log -Level Info -Message "License List URL = $LicenseListUrl"
@@ -543,14 +464,6 @@ Try {
 
         Start-Sleep -Seconds 2
 
-        $script:PSVersion = (Get-Host | Select-Object Version)
-        $script:PSVersion = [string]$script:PSVersion
-        Write-Log "PowerShell Version: $([string]$script:PSVersion)"
-        If(($script:PSVersion -like "7.*") -or ((Get-Host | Select-Object Name) -match "Visual Studio Code Host")) {
-            Write-Log -Level Warn "PowerShell version $($script:PSVersion) requires using Current PnP Cmdlets (PnP.PowerShell). Using this version with Legacy PnP will result in script failure."
-            Pause
-        }
-
         do {
             showMenu
             $userInput = Read-Host "Please select an option" 
@@ -597,7 +510,7 @@ Try {
                     }
                     Pause
                 }
-                'z'{
+                'll'{
                     $legacyLicensing = $true
                 }
                 'q' {Exit}

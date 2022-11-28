@@ -1,240 +1,699 @@
 ﻿<?xml version="1.0"?>
-<pnp:Provisioning xmlns:pnp="http://schemas.dev.office.com/PnP/2017/05/ProvisioningSchema">
-  <pnp:Preferences Generator="OfficeDevPnP.Core, Version=2.18.1709.0, Culture=neutral, PublicKeyToken=3751622786b357c2" />
-  <pnp:Templates ID="CONTAINER-TEMPLATE-1359146BF80E47BDB2937C12417FE020">
-    <pnp:ProvisioningTemplate ID="TEMPLATE-1359146BF80E47BDB2937C12417FE020" Version="1" BaseSiteTemplate="STS#0" Scope="RootSite">
-      <pnp:WebSettings Title="OnePlace Solutions Site" SiteLogo="{sitecollection}/SiteAssets/oneplacesolutions-logo.png" RequestAccessEmail="someone@example.com" NoCrawl="false" WelcomePage="SitePages/Home.aspx" AlternateCSS="" MasterPageUrl="{masterpagecatalog}/seattle.master" CustomMasterPageUrl="{masterpagecatalog}/seattle.master" />
-      <pnp:RegionalSettings AdjustHijriDays="0" AlternateCalendarType="None" CalendarType="Gregorian" Collation="25" FirstDayOfWeek="Sunday" FirstWeekOfYear="0" LocaleId="1033" ShowWeeks="false" Time24="false" TimeZone="13" WorkDayEndHour="5:00PM" WorkDays="62" WorkDayStartHour="8:00AM" />
-      <pnp:SupportedUILanguages>
-        <pnp:SupportedUILanguage LCID="1033" />
-      </pnp:SupportedUILanguages>
-       <pnp:Security>        
-        <pnp:AdditionalVisitors>
-          <pnp:User Name="c:0(.s|true" />
-        </pnp:AdditionalVisitors>
-        <pnp:Permissions />
-      </pnp:Security>
-      <pnp:Navigation>
-        <pnp:GlobalNavigation NavigationType="Structural">
-          <pnp:StructuralNavigation RemoveExistingNodes="true">
-            <pnp:NavigationNode Title="OnePlace Solutions Site" Url="{site}" />
-          </pnp:StructuralNavigation>
-        </pnp:GlobalNavigation>
-        <pnp:CurrentNavigation NavigationType="StructuralLocal">
-          <pnp:StructuralNavigation RemoveExistingNodes="true">
-			<pnp:NavigationNode Title="Home" Url="{site}" />
-			<pnp:NavigationNode Title="Licenses" Url="{site}/Lists/Licenses/AllItems.aspx" IsExternal="true" />
-			<pnp:NavigationNode Title="Configuration Profiles" Url="{site}/Lists/Configuration Profiles/AllItems.aspx" IsExternal="true" />
-			<pnp:NavigationNode Title="Solution Profiles" Url="{site}/Lists/Solution Profiles/AllItems.aspx" IsExternal="true" />
-          </pnp:StructuralNavigation>
-        </pnp:CurrentNavigation>
-      </pnp:Navigation>   
-      <pnp:Files>
-        <pnp:File Src="oneplacesolutions-logo.png" Folder="SiteAssets" Overwrite="true" />
-      </pnp:Files>  
-      <pnp:Lists>
-        <pnp:ListInstance Title="Configuration Profiles" Description="" DocumentTemplate="" ListExperience="ClassicExperience" TemplateType="100" Url="Lists/Configuration Profiles" MinorVersionLimit="0" MaxVersionLimit="0" DraftVersionVisibility="0" TemplateFeatureID="00bfea71-de22-43b2-a848-c05709900100" EnableFolderCreation="false" DefaultDisplayFormUrl="{site}/Lists/Configuration Profiles/DispForm.aspx" DefaultEditFormUrl="{site}/Lists/Configuration Profiles/EditForm.aspx" DefaultNewFormUrl="{site}/Lists/Configuration Profiles/NewForm.aspx" ImageUrl="/_layouts/15/images/itgen.png?rev=44" ValidationFormula="" ValidationMessage="">
-          <pnp:ContentTypeBindings>
-            <pnp:ContentTypeBinding ContentTypeID="0x01" Default="true" />
-            <pnp:ContentTypeBinding ContentTypeID="0x0120" />
-          </pnp:ContentTypeBindings>
-          <pnp:Views>
-            <View Name="{78D6B65C-8586-4F7B-B22E-E03B79DC7B19}" DefaultView="TRUE" MobileView="TRUE" MobileDefaultView="TRUE" Type="HTML" DisplayName="All Items" Url="/sites/livepnp/Lists/Configuration Profiles/AllItems.aspx" Level="1" BaseViewID="1" ContentTypeID="0x" ImageUrl="/_layouts/15/images/generic.png?rev=44">
-              <Query>
-                <OrderBy>
-                  <FieldRef Name="ID" />
-                </OrderBy>
-              </Query>
-              <ViewFields>
-                <FieldRef Name="LinkTitle" />
-                <FieldRef Name="VersionNo" />
-                <FieldRef Name="ProfileId" />
-                <FieldRef Name="Comments" />
-                <FieldRef Name="ProfileStatus" />
-                <FieldRef Name="ProfileCategory" />
-                <FieldRef Name="RestrictedTo" />
-                <FieldRef Name="ProfilePriority" />
-                <FieldRef Name="ProfileLiveClientBuildNumber" />               
-              </ViewFields>
-              <RowLimit Paged="TRUE">30</RowLimit>
-              <JSLink>clienttemplates.js</JSLink>
-            </View>
-          </pnp:Views>
-          <pnp:Fields>
-            <Field Type="Number" DisplayName="VersionNo" Required="FALSE" EnforceUniqueValues="FALSE" Indexed="FALSE" ID="{9cd5c801-7699-4a09-81c7-487383d518f1}" SourceID="{cfd074d8-2653-4ac4-8664-8a9c60c5a9a2}" StaticName="VersionNo" Name="VersionNo" ColName="float1" RowOrdinal="0" Percentage="FALSE" />
-            <Field Type="Text" DisplayName="ProfileId" Required="FALSE" EnforceUniqueValues="FALSE" Indexed="FALSE" MaxLength="255" ID="{ae09efcf-3ec7-41a9-ba0d-c88771266569}" SourceID="{cfd074d8-2653-4ac4-8664-8a9c60c5a9a2}" StaticName="ProfileId" Name="ProfileId" ColName="nvarchar3" RowOrdinal="0" />           
-            <Field Type="Note" DisplayName="Comments" Required="FALSE" EnforceUniqueValues="FALSE" Indexed="FALSE" NumLines="6" RichText="FALSE" Sortable="FALSE" ID="{677a686e-58cf-4bd9-8421-57d0cca198bd}" SourceID="{cfd074d8-2653-4ac4-8664-8a9c60c5a9a2}" StaticName="Comments" Name="Comments" ColName="ntext2" RowOrdinal="0" RestrictedMode="TRUE" RichTextMode="Compatible" IsolateStyles="FALSE" AppendOnly="FALSE" />
-            <Field Type="Text" DisplayName="ProfileStatus" Required="FALSE" EnforceUniqueValues="FALSE" Indexed="FALSE" MaxLength="255" ID="{36c2b196-24fb-468c-ba3b-edfb7e03f0ae}" SourceID="{cfd074d8-2653-4ac4-8664-8a9c60c5a9a2}" StaticName="ProfileStatus" Name="ProfileStatus" ColName="nvarchar4" RowOrdinal="0" />
-            <Field Type="Text" DisplayName="ProfileCategory" Required="FALSE" EnforceUniqueValues="FALSE" Indexed="FALSE" MaxLength="255" ID="{941d66b3-b85f-43bd-80b5-2bb296d57cea}" SourceID="{cfd074d8-2653-4ac4-8664-8a9c60c5a9a2}" StaticName="ProfileCategory" Name="ProfileCategory" ColName="nvarchar5" RowOrdinal="0" />
-            <Field Type="UserMulti" DisplayName="RestrictedTo" List="UserInfo" Required="FALSE" EnforceUniqueValues="FALSE" ShowField="ImnName" UserSelectionMode="PeopleAndGroups" UserSelectionScope="0" Mult="TRUE" Sortable="FALSE" ID="{5f385fca-5876-4a4a-9c38-79fc5164ba6b}" SourceID="{cfd074d8-2653-4ac4-8664-8a9c60c5a9a2}" StaticName="RestrictedTo" Name="RestrictedTo" ColName="int1" RowOrdinal="0" Group="" />
-            <Field Type="Number" DisplayName="ProfilePriority" Required="FALSE" EnforceUniqueValues="FALSE" Indexed="FALSE" ID="{cd0c0da5-0de6-446f-a481-185829667391}" SourceID="{cfd074d8-2653-4ac4-8664-8a9c60c5a9a2}" StaticName="ProfilePriority" Name="ProfilePriority" ColName="float2" RowOrdinal="0" Percentage="FALSE" />
-            <Field Type="Text" DisplayName="ProfileLiveClientBuildNumber" Required="FALSE" EnforceUniqueValues="FALSE" Indexed="FALSE" MaxLength="255" ID="{7502f10e-f17e-48fb-ad4f-1ff6e8b15bf2}" SourceID="{cfd074d8-2653-4ac4-8664-8a9c60c5a9a2}" StaticName="ProfileLiveClientBuildNumber" Name="ProfileLiveClientBuildNumber" ColName="nvarchar6" RowOrdinal="0" />
-          </pnp:Fields>        
-        </pnp:ListInstance>
-        <pnp:ListInstance Title="Licenses" Description="" DocumentTemplate="" ListExperience="ClassicExperience" TemplateType="100" Url="Lists/Licenses" MinorVersionLimit="0" MaxVersionLimit="0" DraftVersionVisibility="0" TemplateFeatureID="00bfea71-de22-43b2-a848-c05709900100" EnableFolderCreation="false" DefaultDisplayFormUrl="{site}/Lists/Licenses/DispForm.aspx" DefaultEditFormUrl="{site}/Lists/Licenses/EditForm.aspx" DefaultNewFormUrl="{site}/Lists/Licenses/NewForm.aspx" ImageUrl="/_layouts/15/images/itgen.png?rev=44" ValidationFormula="" ValidationMessage="">
-          <pnp:ContentTypeBindings>
-            <pnp:ContentTypeBinding ContentTypeID="0x01" Default="true" />
-            <pnp:ContentTypeBinding ContentTypeID="0x0120" />
-          </pnp:ContentTypeBindings>
-          <pnp:Views>
-            <View Name="{B803A57B-5D14-4C59-A2F9-424FCC24F737}" DefaultView="TRUE" MobileView="TRUE" MobileDefaultView="TRUE" Type="HTML" DisplayName="All Items" Url="/sites/livepnp/Lists/Licenses/AllItems.aspx" Level="1" BaseViewID="1" ContentTypeID="0x" ImageUrl="/_layouts/15/images/generic.png?rev=44">
-              <Query>
-                <OrderBy>
-                  <FieldRef Name="ID" />
-                </OrderBy>
-              </Query>
-              <ViewFields>
-                <FieldRef Name="LinkTitle" />
-              </ViewFields>
-              <RowLimit Paged="TRUE">30</RowLimit>
-			  <Aggregations Value="On">
-                <FieldRef Name="LinkTitle" Type="COUNT" />
-              </Aggregations>
-              <JSLink>clienttemplates.js</JSLink>
-            </View>
-          </pnp:Views>         
-           <pnp:Security>
-            <pnp:BreakRoleInheritance CopyRoleAssignments="false" ClearSubscopes="false">
-              <pnp:RoleAssignment Principal="{associatedownergroup}" RoleDefinition="Full Control" />
-              <pnp:RoleAssignment Principal="{associatedvisitorgroup}" RoleDefinition="Contribute" />
-              <pnp:RoleAssignment Principal="{associatedmembergroup}" RoleDefinition="Edit" />
-              <pnp:RoleAssignment Principal="{associatedmembergroup}" RoleDefinition="Contribute" />
-            </pnp:BreakRoleInheritance>
-          </pnp:Security>
-        </pnp:ListInstance>
-        <pnp:ListInstance Title="Solution Profiles" Description="" DocumentTemplate="" ListExperience="ClassicExperience" TemplateType="100" Url="Lists/Solution Profiles" MinorVersionLimit="0" MaxVersionLimit="0" DraftVersionVisibility="0" TemplateFeatureID="00bfea71-de22-43b2-a848-c05709900100" EnableFolderCreation="false" DefaultDisplayFormUrl="{site}/Lists/Solution Profiles/DispForm.aspx" DefaultEditFormUrl="{site}/Lists/Solution Profiles/EditForm.aspx" DefaultNewFormUrl="{site}/Lists/Solution Profiles/NewForm.aspx" ImageUrl="/_layouts/15/images/itgen.png?rev=44" ValidationFormula="" ValidationMessage="">
-          <pnp:ContentTypeBindings>
-            <pnp:ContentTypeBinding ContentTypeID="0x01" Default="true" />
-            <pnp:ContentTypeBinding ContentTypeID="0x0120" />
-          </pnp:ContentTypeBindings>
-          <pnp:Views>
-            <View Name="{14C34D94-60F2-4358-87CB-C0266322859D}" DefaultView="TRUE" MobileView="TRUE" MobileDefaultView="TRUE" Type="HTML" DisplayName="All Items" Url="/sites/livepnp/Lists/Solution Profiles/AllItems.aspx" Level="1" BaseViewID="1" ContentTypeID="0x" ImageUrl="/_layouts/15/images/generic.png?rev=44">
-              <Query>
-                <OrderBy>
-                  <FieldRef Name="ID" />
-                </OrderBy>
-              </Query>
-              <ViewFields>
-                <FieldRef Name="LinkTitle" />
-                <FieldRef Name="VersionNo" />
-                <FieldRef Name="ProfileId" />
-                <FieldRef Name="Comments" />
-                <FieldRef Name="Attachments" />
-                <FieldRef Name="ProfileStatus" />
-                <FieldRef Name="ProfileGroup" />
-                <FieldRef Name="RestrictedTo" />
-              </ViewFields>
-              <RowLimit Paged="TRUE">30</RowLimit>
-              <Aggregations Value="Off" />
-              <JSLink>clienttemplates.js</JSLink>
-            </View>
-          </pnp:Views>
-          <pnp:Fields>
-            <Field Type="Number" DisplayName="VersionNo" Required="FALSE" EnforceUniqueValues="FALSE" Indexed="FALSE" ID="{d033da4b-5110-41cb-b3af-a9c892043280}" SourceID="{76f226d7-9429-4bd9-9f90-42b2d960ed9c}" StaticName="VersionNo" Name="VersionNo" ColName="float1" RowOrdinal="0" />
-            <Field Type="Text" DisplayName="ProfileId" Required="FALSE" EnforceUniqueValues="FALSE" Indexed="FALSE" MaxLength="255" ID="{766e041a-5396-477d-a991-226d8d763458}" SourceID="{76f226d7-9429-4bd9-9f90-42b2d960ed9c}" StaticName="ProfileId" Name="ProfileId" ColName="nvarchar3" RowOrdinal="0" />
-            <Field Type="Note" DisplayName="Comments" Required="FALSE" EnforceUniqueValues="FALSE" Indexed="FALSE" NumLines="6" RichText="FALSE" Sortable="FALSE" ID="{19c66ea9-4f2c-4696-ad80-4c0927f5194b}" SourceID="{76f226d7-9429-4bd9-9f90-42b2d960ed9c}" StaticName="Comments" Name="Comments" ColName="ntext2" RowOrdinal="0" />
-            <Field Type="Text" DisplayName="ProfileStatus" Description="Valid values: Unpublished, Published" Required="FALSE" EnforceUniqueValues="FALSE" Indexed="FALSE" MaxLength="255" ID="{05c83ee1-b97b-4560-9715-c84d92643324}" SourceID="{76f226d7-9429-4bd9-9f90-42b2d960ed9c}" StaticName="ProfileStatus" Name="ProfileStatus" ColName="nvarchar4" RowOrdinal="0">
-              <Default>Unpublished</Default>
-            </Field>
-            <Field Type="Text" DisplayName="ProfileGroup" Required="FALSE" EnforceUniqueValues="FALSE" Indexed="FALSE" MaxLength="255" ID="{a484caa2-e21b-495b-8831-a8203b283ede}" SourceID="{ab0c7383-492b-4ca6-b075-39ab7ade7780}" StaticName="ProfileGroup" Name="ProfileGroup" ColName="nvarchar5" RowOrdinal="0" />
-            <Field Type="UserMulti" DisplayName="RestrictedTo" List="UserInfo" Required="FALSE" EnforceUniqueValues="FALSE" ShowField="ImnName" UserSelectionMode="PeopleAndGroups" UserSelectionScope="0" Mult="TRUE" Sortable="FALSE" ID="{b689cd8d-842d-4719-b7be-41dd5dc6e004}" SourceID="{09d10b43-6d76-4fc8-bc21-0e44851ee93f}" StaticName="RestrictedTo" Name="RestrictedTo" ColName="int1" RowOrdinal="0" />
-          </pnp:Fields>         
-        </pnp:ListInstance>
-      </pnp:Lists>
-      <pnp:Pages>
-        <pnp:Page Url="{site}/SitePages/Home.aspx" Overwrite="true" Layout="Custom">
-          <pnp:WebParts>
-            <pnp:WebPart Title="​Desktop Suite Production License Usage:" Row="1" Column="1">
-              <pnp:Contents>
-                <webParts>
-                  <webPart xmlns="http://schemas.microsoft.com/WebPart/v3">
-                    <metaData>
-                      <type name="Microsoft.SharePoint.WebPartPages.XsltListViewWebPart, Microsoft.SharePoint, Version={parameter:version}, Culture=neutral, PublicKeyToken=71e9bce111e9429c" />
-                      <importErrorMessage>Cannot import this Web Part.</importErrorMessage>
-                    </metaData>
-                    <data>
-                      <properties>
-                        <property name="ShowWithSampleData" type="bool">False</property>
-                        <property name="Default" type="string" />
-                        <property name="NoDefaultStyle" type="string" null="true" />
-                        <property name="CacheXslStorage" type="bool">True</property>
-                        <property name="ViewContentTypeId" type="string" />
-                        <property name="XmlDefinitionLink" type="string" />
-                        <property name="ManualRefresh" type="bool">False</property>
-                        <property name="ListUrl" type="string" null="true" />
-                        <property name="ListId" type="System.Guid, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">{listid:Licenses}</property>
-                        <property name="TitleUrl" type="string">{site}/Lists/Licenses</property>
-                        <property name="EnableOriginalValue" type="bool">False</property>
-                        <property name="Direction" type="direction">NotSet</property>
-                        <property name="ServerRender" type="bool">False</property>
-                        <property name="ViewFlags" type="Microsoft.SharePoint.SPViewFlags, Microsoft.SharePoint, Version={parameter:version}, Culture=neutral, PublicKeyToken=71e9bce111e9429c">Html, TabularView, Hidden, Mobile</property>
-                        <property name="AllowConnect" type="bool">False</property>
-                        <property name="ListName" type="string">{{listid:Licenses}}</property>
-                        <property name="ListDisplayName" type="string" null="true" />
-                        <property name="AllowZoneChange" type="bool">True</property>
-                        <property name="ChromeState" type="chromestate">Normal</property>
-                        <property name="DisableSaveAsNewViewButton" type="bool">False</property>
-                        <property name="ViewFlag" type="string" />
-                        <property name="DataSourceID" type="string" />
-                        <property name="ExportMode" type="exportmode">All</property>
-                        <property name="AutoRefresh" type="bool">False</property>
-                        <property name="FireInitialRow" type="bool">True</property>
-                        <property name="AllowEdit" type="bool">False</property>
-                        <property name="Description" type="string" />
-                        <property name="HelpMode" type="helpmode">Modeless</property>
-                        <property name="BaseXsltHashKey" type="string" null="true" />
-                        <property name="AllowMinimize" type="bool">False</property>
-                        <property name="CacheXslTimeOut" type="int">86400</property>
-                        <property name="ChromeType" type="chrometype">Default</property>
-                        <property name="Xsl" type="string" null="true" />
-                        <property name="JSLink" type="string" null="true" />
-                        <property name="CatalogIconImageUrl" type="string">/_layouts/15/images/itgen.png?rev=44</property>
-                        <property name="SampleData" type="string" null="true" />
-                        <property name="UseSQLDataSourcePaging" type="bool">True</property>
-                        <property name="TitleIconImageUrl" type="string" />
-                        <property name="PageSize" type="int">-1</property>
-                        <property name="ShowTimelineIfAvailable" type="bool">True</property>
-                        <property name="Width" type="string" />
-                        <property name="DataFields" type="string" />
-                        <property name="Hidden" type="bool">False</property>
-                        <property name="Title" type="string">​Desktop Suite Production License Usage:</property>
-                        <property name="PageType" type="Microsoft.SharePoint.PAGETYPE, Microsoft.SharePoint, Version={parameter:version}, Culture=neutral, PublicKeyToken=71e9bce111e9429c">PAGE_NORMALVIEW</property>
-                        <property name="DataSourcesString" type="string" />
-                        <property name="AllowClose" type="bool">True</property>
-                        <property name="InplaceSearchEnabled" type="bool">True</property>
-                        <property name="WebId" type="System.Guid, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">00000000-0000-0000-0000-000000000000</property>
-                        <property name="Height" type="string" />
-                        <property name="GhostedXslLink" type="string">main.xsl</property>
-                        <property name="DisableViewSelectorMenu" type="bool">False</property>
-                        <property name="DisplayName" type="string" />
-                        <property name="IsClientRender" type="bool">False</property>
-                        <property name="XmlDefinition" type="string">&lt;View Name="{361FF847-81FE-49EA-AA48-77BB7CA79139}" MobileView="TRUE" Type="HTML" Hidden="TRUE" DisplayName="" Url="{site}/SitePages/Home.aspx" Level="1" BaseViewID="1" ContentTypeID="0x" ImageUrl="/_layouts/15/images/generic.png?rev=43" &gt;&lt;Query&gt;&lt;OrderBy&gt;&lt;FieldRef Name="ID"/&gt;&lt;/OrderBy&gt;&lt;Where&gt;&lt;Neq&gt;&lt;FieldRef Name="Title"/&gt;&lt;Value Type="Text"&gt;License&lt;/Value&gt;&lt;/Neq&gt;&lt;/Where&gt;&lt;/Query&gt;&lt;ViewFields&gt;&lt;FieldRef Name="LinkTitle"/&gt;&lt;FieldRef Name="ItemChildCount"/&gt;&lt;/ViewFields&gt;&lt;RowLimit Paged="TRUE"&gt;30&lt;/RowLimit&gt;&lt;Aggregations Value="Off"/&gt;&lt;JSLink&gt;clienttemplates.js&lt;/JSLink&gt;&lt;XslLink Default="TRUE"&gt;main.xsl&lt;/XslLink&gt;&lt;Toolbar Type="None"/&gt;&lt;/View&gt;</property>
-                        <property name="InitialAsyncDataFetch" type="bool">False</property>
-                        <property name="AllowHide" type="bool">True</property>
-                        <property name="ParameterBindings" type="string">&lt;ParameterBinding Name="dvt_sortdir" Location="Postback;Connection" /&gt;&lt;ParameterBinding Name="dvt_sortfield" Location="Postback;Connection" /&gt;&lt;ParameterBinding Name="dvt_startposition" Location="Postback" DefaultValue="" /&gt;&lt;ParameterBinding Name="dvt_firstrow" Location="Postback;Connection" /&gt;&lt;ParameterBinding Name="OpenMenuKeyAccessible" Location="Resource(wss,OpenMenuKeyAccessible)" /&gt;&lt;ParameterBinding Name="open_menu" Location="Resource(wss,open_menu)" /&gt;&lt;ParameterBinding Name="select_deselect_all" Location="Resource(wss,select_deselect_all)" /&gt;&lt;ParameterBinding Name="idPresEnabled" Location="Resource(wss,idPresEnabled)" /&gt;&lt;ParameterBinding Name="NoAnnouncements" Location="Resource(wss,noXinviewofY_LIST)" /&gt;&lt;ParameterBinding Name="NoAnnouncementsHowTo" Location="Resource(wss,noXinviewofY_DEFAULT)" /&gt;</property>
-                        <property name="DataSourceMode" type="Microsoft.SharePoint.WebControls.SPDataSourceMode, Microsoft.SharePoint, Version={parameter:version}, Culture=neutral, PublicKeyToken=71e9bce111e9429c">List</property>
-                        <property name="AutoRefreshInterval" type="int">60</property>
-                        <property name="AsyncRefresh" type="bool">False</property>
-                        <property name="HelpUrl" type="string" />
-                        <property name="MissingAssembly" type="string">Cannot import this Web Part.</property>
-                        <property name="XslLink" type="string" null="true" />
-                        <property name="SelectParameters" type="string" />
-                        <property name="HasClientDataSource" type="bool">False</property>
-                      </properties>
-                    </data>
-                  </webPart>
-                </webParts>
-              </pnp:Contents>
-            </pnp:WebPart>
-          </pnp:WebParts>
-          <pnp:Fields>
-            <pnp:Field FieldName="WikiField">&lt;div class="ExternalClass4B6088D6997C41CB958880A720B64131"&gt;
+<pnp:Provisioning xmlns:pnp="http://schemas.dev.office.com/PnP/2019/09/ProvisioningSchema">
+	<pnp:Preferences />
+	<pnp:Templates ID="CONTAINER-TEMPLATE-1359146BF80E47BDB2937C12417FE020">
+		<pnp:ProvisioningTemplate ID="TEMPLATE-1359146BF80E47BDB2937C12417FE020"
+		                          Version="1"
+		                          BaseSiteTemplate="STS#0"
+		                          Scope="RootSite">
+			<pnp:WebSettings Title="OnePlace Solutions Site"
+			                 SiteLogo="{sitecollection}/SiteAssets/oneplacesolutions-logo.png"
+			                 RequestAccessEmail="someone@example.com"
+			                 NoCrawl="false"
+			                 WelcomePage="SitePages/Home.aspx"
+			                 AlternateCSS=""
+			                 MasterPageUrl="{masterpagecatalog}/seattle.master"
+			                 CustomMasterPageUrl="{masterpagecatalog}/seattle.master"/>
+			<pnp:RegionalSettings AdjustHijriDays="0"
+			                      AlternateCalendarType="None"
+			                      CalendarType="Gregorian"
+			                      Collation="25"
+			                      FirstDayOfWeek="Sunday"
+			                      FirstWeekOfYear="0"
+			                      LocaleId="1033"
+			                      ShowWeeks="false"
+			                      Time24="false"
+			                      TimeZone="13"
+			                      WorkDayEndHour="5:00PM"
+			                      WorkDays="62"
+			                      WorkDayStartHour="8:00AM"/>
+			<pnp:SupportedUILanguages>
+				<pnp:SupportedUILanguage LCID="1033"/>
+			</pnp:SupportedUILanguages>
+			<pnp:Security>
+				<pnp:AdditionalVisitors>
+					<pnp:User Name="c:0(.s|true"/>
+				</pnp:AdditionalVisitors>
+				<pnp:Permissions/>
+			</pnp:Security>
+			<pnp:Navigation>
+				<pnp:GlobalNavigation NavigationType="Structural">
+					<pnp:StructuralNavigation RemoveExistingNodes="true">
+						<pnp:NavigationNode Title="OnePlace Solutions Site"
+						                    Url="{site}"/>
+					</pnp:StructuralNavigation>
+				</pnp:GlobalNavigation>
+				<pnp:CurrentNavigation NavigationType="StructuralLocal">
+					<pnp:StructuralNavigation RemoveExistingNodes="true">
+						<pnp:NavigationNode Title="Home"
+						                    Url="{site}"/>
+						<pnp:NavigationNode Title="Licenses"
+						                    Url="{site}/Lists/Licenses/AllItems.aspx"
+						                    IsExternal="true"/>
+						<pnp:NavigationNode Title="Configuration Profiles"
+						                    Url="{site}/Lists/Configuration Profiles/AllItems.aspx"
+						                    IsExternal="true"/>
+						<pnp:NavigationNode Title="Solution Profiles"
+						                    Url="{site}/Lists/Solution Profiles/AllItems.aspx"
+						                    IsExternal="true"/>
+					</pnp:StructuralNavigation>
+				</pnp:CurrentNavigation>
+			</pnp:Navigation>
+			<pnp:Files>
+				<pnp:File Src="oneplacesolutions-logo.png"
+				          Folder="SiteAssets"
+				          Overwrite="true"/>
+			</pnp:Files>
+			<pnp:Lists>
+				<pnp:ListInstance Title="Configuration Profiles"
+				                  Description=""
+				                  DocumentTemplate=""
+				                  ListExperience="ClassicExperience"
+				                  TemplateType="100"
+				                  Url="Lists/Configuration Profiles"
+				                  MinorVersionLimit="0"
+				                  MaxVersionLimit="0"
+				                  DraftVersionVisibility="0"
+				                  TemplateFeatureID="00bfea71-de22-43b2-a848-c05709900100"
+				                  EnableFolderCreation="false"
+				                  DefaultDisplayFormUrl="{site}/Lists/Configuration Profiles/DispForm.aspx"
+				                  DefaultEditFormUrl="{site}/Lists/Configuration Profiles/EditForm.aspx"
+				                  DefaultNewFormUrl="{site}/Lists/Configuration Profiles/NewForm.aspx"
+				                  ImageUrl="/_layouts/15/images/itgen.png?rev=44"
+				                  ValidationFormula=""
+				                  ValidationMessage="">
+					<pnp:ContentTypeBindings>
+						<pnp:ContentTypeBinding ContentTypeID="0x01"
+						                        Default="true"/>
+						<pnp:ContentTypeBinding ContentTypeID="0x0120"/>
+					</pnp:ContentTypeBindings>
+					<pnp:Views>
+						<View Name="{78D6B65C-8586-4F7B-B22E-E03B79DC7B19}"
+						      DefaultView="TRUE"
+						      MobileView="TRUE"
+						      MobileDefaultView="TRUE"
+						      Type="HTML"
+						      DisplayName="All Items"
+						      Url="/sites/livepnp/Lists/Configuration Profiles/AllItems.aspx"
+						      Level="1"
+						      BaseViewID="1"
+						      ContentTypeID="0x"
+						      ImageUrl="/_layouts/15/images/generic.png?rev=44">
+							<Query>
+								<OrderBy>
+									<FieldRef Name="ID"/>
+								</OrderBy>
+							</Query>
+							<ViewFields>
+								<FieldRef Name="LinkTitle"/>
+								<FieldRef Name="VersionNo"/>
+								<FieldRef Name="ProfileId"/>
+								<FieldRef Name="Comments"/>
+								<FieldRef Name="ProfileStatus"/>
+								<FieldRef Name="ProfileCategory"/>
+								<FieldRef Name="RestrictedTo"/>
+								<FieldRef Name="ProfilePriority"/>
+								<FieldRef Name="ProfileLiveClientBuildNumber"/>
+							</ViewFields>
+							<RowLimit Paged="TRUE">30</RowLimit>
+							<JSLink>clienttemplates.js</JSLink>
+						</View>
+					</pnp:Views>
+					<pnp:Fields>
+						<Field Type="Number"
+						       DisplayName="VersionNo"
+						       Required="FALSE"
+						       EnforceUniqueValues="FALSE"
+						       Indexed="FALSE"
+						       ID="{9cd5c801-7699-4a09-81c7-487383d518f1}"
+						       SourceID="{cfd074d8-2653-4ac4-8664-8a9c60c5a9a2}"
+						       StaticName="VersionNo"
+						       Name="VersionNo"
+						       ColName="float1"
+						       RowOrdinal="0"
+						       Percentage="FALSE"/>
+						<Field Type="Text"
+						       DisplayName="ProfileId"
+						       Required="FALSE"
+						       EnforceUniqueValues="FALSE"
+						       Indexed="FALSE"
+						       MaxLength="255"
+						       ID="{ae09efcf-3ec7-41a9-ba0d-c88771266569}"
+						       SourceID="{cfd074d8-2653-4ac4-8664-8a9c60c5a9a2}"
+						       StaticName="ProfileId"
+						       Name="ProfileId"
+						       ColName="nvarchar3"
+						       RowOrdinal="0"/>
+						<Field Type="Note"
+						       DisplayName="Comments"
+						       Required="FALSE"
+						       EnforceUniqueValues="FALSE"
+						       Indexed="FALSE"
+						       NumLines="6"
+						       RichText="FALSE"
+						       Sortable="FALSE"
+						       ID="{677a686e-58cf-4bd9-8421-57d0cca198bd}"
+						       SourceID="{cfd074d8-2653-4ac4-8664-8a9c60c5a9a2}"
+						       StaticName="Comments"
+						       Name="Comments"
+						       ColName="ntext2"
+						       RowOrdinal="0"
+						       RestrictedMode="TRUE"
+						       RichTextMode="Compatible"
+						       IsolateStyles="FALSE"
+						       AppendOnly="FALSE"/>
+						<Field Type="Text"
+						       DisplayName="ProfileStatus"
+						       Required="FALSE"
+						       EnforceUniqueValues="FALSE"
+						       Indexed="FALSE"
+						       MaxLength="255"
+						       ID="{36c2b196-24fb-468c-ba3b-edfb7e03f0ae}"
+						       SourceID="{cfd074d8-2653-4ac4-8664-8a9c60c5a9a2}"
+						       StaticName="ProfileStatus"
+						       Name="ProfileStatus"
+						       ColName="nvarchar4"
+						       RowOrdinal="0"/>
+						<Field Type="Text"
+						       DisplayName="ProfileCategory"
+						       Required="FALSE"
+						       EnforceUniqueValues="FALSE"
+						       Indexed="FALSE"
+						       MaxLength="255"
+						       ID="{941d66b3-b85f-43bd-80b5-2bb296d57cea}"
+						       SourceID="{cfd074d8-2653-4ac4-8664-8a9c60c5a9a2}"
+						       StaticName="ProfileCategory"
+						       Name="ProfileCategory"
+						       ColName="nvarchar5"
+						       RowOrdinal="0"/>
+						<Field Type="UserMulti"
+						       DisplayName="RestrictedTo"
+						       List="UserInfo"
+						       Required="FALSE"
+						       EnforceUniqueValues="FALSE"
+						       ShowField="ImnName"
+						       UserSelectionMode="PeopleAndGroups"
+						       UserSelectionScope="0"
+						       Mult="TRUE"
+						       Sortable="FALSE"
+						       ID="{5f385fca-5876-4a4a-9c38-79fc5164ba6b}"
+						       SourceID="{cfd074d8-2653-4ac4-8664-8a9c60c5a9a2}"
+						       StaticName="RestrictedTo"
+						       Name="RestrictedTo"
+						       ColName="int1"
+						       RowOrdinal="0"
+						       Group=""/>
+						<Field Type="Number"
+						       DisplayName="ProfilePriority"
+						       Required="FALSE"
+						       EnforceUniqueValues="FALSE"
+						       Indexed="FALSE"
+						       ID="{cd0c0da5-0de6-446f-a481-185829667391}"
+						       SourceID="{cfd074d8-2653-4ac4-8664-8a9c60c5a9a2}"
+						       StaticName="ProfilePriority"
+						       Name="ProfilePriority"
+						       ColName="float2"
+						       RowOrdinal="0"
+						       Percentage="FALSE"/>
+						<Field Type="Text"
+						       DisplayName="ProfileLiveClientBuildNumber"
+						       Required="FALSE"
+						       EnforceUniqueValues="FALSE"
+						       Indexed="FALSE"
+						       MaxLength="255"
+						       ID="{7502f10e-f17e-48fb-ad4f-1ff6e8b15bf2}"
+						       SourceID="{cfd074d8-2653-4ac4-8664-8a9c60c5a9a2}"
+						       StaticName="ProfileLiveClientBuildNumber"
+						       Name="ProfileLiveClientBuildNumber"
+						       ColName="nvarchar6"
+						       RowOrdinal="0"/>
+					</pnp:Fields>
+				</pnp:ListInstance>
+				<pnp:ListInstance Title="Licenses"
+				                  Description=""
+				                  DocumentTemplate=""
+				                  ListExperience="ClassicExperience"
+				                  TemplateType="100"
+				                  Url="Lists/Licenses"
+				                  MinorVersionLimit="0"
+				                  MaxVersionLimit="0"
+				                  DraftVersionVisibility="0"
+				                  TemplateFeatureID="00bfea71-de22-43b2-a848-c05709900100"
+				                  EnableFolderCreation="false"
+				                  DefaultDisplayFormUrl="{site}/Lists/Licenses/DispForm.aspx"
+				                  DefaultEditFormUrl="{site}/Lists/Licenses/EditForm.aspx"
+				                  DefaultNewFormUrl="{site}/Lists/Licenses/NewForm.aspx"
+				                  ImageUrl="/_layouts/15/images/itgen.png?rev=44"
+				                  ValidationFormula=""
+				                  ValidationMessage="">
+					<pnp:ContentTypeBindings>
+						<pnp:ContentTypeBinding ContentTypeID="0x01"
+						                        Default="true"/>
+						<pnp:ContentTypeBinding ContentTypeID="0x0120"/>
+					</pnp:ContentTypeBindings>
+					<pnp:Views>
+						<View Name="{B803A57B-5D14-4C59-A2F9-424FCC24F737}"
+						      DefaultView="TRUE"
+						      MobileView="TRUE"
+						      MobileDefaultView="TRUE"
+						      Type="HTML"
+						      DisplayName="All Items"
+						      Url="/sites/livepnp/Lists/Licenses/AllItems.aspx"
+						      Level="1"
+						      BaseViewID="1"
+						      ContentTypeID="0x"
+						      ImageUrl="/_layouts/15/images/generic.png?rev=44">
+							<Query>
+								<OrderBy>
+									<FieldRef Name="ID"/>
+								</OrderBy>
+							</Query>
+							<ViewFields>
+								<FieldRef Name="LinkTitle"/>
+							</ViewFields>
+							<RowLimit Paged="TRUE">30</RowLimit>
+							<Aggregations Value="On">
+								<FieldRef Name="LinkTitle"
+								          Type="COUNT"/>
+							</Aggregations>
+							<JSLink>clienttemplates.js</JSLink>
+						</View>
+					</pnp:Views>
+					<pnp:DataRows UpdateBehavior="Overwrite">
+						<pnp:DataRow>
+							<pnp:DataValue FieldName="ContentTypeId">0x01</pnp:DataValue>
+							<pnp:DataValue FieldName="Title">License</pnp:DataValue>
+							<pnp:DataValue FieldName="Order">1</pnp:DataValue>
+							<pnp:DataValue FieldName="ID">1</pnp:DataValue>
+							<pnp:DataValue FieldName="FileLeafRef">1.000</pnp:DataValue>
+							<pnp:DataValue FieldName="MetaInfo"/>
+						</pnp:DataRow>
+					</pnp:DataRows>
+					<pnp:Security>
+						<pnp:BreakRoleInheritance CopyRoleAssignments="false"
+						                          ClearSubscopes="false">
+							<pnp:RoleAssignment Principal="{associatedownergroup}"
+							                    RoleDefinition="Full Control"/>
+							<pnp:RoleAssignment Principal="{associatedvisitorgroup}"
+							                    RoleDefinition="Contribute"/>
+							<pnp:RoleAssignment Principal="{associatedmembergroup}"
+							                    RoleDefinition="Edit"/>
+							<pnp:RoleAssignment Principal="{associatedmembergroup}"
+							                    RoleDefinition="Contribute"/>
+						</pnp:BreakRoleInheritance>
+					</pnp:Security>
+				</pnp:ListInstance>
+				<pnp:ListInstance Title="Custom Column Mapping"
+				                  Description=""
+				                  DocumentTemplate=""
+				                  TemplateType="100"
+				                  Url="Lists/Custom Column Mapping"
+				                  EnableVersioning="true"
+				                  MinorVersionLimit="0"
+				                  MaxVersionLimit="50"
+				                  DraftVersionVisibility="0"
+				                  TemplateFeatureID="00bfea71-de22-43b2-a848-c05709900100"
+				                  EnableFolderCreation="false"
+				                  DefaultDisplayFormUrl="{site}/Lists/Custom Column Mapping/DispForm.aspx"
+				                  DefaultEditFormUrl="{site}/Lists/Custom Column Mapping/EditForm.aspx"
+				                  DefaultNewFormUrl="{site}/Lists/Custom Column Mapping/NewForm.aspx"
+				                  ImageUrl="/_layouts/15/images/itgen.png?rev=47"
+				                  IrmExpire="false"
+				                  IrmReject="false"
+				                  IsApplicationList="false"
+				                  ValidationFormula=""
+				                  ValidationMessage="">
+					<pnp:ContentTypeBindings>
+						<pnp:ContentTypeBinding ContentTypeID="0x01"
+						                        Default="true"/>
+						<pnp:ContentTypeBinding ContentTypeID="0x0120"/>
+					</pnp:ContentTypeBindings>
+					<pnp:Views>
+						<View Name="{E3E0EDF5-5B37-4B3C-8FFF-7E678EBD37CF}"
+						      DefaultView="TRUE"
+						      MobileView="TRUE"
+						      MobileDefaultView="TRUE"
+						      Type="HTML"
+						      DisplayName="All Items"
+						      Url="{site}/Lists/Custom Column Mapping/AllItems.aspx"
+						      Level="1"
+						      BaseViewID="1"
+						      ContentTypeID="0x"
+						      ImageUrl="/_layouts/15/images/generic.png?rev=47">
+							<Query>
+								<OrderBy>
+									<FieldRef Name="ID"/>
+								</OrderBy>
+							</Query>
+							<ViewFields>
+								<FieldRef Name="LinkTitle"/>
+								<FieldRef Name="From_x0020_Column"/>
+								<FieldRef Name="To_x0020_Column"/>
+							</ViewFields>
+							<RowLimit Paged="TRUE">30</RowLimit>
+							<JSLink>clienttemplates.js</JSLink>
+						</View>
+					</pnp:Views>
+					<pnp:Fields>
+						<Field Type="Text"
+						       Name="From_x0020_Column"
+						       DisplayName="From Column"
+						       ID="{eb834b31-fe98-47a2-af80-5bb71cfe2f2c}"
+						       Group=""
+						       Required="TRUE"
+						       SourceID="{{listid:Custom Column Mapping}}"
+						       StaticName="From_x0020_Column"
+						       ColName="nvarchar4"
+						       RowOrdinal="0"
+						       Version="2"
+						       Description="This is the field (by internal name) you want to map from to an existing field, eg 'EmSubject'"/>
+						<Field Type="Text"
+						       Name="To_x0020_Column"
+						       DisplayName="To Column"
+						       ID="{40f778fd-ec9c-42c1-a454-24c94dc90dc7}"
+						       Group=""
+						       Required="TRUE"
+						       SourceID="{{listid:Custom Column Mapping}}"
+						       StaticName="To_x0020_Column"
+						       ColName="nvarchar5"
+						       RowOrdinal="0"
+						       Version="2"
+						       Description="This is the field (by internal name) you want to map to. This should already exist"/>
+					</pnp:Fields>
+					<pnp:FieldDefaults>
+						<pnp:FieldDefault FieldName="Title">Global</pnp:FieldDefault>
+					</pnp:FieldDefaults>
+				</pnp:ListInstance>
+				<pnp:ListInstance Title="Solution Profiles"
+				                  Description=""
+				                  DocumentTemplate=""
+				                  ListExperience="ClassicExperience"
+				                  TemplateType="100"
+				                  Url="Lists/Solution Profiles"
+				                  MinorVersionLimit="0"
+				                  MaxVersionLimit="0"
+				                  DraftVersionVisibility="0"
+				                  TemplateFeatureID="00bfea71-de22-43b2-a848-c05709900100"
+				                  EnableFolderCreation="false"
+				                  DefaultDisplayFormUrl="{site}/Lists/Solution Profiles/DispForm.aspx"
+				                  DefaultEditFormUrl="{site}/Lists/Solution Profiles/EditForm.aspx"
+				                  DefaultNewFormUrl="{site}/Lists/Solution Profiles/NewForm.aspx"
+				                  ImageUrl="/_layouts/15/images/itgen.png?rev=44"
+				                  ValidationFormula=""
+				                  ValidationMessage="">
+					<pnp:ContentTypeBindings>
+						<pnp:ContentTypeBinding ContentTypeID="0x01"
+						                        Default="true"/>
+						<pnp:ContentTypeBinding ContentTypeID="0x0120"/>
+					</pnp:ContentTypeBindings>
+					<pnp:Views>
+						<View Name="{14C34D94-60F2-4358-87CB-C0266322859D}"
+						      DefaultView="TRUE"
+						      MobileView="TRUE"
+						      MobileDefaultView="TRUE"
+						      Type="HTML"
+						      DisplayName="All Items"
+						      Url="/sites/livepnp/Lists/Solution Profiles/AllItems.aspx"
+						      Level="1"
+						      BaseViewID="1"
+						      ContentTypeID="0x"
+						      ImageUrl="/_layouts/15/images/generic.png?rev=44">
+							<Query>
+								<OrderBy>
+									<FieldRef Name="ID"/>
+								</OrderBy>
+							</Query>
+							<ViewFields>
+								<FieldRef Name="LinkTitle"/>
+								<FieldRef Name="VersionNo"/>
+								<FieldRef Name="ProfileId"/>
+								<FieldRef Name="Comments"/>
+								<FieldRef Name="Attachments"/>
+								<FieldRef Name="ProfileStatus"/>
+								<FieldRef Name="ProfileGroup"/>
+								<FieldRef Name="RestrictedTo"/>
+							</ViewFields>
+							<RowLimit Paged="TRUE">30</RowLimit>
+							<Aggregations Value="Off"/>
+							<JSLink>clienttemplates.js</JSLink>
+						</View>
+					</pnp:Views>
+					<pnp:Fields>
+						<Field Type="Number"
+						       DisplayName="VersionNo"
+						       Required="FALSE"
+						       EnforceUniqueValues="FALSE"
+						       Indexed="FALSE"
+						       ID="{d033da4b-5110-41cb-b3af-a9c892043280}"
+						       SourceID="{76f226d7-9429-4bd9-9f90-42b2d960ed9c}"
+						       StaticName="VersionNo"
+						       Name="VersionNo"
+						       ColName="float1"
+						       RowOrdinal="0"/>
+						<Field Type="Text"
+						       DisplayName="ProfileId"
+						       Required="FALSE"
+						       EnforceUniqueValues="FALSE"
+						       Indexed="FALSE"
+						       MaxLength="255"
+						       ID="{766e041a-5396-477d-a991-226d8d763458}"
+						       SourceID="{76f226d7-9429-4bd9-9f90-42b2d960ed9c}"
+						       StaticName="ProfileId"
+						       Name="ProfileId"
+						       ColName="nvarchar3"
+						       RowOrdinal="0"/>
+						<Field Type="Note"
+						       DisplayName="Comments"
+						       Required="FALSE"
+						       EnforceUniqueValues="FALSE"
+						       Indexed="FALSE"
+						       NumLines="6"
+						       RichText="FALSE"
+						       Sortable="FALSE"
+						       ID="{19c66ea9-4f2c-4696-ad80-4c0927f5194b}"
+						       SourceID="{76f226d7-9429-4bd9-9f90-42b2d960ed9c}"
+						       StaticName="Comments"
+						       Name="Comments"
+						       ColName="ntext2"
+						       RowOrdinal="0"/>
+						<Field Type="Text"
+						       DisplayName="ProfileStatus"
+						       Description="Valid values: Unpublished, Published"
+						       Required="FALSE"
+						       EnforceUniqueValues="FALSE"
+						       Indexed="FALSE"
+						       MaxLength="255"
+						       ID="{05c83ee1-b97b-4560-9715-c84d92643324}"
+						       SourceID="{76f226d7-9429-4bd9-9f90-42b2d960ed9c}"
+						       StaticName="ProfileStatus"
+						       Name="ProfileStatus"
+						       ColName="nvarchar4"
+						       RowOrdinal="0">
+							<Default>Unpublished</Default>
+						</Field>
+						<Field Type="Text"
+						       DisplayName="ProfileGroup"
+						       Required="FALSE"
+						       EnforceUniqueValues="FALSE"
+						       Indexed="FALSE"
+						       MaxLength="255"
+						       ID="{a484caa2-e21b-495b-8831-a8203b283ede}"
+						       SourceID="{ab0c7383-492b-4ca6-b075-39ab7ade7780}"
+						       StaticName="ProfileGroup"
+						       Name="ProfileGroup"
+						       ColName="nvarchar5"
+						       RowOrdinal="0"/>
+						<Field Type="UserMulti"
+						       DisplayName="RestrictedTo"
+						       List="UserInfo"
+						       Required="FALSE"
+						       EnforceUniqueValues="FALSE"
+						       ShowField="ImnName"
+						       UserSelectionMode="PeopleAndGroups"
+						       UserSelectionScope="0"
+						       Mult="TRUE"
+						       Sortable="FALSE"
+						       ID="{b689cd8d-842d-4719-b7be-41dd5dc6e004}"
+						       SourceID="{09d10b43-6d76-4fc8-bc21-0e44851ee93f}"
+						       StaticName="RestrictedTo"
+						       Name="RestrictedTo"
+						       ColName="int1"
+						       RowOrdinal="0"/>
+					</pnp:Fields>
+				</pnp:ListInstance>
+			</pnp:Lists>
+			<pnp:Pages>
+				<pnp:Page Url="{site}/SitePages/Home.aspx"
+				          Overwrite="true"
+				          Layout="Custom">
+					<pnp:WebParts>
+						<pnp:WebPart Title="​Desktop Suite Production License Usage:"
+						             Row="1"
+						             Column="1">
+							<pnp:Contents>
+								<webParts>
+									<webPart xmlns="http://schemas.microsoft.com/WebPart/v3">
+										<metaData>
+											<type name="Microsoft.SharePoint.WebPartPages.XsltListViewWebPart, Microsoft.SharePoint, Version={parameter:version}, Culture=neutral, PublicKeyToken=71e9bce111e9429c"/>
+											<importErrorMessage>Cannot import this Web Part.</importErrorMessage>
+										</metaData>
+										<data>
+											<properties>
+												<property name="ShowWithSampleData"
+												          type="bool">False</property>
+												<property name="Default"
+												          type="string"/>
+												<property name="NoDefaultStyle"
+												          type="string"
+												          null="true"/>
+												<property name="CacheXslStorage"
+												          type="bool">True</property>
+												<property name="ViewContentTypeId"
+												          type="string"/>
+												<property name="XmlDefinitionLink"
+												          type="string"/>
+												<property name="ManualRefresh"
+												          type="bool">False</property>
+												<property name="ListUrl"
+												          type="string"
+												          null="true"/>
+												<property name="ListId"
+												          type="System.Guid, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">{listid:Licenses}</property>
+												<property name="TitleUrl"
+												          type="string">{site}/Lists/Licenses</property>
+												<property name="EnableOriginalValue"
+												          type="bool">False</property>
+												<property name="Direction"
+												          type="direction">NotSet</property>
+												<property name="ServerRender"
+												          type="bool">False</property>
+												<property name="ViewFlags"
+												          type="Microsoft.SharePoint.SPViewFlags, Microsoft.SharePoint, Version={parameter:version}, Culture=neutral, PublicKeyToken=71e9bce111e9429c">Html, TabularView, Hidden, Mobile</property>
+												<property name="AllowConnect"
+												          type="bool">False</property>
+												<property name="ListName"
+												          type="string">{{listid:Licenses}}</property>
+												<property name="ListDisplayName"
+												          type="string"
+												          null="true"/>
+												<property name="AllowZoneChange"
+												          type="bool">True</property>
+												<property name="ChromeState"
+												          type="chromestate">Normal</property>
+												<property name="DisableSaveAsNewViewButton"
+												          type="bool">False</property>
+												<property name="ViewFlag"
+												          type="string"/>
+												<property name="DataSourceID"
+												          type="string"/>
+												<property name="ExportMode"
+												          type="exportmode">All</property>
+												<property name="AutoRefresh"
+												          type="bool">False</property>
+												<property name="FireInitialRow"
+												          type="bool">True</property>
+												<property name="AllowEdit"
+												          type="bool">False</property>
+												<property name="Description"
+												          type="string"/>
+												<property name="HelpMode"
+												          type="helpmode">Modeless</property>
+												<property name="BaseXsltHashKey"
+												          type="string"
+												          null="true"/>
+												<property name="AllowMinimize"
+												          type="bool">False</property>
+												<property name="CacheXslTimeOut"
+												          type="int">86400</property>
+												<property name="ChromeType"
+												          type="chrometype">Default</property>
+												<property name="Xsl"
+												          type="string"
+												          null="true"/>
+												<property name="JSLink"
+												          type="string"
+												          null="true"/>
+												<property name="CatalogIconImageUrl"
+												          type="string">/_layouts/15/images/itgen.png?rev=44</property>
+												<property name="SampleData"
+												          type="string"
+												          null="true"/>
+												<property name="UseSQLDataSourcePaging"
+												          type="bool">True</property>
+												<property name="TitleIconImageUrl"
+												          type="string"/>
+												<property name="PageSize"
+												          type="int">-1</property>
+												<property name="ShowTimelineIfAvailable"
+												          type="bool">True</property>
+												<property name="Width"
+												          type="string"/>
+												<property name="DataFields"
+												          type="string"/>
+												<property name="Hidden"
+												          type="bool">False</property>
+												<property name="Title"
+												          type="string">​Desktop Suite Production License Usage:</property>
+												<property name="PageType"
+												          type="Microsoft.SharePoint.PAGETYPE, Microsoft.SharePoint, Version={parameter:version}, Culture=neutral, PublicKeyToken=71e9bce111e9429c">PAGE_NORMALVIEW</property>
+												<property name="DataSourcesString"
+												          type="string"/>
+												<property name="AllowClose"
+												          type="bool">True</property>
+												<property name="InplaceSearchEnabled"
+												          type="bool">True</property>
+												<property name="WebId"
+												          type="System.Guid, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">00000000-0000-0000-0000-000000000000</property>
+												<property name="Height"
+												          type="string"/>
+												<property name="GhostedXslLink"
+												          type="string">main.xsl</property>
+												<property name="DisableViewSelectorMenu"
+												          type="bool">False</property>
+												<property name="DisplayName"
+												          type="string"/>
+												<property name="IsClientRender"
+												          type="bool">False</property>
+												<property name="XmlDefinition"
+												          type="string">&lt;View Name="{361FF847-81FE-49EA-AA48-77BB7CA79139}" MobileView="TRUE" Type="HTML" Hidden="TRUE" DisplayName="" Url="{site}/SitePages/Home.aspx" Level="1" BaseViewID="1" ContentTypeID="0x" ImageUrl="/_layouts/15/images/generic.png?rev=43" &gt;&lt;Query&gt;&lt;OrderBy&gt;&lt;FieldRef Name="ID"/&gt;&lt;/OrderBy&gt;&lt;Where&gt;&lt;Neq&gt;&lt;FieldRef Name="Title"/&gt;&lt;Value Type="Text"&gt;License&lt;/Value&gt;&lt;/Neq&gt;&lt;/Where&gt;&lt;/Query&gt;&lt;ViewFields&gt;&lt;FieldRef Name="LinkTitle"/&gt;&lt;FieldRef Name="ItemChildCount"/&gt;&lt;/ViewFields&gt;&lt;RowLimit Paged="TRUE"&gt;30&lt;/RowLimit&gt;&lt;Aggregations Value="Off"/&gt;&lt;JSLink&gt;clienttemplates.js&lt;/JSLink&gt;&lt;XslLink Default="TRUE"&gt;main.xsl&lt;/XslLink&gt;&lt;Toolbar Type="None"/&gt;&lt;/View&gt;</property>
+												<property name="InitialAsyncDataFetch"
+												          type="bool">False</property>
+												<property name="AllowHide"
+												          type="bool">True</property>
+												<property name="ParameterBindings"
+												          type="string">&lt;ParameterBinding Name="dvt_sortdir" Location="Postback;Connection" /&gt;&lt;ParameterBinding Name="dvt_sortfield" Location="Postback;Connection" /&gt;&lt;ParameterBinding Name="dvt_startposition" Location="Postback" DefaultValue="" /&gt;&lt;ParameterBinding Name="dvt_firstrow" Location="Postback;Connection" /&gt;&lt;ParameterBinding Name="OpenMenuKeyAccessible" Location="Resource(wss,OpenMenuKeyAccessible)" /&gt;&lt;ParameterBinding Name="open_menu" Location="Resource(wss,open_menu)" /&gt;&lt;ParameterBinding Name="select_deselect_all" Location="Resource(wss,select_deselect_all)" /&gt;&lt;ParameterBinding Name="idPresEnabled" Location="Resource(wss,idPresEnabled)" /&gt;&lt;ParameterBinding Name="NoAnnouncements" Location="Resource(wss,noXinviewofY_LIST)" /&gt;&lt;ParameterBinding Name="NoAnnouncementsHowTo" Location="Resource(wss,noXinviewofY_DEFAULT)" /&gt;</property>
+												<property name="DataSourceMode"
+												          type="Microsoft.SharePoint.WebControls.SPDataSourceMode, Microsoft.SharePoint, Version={parameter:version}, Culture=neutral, PublicKeyToken=71e9bce111e9429c">List</property>
+												<property name="AutoRefreshInterval"
+												          type="int">60</property>
+												<property name="AsyncRefresh"
+												          type="bool">False</property>
+												<property name="HelpUrl"
+												          type="string"/>
+												<property name="MissingAssembly"
+												          type="string">Cannot import this Web Part.</property>
+												<property name="XslLink"
+												          type="string"
+												          null="true"/>
+												<property name="SelectParameters"
+												          type="string"/>
+												<property name="HasClientDataSource"
+												          type="bool">False</property>
+											</properties>
+										</data>
+									</webPart>
+								</webParts>
+							</pnp:Contents>
+						</pnp:WebPart>
+					</pnp:WebParts>
+					<pnp:Fields>
+						<pnp:Field FieldName="WikiField">&lt;div class="ExternalClass4B6088D6997C41CB958880A720B64131"&gt;
                 &lt;table id="layoutsTable" style="width&amp;#58;100%;"&gt;&lt;tbody&gt;&lt;tr style="vertical-align&amp;#58;top;"&gt;&lt;td style="padding&amp;#58;0px;width&amp;#58;100%;"&gt;&lt;div class="ms-rte-layoutszone-outer" style="width&amp;#58;100%;"&gt;&lt;div class="ms-rte-layoutszone-inner"&gt;​&lt;span class="ms-rteFontSize-3"&gt;​Resources​&amp;#58;​​
-&lt;/span&gt;&lt;ul&gt;&lt;li&gt;&lt;a title="Who we are and what we do" href="https&amp;#58;//www.oneplacesolutions.com/"&gt;OnePlace Solutions Website&lt;/a&gt;&lt;br&gt;&lt;/li&gt;&lt;li&gt; ​&lt;a href="https&amp;#58;//www.oneplacesolutions.com/help" target="_blank"&gt;Submit a Support Request&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a title="Articles for your IT Helpdesk to fix common issues" href="https&amp;#58;//www.oneplacesolutions.com/support/knowledgebase.html"&gt;Online Help&amp;#58; Knowledgebase&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="https&amp;#58;//www.oneplacesolutions.com/help/"&gt;Online Help&amp;#58; Desktop Products&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a title="Guides and support for the Office 365 Modern App" href="https&amp;#58;//www.oneplacesolutions.com/help/app/"&gt;Online Help&amp;#58; OnePlaceMail App&lt;/a&gt;&lt;br&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="https&amp;#58;//www.youtube.com/channel/UCSoBckN7vzEeLsy4_zzJ0Ug"&gt;OnePlace Solutions - Youtube&lt;/a&gt;&lt;br&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="https&amp;#58;//github.com/OnePlaceSolutions/"&gt;OnePlace Solutions Github&lt;/a&gt;&lt;br&gt;&lt;/li&gt;&lt;/ul&gt;&lt;div&gt;&lt;div class="ms-rtestate-read ms-rte-wpbox"&gt;&lt;div class="ms-rtestate-notify  ms-rtestate-read {webpartid:​Desktop Suite Production License Usage:}" id="div_{webpartid:​Desktop Suite Production License Usage:}" unselectable="on"&gt;&lt;/div&gt;&lt;div id="vid_{webpartid:​Desktop Suite Production License Usage:}" unselectable="on" style="display&amp;#58;none;"&gt;&lt;/div&gt;&lt;/div&gt;​&lt;/div&gt;&lt;div&gt;&lt;span class="ms-rteFontSize-3"&gt;Client Configuration Details&amp;#58;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;ul&gt;&lt;li&gt;License List URL&amp;#58; &lt;strong&gt;{parameter:site}/Lists/Licenses​​&lt;/strong&gt;&lt;br&gt;&lt;/li&gt;&lt;li&gt;Solutions Site URL &amp;#58; &lt;strong&gt;{parameter:site}​&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;div&gt;&lt;span class="ms-rteFontSize-3"&gt;License Key Details&amp;#58;&lt;/span&gt;&lt;/div&gt;&lt;ul&gt;&lt;li&gt;&lt;span style="text-align&amp;#58;left;color&amp;#58;#444444;text-transform&amp;#58;none;text-indent&amp;#58;0px;letter-spacing&amp;#58;normal;font-family&amp;#58;&amp;quot;segoe ui&amp;quot;,&amp;quot;segoe&amp;quot;,tahoma,helvetica,arial,sans-serif;font-size&amp;#58;13px;font-style&amp;#58;normal;font-variant&amp;#58;normal;font-weight&amp;#58;400;text-decoration&amp;#58;none;word-spacing&amp;#58;0px;display&amp;#58;inline !important;white-space&amp;#58;normal;orphans&amp;#58;2;float&amp;#58;none;"&gt;License List ID&amp;#58; &lt;/span&gt;&lt;strong style="text-align&amp;#58;left;color&amp;#58;#444444;text-transform&amp;#58;none;text-indent&amp;#58;0px;letter-spacing&amp;#58;normal;font-size&amp;#58;13px;font-style&amp;#58;normal;font-variant&amp;#58;normal;font-weight&amp;#58;700;text-decoration&amp;#58;none;word-spacing&amp;#58;0px;white-space&amp;#58;normal;orphans&amp;#58;2;"&gt;{parameter:licenseListId}&lt;/strong&gt;&lt;br&gt;&lt;/li&gt;&lt;/ul&gt;​&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;span class="ms-rteFontSize-3"&gt;Have a Production license or Time Expiry Key?&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;a href="{parameter:site}/Lists/Licenses/EditForm.aspx?ID=1"&gt;Attach License or Key here&lt;/a&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&amp;#160;&lt;/div&gt;&lt;div&gt;&lt;span class="ms-rteFontSize-2"&gt;Need a Production license/key or trial extension? Email &lt;/span&gt;&lt;a href="mailto&amp;#58;success@oneplacesolutions.com"&gt;&lt;span class="ms-rteFontSize-2"&gt;success@oneplacesolutions.com​&lt;/span&gt;&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/span&gt;&lt;ul&gt;&lt;li&gt;&lt;a title="Who we are and what we do" href="https&amp;#58;//www.oneplacesolutions.com/"&gt;OnePlace Solutions Website&lt;/a&gt;&lt;br&gt;&lt;/li&gt;&lt;li&gt; ​&lt;a href="https&amp;#58;//www.oneplacesolutions.com/help" target="_blank"&gt;Submit a Support Request&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a title="Articles for your IT Helpdesk to fix common issues" href="https&amp;#58;//www.oneplacesolutions.com/support/knowledgebase.html"&gt;Online Help&amp;#58; Knowledgebase&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="https&amp;#58;//www.oneplacesolutions.com/help/"&gt;Online Help&amp;#58; Desktop Products&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a title="Guides and support for the Office 365 Modern App" href="https&amp;#58;//www.oneplacesolutions.com/help/app/"&gt;Online Help&amp;#58; OnePlaceMail App&lt;/a&gt;&lt;br&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="https&amp;#58;//www.youtube.com/channel/UCSoBckN7vzEeLsy4_zzJ0Ug"&gt;OnePlace Solutions - Youtube&lt;/a&gt;&lt;br&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="https&amp;#58;//github.com/OnePlaceSolutions/"&gt;OnePlace Solutions Github&lt;/a&gt;&lt;br&gt;&lt;/li&gt;&lt;/ul&gt;&lt;div&gt;&lt;div class="ms-rtestate-read ms-rte-wpbox"&gt;&lt;div class="ms-rtestate-notify  ms-rtestate-read {webpartid:​Desktop Suite Production License Usage:}" id="div_{webpartid:​Desktop Suite Production License Usage:}" unselectable="on"&gt;&lt;/div&gt;&lt;div id="vid_{webpartid:​Desktop Suite Production License Usage:}" unselectable="on" style="display&amp;#58;none;"&gt;&lt;/div&gt;&lt;/div&gt;​&lt;/div&gt;&lt;div&gt;&lt;span class="ms-rteFontSize-3"&gt;Client Configuration Details&amp;#58;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;ul&gt;&lt;li&gt;License List URL&amp;#58; &lt;strong&gt;{hosturl}{sitecollection}/Lists/Licenses​​&lt;/strong&gt;&lt;br&gt;&lt;/li&gt;&lt;li&gt;Solutions Site URL &amp;#58; &lt;strong&gt;{hosturl}{sitecollection}&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;div&gt;&lt;span class="ms-rteFontSize-3"&gt;License Key Details&amp;#58;&lt;/span&gt;&lt;/div&gt;&lt;ul&gt;&lt;li&gt;&lt;span style="text-align&amp;#58;left;color&amp;#58;#444444;text-transform&amp;#58;none;text-indent&amp;#58;0px;letter-spacing&amp;#58;normal;font-family&amp;#58;&amp;quot;segoe ui&amp;quot;,&amp;quot;segoe&amp;quot;,tahoma,helvetica,arial,sans-serif;font-size&amp;#58;13px;font-style&amp;#58;normal;font-variant&amp;#58;normal;font-weight&amp;#58;400;text-decoration&amp;#58;none;word-spacing&amp;#58;0px;display&amp;#58;inline !important;white-space&amp;#58;normal;orphans&amp;#58;2;float&amp;#58;none;"&gt;License List ID&amp;#58; &lt;/span&gt;&lt;strong style="text-align&amp;#58;left;color&amp;#58;#444444;text-transform&amp;#58;none;text-indent&amp;#58;0px;letter-spacing&amp;#58;normal;font-size&amp;#58;13px;font-style&amp;#58;normal;font-variant&amp;#58;normal;font-weight&amp;#58;700;text-decoration&amp;#58;none;word-spacing&amp;#58;0px;white-space&amp;#58;normal;orphans&amp;#58;2;"&gt;{listid:Licenses}&lt;/strong&gt;&lt;br&gt;&lt;/li&gt;&lt;/ul&gt;​&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;span class="ms-rteFontSize-3"&gt;Have a Production license or Time Expiry Key?&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;a href="{parameter:site}/Lists/Licenses/EditForm.aspx?ID=1"&gt;Attach License or Key here&lt;/a&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&amp;#160;&lt;/div&gt;&lt;div&gt;&lt;span class="ms-rteFontSize-2"&gt;Need a Production license/key or trial extension? Email &lt;/span&gt;&lt;a href="mailto&amp;#58;success@oneplacesolutions.com"&gt;&lt;span class="ms-rteFontSize-2"&gt;success@oneplacesolutions.com​&lt;/span&gt;&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
     &lt;span id="layoutsData" style="display&amp;#58;none;"&gt;false,false,1&lt;/span&gt;&lt;/div&gt;</pnp:Field>
-          </pnp:Fields>
-        </pnp:Page>
-      </pnp:Pages>
-    </pnp:ProvisioningTemplate>
-  </pnp:Templates>
+					</pnp:Fields>
+				</pnp:Page>
+			</pnp:Pages>
+		</pnp:ProvisioningTemplate>
+	</pnp:Templates>
 </pnp:Provisioning>
