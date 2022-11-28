@@ -284,6 +284,7 @@
 							<pnp:DataValue FieldName="ContentTypeId">0x01</pnp:DataValue>
 							<pnp:DataValue FieldName="Title">License</pnp:DataValue>
 							<pnp:DataValue FieldName="Order">1</pnp:DataValue>
+							<pnp:DataValue FieldName="ID">1</pnp:DataValue>
 							<pnp:DataValue FieldName="FileLeafRef">1.000</pnp:DataValue>
 							<pnp:DataValue FieldName="MetaInfo"/>
 						</pnp:DataRow>
