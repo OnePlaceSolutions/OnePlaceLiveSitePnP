@@ -144,6 +144,7 @@ Try {
         #Download OnePlace Solutions Company logo to be used as Site logo    
         $UrlSiteImage = "https://raw.githubusercontent.com/OnePlaceSolutions/OnePlaceLiveSitePnP/master/oneplacesolutions-logo.png"
         $PathImage = "$env:temp\oneplacesolutions-logo.png" 
+
         If(-not (Test-Path $PathImage )) {
             $filler = "Downloading OPS logo for Solutions Site"
             Write-Host $filler -ForegroundColor Yellow 
@@ -154,8 +155,6 @@ Try {
         $filler = "Applying configuration changes..."
         Write-Host $filler -ForegroundColor Yellow
         Write-Log -Level Info -Message $filler
-
-        #Apply-PnPProvisioningTemplate -path $Path -ExcludeHandlers SiteSecurity, Pages
         
         try {
             Write-Host "Checking which PnP module is installed to adjust script..."
