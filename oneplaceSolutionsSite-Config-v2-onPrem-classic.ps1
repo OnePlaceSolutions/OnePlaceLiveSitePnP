@@ -156,8 +156,10 @@ Try {
         Write-Host $filler -ForegroundColor Yellow
         Write-Log -Level Info -Message $filler
 
-        Apply-PnPProvisioningTemplate -path $Path -ExcludeHandlers SiteSecurity, Pages
-		
+        #Apply-PnPProvisioningTemplate -path $Path -ExcludeHandlers SiteSecurity, Pages
+        Apply-PnPProvisioningTemplate -path $Path
+
+        <#
 		$licenseList = Get-PnPList -Identity "Licenses"
         $licenseListId = $licenseList.ID
         $licenseListId = $licenseListId.ToString()
@@ -174,7 +176,7 @@ Try {
             Write-Log -Level Warn -Message $filler
             Apply-PnPProvisioningTemplate -path $Path -Handlers SiteSecurity, Pages -Parameters @{"licenseListID"=$licenseListId;"site"=$SolutionsSiteUrl;"version"="15.0.0.0"}
         }
-
+        #>
         $filler = "Provisioning complete!"
         Write-Host $filler -ForeGroundColor Green
         Write-Log -Level Info -Message $filler
@@ -187,6 +189,7 @@ Try {
         Write-Host $filler -ForegroundColor Yellow
         Write-Log -Level Info -Message $filler
 
+        <#
         $licenseItemCount = ((Get-PnPListItem -List "Licenses" -Query "<View><Query><Where><Eq><FieldRef Name='Title'/><Value Type='Text'>License</Value></Eq></Where></Query></View>").Count)
         If ($licenseItemCount -eq 0) {
             Add-PnPListItem -List "Licenses" -Values @{"Title" = "License"} | Out-Null
@@ -199,12 +202,14 @@ Try {
             Write-Host "`n$filler" -ForegroundColor Red
             Write-Log -Level Warn -Message $filler
         }
+        #>
 
         Write-Log -Level Info -Message "Solutions Site URL = $SolutionsSiteUrl"
         Write-Log -Level Info -Message "License List URL = $LicenseListUrl"
         Write-Log -Level Info -Message "License List ID = $licenseListId"
         Write-Log -Level Info -Message "Uploading log file to $SolutionsSiteUrl/Shared%20Documents"
 
+        <#
         #This sets up a Custom Column Mapping list ready for use if required
         If($null -eq (Get-PnPList -Identity 'Custom Column Mapping')) {
             Write-Log -Level Info -Message "Creating Custom Column Mapping list for later use if required."
@@ -226,7 +231,7 @@ Try {
         Else {
             Write-Log -Level Info -Message "Custom Column Mapping list already exists by name, skipping creation."
         }
-
+        #>
         Try {
             #workaround for a PnP bug
             $logToSharePoint = Add-PnPfile -Path $script:LogPath -Folder "Shared Documents"

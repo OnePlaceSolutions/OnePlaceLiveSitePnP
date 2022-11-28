@@ -302,6 +302,87 @@
 						</pnp:BreakRoleInheritance>
 					</pnp:Security>
 				</pnp:ListInstance>
+				<pnp:ListInstance Title="Custom Column Mapping"
+				                  Description=""
+				                  DocumentTemplate=""
+				                  TemplateType="100"
+				                  Url="Lists/Custom Column Mapping"
+				                  EnableVersioning="true"
+				                  MinorVersionLimit="0"
+				                  MaxVersionLimit="50"
+				                  DraftVersionVisibility="0"
+				                  TemplateFeatureID="00bfea71-de22-43b2-a848-c05709900100"
+				                  EnableFolderCreation="false"
+				                  DefaultDisplayFormUrl="{site}/Lists/Custom Column Mapping/DispForm.aspx"
+				                  DefaultEditFormUrl="{site}/Lists/Custom Column Mapping/EditForm.aspx"
+				                  DefaultNewFormUrl="{site}/Lists/Custom Column Mapping/NewForm.aspx"
+				                  ImageUrl="/_layouts/15/images/itgen.png?rev=47"
+				                  IrmExpire="false"
+				                  IrmReject="false"
+				                  IsApplicationList="false"
+				                  ValidationFormula=""
+				                  ValidationMessage="">
+					<pnp:ContentTypeBindings>
+						<pnp:ContentTypeBinding ContentTypeID="0x01"
+						                        Default="true"/>
+						<pnp:ContentTypeBinding ContentTypeID="0x0120"/>
+					</pnp:ContentTypeBindings>
+					<pnp:Views>
+						<View Name="{E3E0EDF5-5B37-4B3C-8FFF-7E678EBD37CF}"
+						      DefaultView="TRUE"
+						      MobileView="TRUE"
+						      MobileDefaultView="TRUE"
+						      Type="HTML"
+						      DisplayName="All Items"
+						      Url="{site}/Lists/Custom Column Mapping/AllItems.aspx"
+						      Level="1"
+						      BaseViewID="1"
+						      ContentTypeID="0x"
+						      ImageUrl="/_layouts/15/images/generic.png?rev=47">
+							<Query>
+								<OrderBy>
+									<FieldRef Name="ID"/>
+								</OrderBy>
+							</Query>
+							<ViewFields>
+								<FieldRef Name="LinkTitle"/>
+								<FieldRef Name="From_x0020_Column"/>
+								<FieldRef Name="To_x0020_Column"/>
+							</ViewFields>
+							<RowLimit Paged="TRUE">30</RowLimit>
+							<JSLink>clienttemplates.js</JSLink>
+						</View>
+					</pnp:Views>
+					<pnp:Fields>
+						<Field Type="Text"
+						       Name="From_x0020_Column"
+						       DisplayName="From Column"
+						       ID="{eb834b31-fe98-47a2-af80-5bb71cfe2f2c}"
+						       Group=""
+						       Required="TRUE"
+						       SourceID="{{listid:Custom Column Mapping}}"
+						       StaticName="From_x0020_Column"
+						       ColName="nvarchar4"
+						       RowOrdinal="0"
+						       Version="2"
+						       Description="This is the field (by internal name) you want to map from to an existing field, eg 'EmSubject'"/>
+						<Field Type="Text"
+						       Name="To_x0020_Column"
+						       DisplayName="To Column"
+						       ID="{40f778fd-ec9c-42c1-a454-24c94dc90dc7}"
+						       Group=""
+						       Required="TRUE"
+						       SourceID="{{listid:Custom Column Mapping}}"
+						       StaticName="To_x0020_Column"
+						       ColName="nvarchar5"
+						       RowOrdinal="0"
+						       Version="2"
+						       Description="This is the field (by internal name) you want to map to. This should already exist"/>
+					</pnp:Fields>
+					<pnp:FieldDefaults>
+						<pnp:FieldDefault FieldName="Title">Global</pnp:FieldDefault>
+					</pnp:FieldDefaults>
+				</pnp:ListInstance>
 				<pnp:ListInstance Title="Solution Profiles"
 				                  Description=""
 				                  DocumentTemplate=""
