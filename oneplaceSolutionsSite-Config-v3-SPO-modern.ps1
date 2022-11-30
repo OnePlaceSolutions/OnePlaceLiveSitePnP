@@ -40,7 +40,10 @@ function Write-Log {
         [Parameter(Mandatory = $false)] 
         [ValidateSet("Error", "Warn", "Info")] 
         [string]$Level = "Info", 
-         
+        
+        [Parameter(Mandatory = $false)] 
+        [switch]$Output = $false,
+
         [Parameter(Mandatory = $false)] 
         [switch]$NoClobber 
     ) 
@@ -80,9 +83,15 @@ function Write-Log {
                 $LevelText = 'WARNING:' 
             } 
             'Info' { 
-                Write-Verbose $Message 
-                $LevelText = 'INFO:' 
-            } 
+                If( $Output ) {
+                    Write-Verbose $Message
+                    Write-Host $Message -ForegroundColor Yellow
+                }
+                Else {
+                    Write-Verbose $Message
+                }
+                $LevelText = 'INFO:'
+            }
         } 
          
         # Write log entry to $Path
@@ -193,11 +202,8 @@ Try {
                 Catch {
                     $exMessage = $($_.Exception.Message)
                     If ($exMessage -like "*(403)*") {
-                        Write-Log -Level Error -Message $exMessage
-                        $filler = "Error connecting to '$adminSharePoint'. Please ensure you have sufficient rights to create Site Collections in your Microsoft 365 Tenant. `nThis usually requires Global Administrative rights, or alternatively ask your SharePoint Administrator to perform the Solutions Site Setup."
-                        Write-Host $filler -ForegroundColor Yellow
-                        Write-Host "Please contact OnePlace Solutions Support if you are still encountering difficulties."
-                        Write-Log -Level Info -Message $filler
+                        Write-Log -level Error -Message "Error connecting to '$adminSharePoint'. Please ensure you have sufficient rights to create Site Collections in your Microsoft 365 Tenant. `nThis usually requires Global Administrative rights, or alternatively ask your SharePoint Administrator to perform the Solutions Site Setup."
+                        Write-Host "`nPlease contact OnePlace Solutions Support if you are still encountering difficulties."
                     }
                     ElseIf ($exMessage -like "*'Connect-PnPOnline'*") {
                         Write-Log -Level Error -Message "Pre-requisite PnP Cmdlets likely not installed. Please review documentation and try again."
@@ -227,7 +233,24 @@ Try {
                     $Context.Load($Context.Web.CurrentUser)
                     $Context.ExecuteQuery()
 
-                    $OwnerEmail = $Context.Web.CurrentUser.Email
+                    $OwnerEmail = $Context.Web.CurrentUser.Email.ToString()
+
+                    if( [string]::IsNullOrWhiteSpace( $Context.Web.CurrentUser.Email ) -and [string]::IsNullOrWhiteSpace( $Context.Web.CurrentUser.UserPrincipalName ) ){ 
+                        $OwnerEmail = Read-Host "Automatic user identification failed. Please enter the email address of the user you just logged in as"
+                        $OwnerEmail = $OwnerEmail.Trim()
+                    }
+                    elseif( [string]::IsNullOrWhiteSpace( $Context.Web.CurrentUser.Email ) -and ( -not [string]::IsNullOrWhiteSpace( $Context.Web.CurrentUser.UserPrincipalName ) ) ) {
+                        $OwnerEmail = $Context.Web.CurrentUser.UserPrincipalName.ToString()
+                    }
+
+                    if ([string]::IsNullOrWhiteSpace($OwnerEmail)) {
+                            Write-Log -Level Error -Message 'No Site Collection owner has been entered. Exiting script.'
+                            Pause
+                            exit
+                    }
+                    else {
+                        Write-Log "OwnerEmail set to $OwnerEmail"
+                    }
 
                     #Creating the site collection
                     $filler = "Creating site collection with URL '$SolutionsSiteUrl' for the Solutions Site, and owner '$ownerEmail'. This may take a while, please do not close this window, but feel free to minimize the PowerShell window and check back in 10 minutes."
@@ -249,32 +272,27 @@ Try {
                     Write-Log -Level Info -Message $filler
                 }
                 Catch [Microsoft.SharePoint.Client.ServerException] {
-                    $exMessage = $($_.Exception.Message)
-                    If ($exMessage -match 'A site already exists at url') {
-                        Write-Host $exMessage -ForegroundColor Red
-                        Write-Log -Level Error -Message $exMessage
-                        Write-Host "Site with URL $SolutionsSiteUrl already exists. Please run the script again and choose a different Solutions Site suffix, or opt to deploy to an existing Site." -ForegroundColor Red
-                        Throw
+                    If ( $_.Exception.Message -like "A site already exists at url*" ) {
+                        Write-Log -Level Error -Message "Site with URL $SolutionsSiteUrl already exists. Please run the script again and choose to deploy to an existing Site." -ForegroundColor Red
+                        Throw $_
                     }
-                    ElseIf ($exMessage -like '*401*') {
-                        $filler = "Authentication issue. `nIf the newly created Site Collection is visible in your SharePoint Online admin center, re-run the script and select Option 1 to deploy to that site."
-                        Write-Log -Level Error -Message $filler
+                    ElseIf ( $_.Exception.Message -like '*401*' ) {
+                        Write-Log -Level Error -Message "Authentication issue. `nIf the newly created Site Collection is visible in your SharePoint Online admin center, re-run the script and select Option 1 to deploy to that site."
+                        Throw $_
                     }
                     Else {
-                        Throw
+                        Throw $_
                     }
                 }
                 Catch {
-                    Write-Log -level Info -Message "Something went wrong during Site Creation. Details following"
-                    Throw
+                    Write-Log -level Error -Message "Something went wrong during Site Creation. Details following"
+                    Throw $_
                 }
                 
             }
             #Stage 1b Skipping Site Creation, identifying Solutions Site instead
             Else {
-                $stage = "Stage 1/2 - Identify Solutions Site"
-                Write-Host "`n$stage`n" -ForegroundColor Yellow
-                
+                Write-Host "`nStage 1/2 - Identify Solutions Site`n" -ForegroundColor Yellow
                 
                 Do {
                     $validInput = $true
@@ -296,8 +314,7 @@ Try {
 
             #Stage 2 Applying the template
             Try {
-                $stage = "Stage 2/2 - Apply Solutions Site template"
-                Write-Host "`n$stage`n" -ForegroundColor Yellow
+                Write-Host "`nStage 2/2 - Apply Solutions Site template`n" -ForegroundColor Yellow
 
                 #Connecting to the site collection to apply the template
                 Write-Host "Please authenticate against the Site Collection"
@@ -361,21 +378,12 @@ Try {
             Catch {
                 $exMessage = $($_.Exception.Message)
                 If ($exMessage -like "*(403)*") {
-                    Write-Log -Level Error -Message $exMessage
-                    $filler = "Error connecting to '$adminSharePoint'. Please ensure you have sufficient rights to create Site Collections in your Microsoft 365 Tenant. `nThis usually requires Global Administrative rights, or alternatively ask your SharePoint Administrator to perform the Solutions Site Setup."
-                    Write-Host $filler -ForegroundColor Yellow
-                    Write-Host "Please contact OnePlace Solutions Support if you are still encountering difficulties."
-                    Write-Log -Level Info -Message $filler
+                    Write-Log -Level Error -Message "Error connecting to '$adminSharePoint'. Please ensure you have sufficient rights to create Site Collections in your Microsoft 365 Tenant. `nThis usually requires Global Administrative rights, or alternatively ask your SharePoint Administrator to perform the Solutions Site Setup."
+                    Write-Host "`nPlease contact OnePlace Solutions Support if you are still encountering difficulties."
                 }
                 ElseIf ($exMessage -like "*'Connect-PnPOnline'*") {
                     Write-Log -Level Error -Message "Pre-requisite PnP Cmdlets likely not installed. Please review documentation and try again."
                     Pause
-                }
-                ElseIf ($exMessage -like "*SPOManagementShell*") {
-                    Write-Log -level Warn -Message "Error calling SPOManagementShell Authentication. Retrying deployment with Force SPOMS `$False"
-                    Start-Sleep -Seconds 2
-                    $script:forceSPOMS = $false
-                    Deploy -createSite $createSite
                 }
                 Throw
             }
