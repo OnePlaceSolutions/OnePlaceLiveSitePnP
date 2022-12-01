@@ -553,7 +553,7 @@
 				</pnp:ListInstance>
 			</pnp:Lists>
 			<pnp:Files>
-				<pnp:File Src="oneplacesolutions-logo.png"
+				<pnp:File Src="./oneplacesolutions-logo.png"
 				          Folder="SiteAssets"
 				          Overwrite="true"
 				          Level="Published"/>
@@ -588,7 +588,154 @@
 						             Type="OneColumn">
 							<pnp:Controls>
 								<pnp:CanvasControl WebPartType="QuickLinks"
-								                   JsonControlData="{&quot;id&quot;: &quot;c70391ea-0b10-4ee9-b2b4-006d3fcad0cd&quot;, &quot;instanceId&quot;: &quot;e6a2992c-2522-46db-8288-4f77d572c40a&quot;, &quot;title&quot;: &quot;Quick links&quot;, &quot;description&quot;: &quot;Add links to important documents and pages.&quot;, &quot;dataVersion&quot;: &quot;2.2&quot;, &quot;properties&quot;: {&quot;items&quot;:[{&quot;sourceItem&quot;:{&quot;itemType&quot;:2,&quot;fileExtension&quot;:&quot;&quot;,&quot;progId&quot;:&quot;&quot;},&quot;thumbnailType&quot;:3,&quot;id&quot;:1,&quot;image&quot;:{&quot;guids&quot;:{&quot;listId&quot;:&quot;{listid:Site Assets}&quot;,&quot;uniqueId&quot;:&quot;7b9fca3f-d3bc-4ea5-b466-002f320e5338&quot;,&quot;webId&quot;:&quot;{siteid}&quot;,&quot;siteId&quot;:&quot;{sitecollectionid}&quot;},&quot;imageFit&quot;:2},&quot;altText&quot;:&quot;&quot;},{&quot;sourceItem&quot;:{&quot;itemType&quot;:2,&quot;fileExtension&quot;:&quot;&quot;,&quot;progId&quot;:&quot;&quot;},&quot;thumbnailType&quot;:3,&quot;id&quot;:3,&quot;altText&quot;:&quot;&quot;},{&quot;sourceItem&quot;:{&quot;itemType&quot;:2,&quot;fileExtension&quot;:&quot;&quot;,&quot;progId&quot;:&quot;&quot;},&quot;thumbnailType&quot;:3,&quot;id&quot;:5,&quot;altText&quot;:&quot;&quot;},{&quot;sourceItem&quot;:{&quot;itemType&quot;:2,&quot;fileExtension&quot;:&quot;&quot;,&quot;progId&quot;:&quot;&quot;},&quot;thumbnailType&quot;:3,&quot;id&quot;:2,&quot;altText&quot;:&quot;&quot;},{&quot;sourceItem&quot;:{&quot;itemType&quot;:2,&quot;fileExtension&quot;:&quot;&quot;,&quot;progId&quot;:&quot;&quot;},&quot;thumbnailType&quot;:3,&quot;id&quot;:4,&quot;altText&quot;:&quot;&quot;},{&quot;sourceItem&quot;:{&quot;itemType&quot;:2,&quot;fileExtension&quot;:&quot;&quot;,&quot;progId&quot;:&quot;&quot;},&quot;thumbnailType&quot;:3,&quot;id&quot;:6,&quot;altText&quot;:&quot;&quot;},{&quot;sourceItem&quot;:{&quot;itemType&quot;:2,&quot;fileExtension&quot;:&quot;&quot;,&quot;progId&quot;:&quot;&quot;},&quot;thumbnailType&quot;:3,&quot;id&quot;:7,&quot;altText&quot;:&quot;&quot;}],&quot;isMigrated&quot;:true,&quot;layoutId&quot;:&quot;List&quot;,&quot;shouldShowThumbnail&quot;:false,&quot;buttonLayoutOptions&quot;:{&quot;showDescription&quot;:false,&quot;buttonTreatment&quot;:2,&quot;iconPositionType&quot;:2,&quot;textAlignmentVertical&quot;:2,&quot;textAlignmentHorizontal&quot;:2,&quot;linesOfText&quot;:2},&quot;listLayoutOptions&quot;:{&quot;showDescription&quot;:true,&quot;showIcon&quot;:true},&quot;waffleLayoutOptions&quot;:{&quot;iconSize&quot;:1,&quot;onlyShowThumbnail&quot;:false},&quot;hideWebPartWhenEmpty&quot;:true,&quot;dataProviderId&quot;:&quot;QuickLinks&quot;,&quot;webId&quot;:&quot;{siteid}&quot;,&quot;siteId&quot;:&quot;{sitecollectionid}&quot;}, &quot;serverProcessedContent&quot;: {&quot;htmlStrings&quot;:{},&quot;searchablePlainTexts&quot;:{&quot;title&quot;:&quot;Resources&quot;,&quot;items[0].title&quot;:&quot;OnePlace Solutions Website&quot;,&quot;items[1].title&quot;:&quot;Submit a Support Request&quot;,&quot;items[2].title&quot;:&quot;Online Help: Knowledgebase&quot;,&quot;items[3].title&quot;:&quot;Online Help: Desktop Products&quot;,&quot;items[4].title&quot;:&quot;Online Help: OnePlaceMail App&quot;,&quot;items[5].title&quot;:&quot;OnePlace Solutions - YouTube&quot;,&quot;items[6].title&quot;:&quot;OnePlace Solutions GitHub&quot;,&quot;items[0].description&quot;:&quot;Who we are and what we do&quot;,&quot;items[1].description&quot;:&quot;Encountered a problem? Submit a support request here&quot;,&quot;items[2].description&quot;:&quot;Articles for your IT Helpdesk to fix common issues&quot;,&quot;items[3].description&quot;:&quot;Guides, support and downloads for the Desktop Suite&quot;,&quot;items[4].description&quot;:&quot;Guides and support for the Office 365 Modern App&quot;,&quot;items[5].description&quot;:&quot;Videos for training and support&quot;,&quot;items[6].description&quot;:&quot;Deploying Email Columns and Content Types? Scripts here!&quot;},&quot;imageSources&quot;:{&quot;items[0].image.url&quot;:&quot;{site}/SiteAssets/SitePages/OnePlace-Solutions-Site-Dashboard/oneplacesolutions-logo.png&quot;,&quot;items[0].rawPreviewImageUrl&quot;:&quot;https://cdn.oneplacesolutions.com/images/slideout-box-ms-app-award-1st-peoples-choice.png&quot;,&quot;items[1].rawPreviewImageUrl&quot;:&quot;https://cdn.oneplacesolutions.com/images/slideout-box-ms-app-award-1st-peoples-choice.png&quot;,&quot;items[2].rawPreviewImageUrl&quot;:&quot;https://cdn.oneplacesolutions.com/images/slideout-box-ms-app-award-1st-peoples-choice.png&quot;,&quot;items[5].rawPreviewImageUrl&quot;:&quot;https://yt3.ggpht.com/a/AGF-l7_x5CVPNp9QTfBhhtQeZToy7ysw9lW2BcRm6Q=s900-c-k-c0xffffffff-no-rj-mo&quot;,&quot;items[6].rawPreviewImageUrl&quot;:&quot;https://avatars2.githubusercontent.com/u/26779143?s=280&amp;v=4&quot;},&quot;links&quot;:{&quot;baseUrl&quot;:&quot;{hosturl}{site}&quot;,&quot;items[0].sourceItem.url&quot;:&quot;https://www.oneplacesolutions.com/&quot;,&quot;items[1].sourceItem.url&quot;:&quot;https://www.oneplacesolutions.com/premium-support.html&quot;,&quot;items[2].sourceItem.url&quot;:&quot;https://www.oneplacesolutions.com/support/knowledgebase.html&quot;,&quot;items[3].sourceItem.url&quot;:&quot;https://www.oneplacesolutions.com/help/&quot;,&quot;items[4].sourceItem.url&quot;:&quot;https://www.oneplacesolutions.com/help/app/&quot;,&quot;items[5].sourceItem.url&quot;:&quot;https://www.youtube.com/channel/UCSoBckN7vzEeLsy4_zzJ0Ug&quot;,&quot;items[6].sourceItem.url&quot;:&quot;https://github.com/OnePlaceSolutions/&quot;},&quot;componentDependencies&quot;:{&quot;layoutComponentId&quot;:&quot;706e33c8-af37-4e7b-9d22-6e5694d92a6f&quot;}}, &quot;dynamicDataPaths&quot;: {}, &quot;dynamicDataValues&quot;: {}}"
+								                   JsonControlData="{
+														&quot;id&quot;: &quot;c70391ea-0b10-4ee9-b2b4-006d3fcad0cd&quot;,
+														&quot;instanceId&quot;: &quot;e6a2992c-2522-46db-8288-4f77d572c40a&quot;,
+														&quot;title&quot;: &quot;Quick links&quot;,
+														&quot;description&quot;: &quot;Add links to important documents and pages.&quot;,
+														&quot;dataVersion&quot;: &quot;2.2&quot;,
+														&quot;properties&quot;: {
+															&quot;items&quot;: [
+																{
+																	&quot;sourceItem&quot;: {
+																		&quot;itemType&quot;: 2,
+																		&quot;fileExtension&quot;: &quot;&quot;,
+																		&quot;progId&quot;: &quot;&quot;
+																	},
+																	&quot;thumbnailType&quot;: 3,
+																	&quot;id&quot;: 1,
+																	&quot;image&quot;: {
+																		&quot;guids&quot;: {
+																			&quot;listId&quot;: &quot;{listid:Site Assets}&quot;,
+																			&quot;uniqueId&quot;: &quot;7b9fca3f-d3bc-4ea5-b466-002f320e5338&quot;,
+																			&quot;webId&quot;: &quot;{siteid}&quot;,
+																			&quot;siteId&quot;: &quot;{sitecollectionid}&quot;
+																		},
+																		&quot;imageFit&quot;: 2
+																	},
+																	&quot;altText&quot;: &quot;&quot;
+																},
+																{
+																	&quot;sourceItem&quot;: {
+																		&quot;itemType&quot;: 2,
+																		&quot;fileExtension&quot;: &quot;&quot;,
+																		&quot;progId&quot;: &quot;&quot;
+																	},
+																	&quot;thumbnailType&quot;: 3,
+																	&quot;id&quot;: 3,
+																	&quot;altText&quot;: &quot;&quot;
+																},
+																{
+																	&quot;sourceItem&quot;: {
+																		&quot;itemType&quot;: 2,
+																		&quot;fileExtension&quot;: &quot;&quot;,
+																		&quot;progId&quot;: &quot;&quot;
+																	},
+																	&quot;thumbnailType&quot;: 3,
+																	&quot;id&quot;: 5,
+																	&quot;altText&quot;: &quot;&quot;
+																},
+																{
+																	&quot;sourceItem&quot;: {
+																		&quot;itemType&quot;: 2,
+																		&quot;fileExtension&quot;: &quot;&quot;,
+																		&quot;progId&quot;: &quot;&quot;
+																	},
+																	&quot;thumbnailType&quot;: 3,
+																	&quot;id&quot;: 2,
+																	&quot;altText&quot;: &quot;&quot;
+																},
+																{
+																	&quot;sourceItem&quot;: {
+																		&quot;itemType&quot;: 2,
+																		&quot;fileExtension&quot;: &quot;&quot;,
+																		&quot;progId&quot;: &quot;&quot;
+																	},
+																	&quot;thumbnailType&quot;: 3,
+																	&quot;id&quot;: 4,
+																	&quot;altText&quot;: &quot;&quot;
+																},
+																{
+																	&quot;sourceItem&quot;: {
+																		&quot;itemType&quot;: 2,
+																		&quot;fileExtension&quot;: &quot;&quot;,
+																		&quot;progId&quot;: &quot;&quot;
+																	},
+																	&quot;thumbnailType&quot;: 3,
+																	&quot;id&quot;: 6,
+																	&quot;altText&quot;: &quot;&quot;
+																},
+																{
+																	&quot;sourceItem&quot;: {
+																		&quot;itemType&quot;: 2,
+																		&quot;fileExtension&quot;: &quot;&quot;,
+																		&quot;progId&quot;: &quot;&quot;
+																	},
+																	&quot;thumbnailType&quot;: 3,
+																	&quot;id&quot;: 7,
+																	&quot;altText&quot;: &quot;&quot;
+																}
+															],
+															&quot;isMigrated&quot;: true,
+															&quot;layoutId&quot;: &quot;List&quot;,
+															&quot;shouldShowThumbnail&quot;: false,
+															&quot;buttonLayoutOptions&quot;: {
+																&quot;showDescription&quot;: false,
+																&quot;buttonTreatment&quot;: 2,
+																&quot;iconPositionType&quot;: 2,
+																&quot;textAlignmentVertical&quot;: 2,
+																&quot;textAlignmentHorizontal&quot;: 2,
+																&quot;linesOfText&quot;: 2
+															},
+															&quot;listLayoutOptions&quot;: {
+																&quot;showDescription&quot;: true,
+																&quot;showIcon&quot;: true
+															},
+															&quot;waffleLayoutOptions&quot;: {
+																&quot;iconSize&quot;: 1,
+																&quot;onlyShowThumbnail&quot;: false
+															},
+															&quot;hideWebPartWhenEmpty&quot;: true,
+															&quot;dataProviderId&quot;: &quot;QuickLinks&quot;,
+															&quot;webId&quot;: &quot;{siteid}&quot;,
+															&quot;siteId&quot;: &quot;{sitecollectionid}&quot;
+														},
+														&quot;serverProcessedContent&quot;: {
+															&quot;htmlStrings&quot;: {},
+															&quot;searchablePlainTexts&quot;: {
+																&quot;title&quot;: &quot;Resources&quot;,
+																&quot;items[0].title&quot;: &quot;OnePlace Solutions Website&quot;,
+																&quot;items[1].title&quot;: &quot;Submit a Support Request&quot;,
+																&quot;items[2].title&quot;: &quot;Online Help: Knowledgebase&quot;,
+																&quot;items[3].title&quot;: &quot;Online Help: Desktop Products&quot;,
+																&quot;items[4].title&quot;: &quot;Online Help: OnePlaceMail App&quot;,
+																&quot;items[5].title&quot;: &quot;OnePlace Solutions - YouTube&quot;,
+																&quot;items[6].title&quot;: &quot;OnePlace Solutions GitHub&quot;,
+																&quot;items[0].description&quot;: &quot;Who we are and what we do&quot;,
+																&quot;items[1].description&quot;: &quot;Encountered a problem? Submit a support request here&quot;,
+																&quot;items[2].description&quot;: &quot;Articles for your IT Helpdesk to fix common issues&quot;,
+																&quot;items[3].description&quot;: &quot;Guides, support and downloads for the Desktop Suite&quot;,
+																&quot;items[4].description&quot;: &quot;Guides and support for the Office 365 Modern App&quot;,
+																&quot;items[5].description&quot;: &quot;Videos for training and support&quot;,
+																&quot;items[6].description&quot;: &quot;Deploying Email Columns and Content Types? Scripts here!&quot;
+															},
+															&quot;links&quot;: {
+																&quot;baseUrl&quot;: &quot;{hosturl}{site}&quot;,
+																&quot;items[0].sourceItem.url&quot;: &quot;https://www.oneplacesolutions.com/&quot;,
+																&quot;items[1].sourceItem.url&quot;: &quot;https://www.oneplacesolutions.com/premium-support.html&quot;,
+																&quot;items[2].sourceItem.url&quot;: &quot;https://www.oneplacesolutions.com/support/knowledgebase.html&quot;,
+																&quot;items[3].sourceItem.url&quot;: &quot;https://www.oneplacesolutions.com/help/&quot;,
+																&quot;items[4].sourceItem.url&quot;: &quot;https://www.oneplacesolutions.com/help/app/&quot;,
+																&quot;items[5].sourceItem.url&quot;: &quot;https://www.youtube.com/channel/UCSoBckN7vzEeLsy4_zzJ0Ug&quot;,
+																&quot;items[6].sourceItem.url&quot;: &quot;https://github.com/OnePlaceSolutions/&quot;
+															},
+															&quot;componentDependencies&quot;: {
+																&quot;layoutComponentId&quot;: &quot;706e33c8-af37-4e7b-9d22-6e5694d92a6f&quot;
+															}
+														},
+														&quot;dynamicDataPaths&quot;: {},
+														&quot;dynamicDataValues&quot;: {}
+													}"
 								                   ControlId="c70391ea-0b10-4ee9-b2b4-006d3fcad0cd"
 								                   Order="1"
 								                   Column="1"/>
