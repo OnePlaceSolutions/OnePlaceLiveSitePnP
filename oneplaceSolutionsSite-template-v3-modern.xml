@@ -750,7 +750,7 @@
 								                   Column="1">
 									<pnp:CanvasControlProperties>
 										<pnp:CanvasControlProperty Key="Text"
-										                           Value="&lt;p&gt;Client Configuration Details:&lt;br&gt;&lt;/p&gt;&lt;ul&gt;&lt;li&gt;Solutions Site URL: &lt;strong&gt;{hosturl}{sitecollection}&lt;/strong&gt;&lt;br&gt;&lt;/li&gt;&lt;/ul&gt;"/>
+										                           Value="&lt;p&gt;Client Configuration Details:&lt;br&gt;&lt;/p&gt;&lt;ul&gt;&lt;li&gt;Solutions Site URL: &lt;strong&gt;{Site.absoluteUrl}&lt;/strong&gt;&lt;br&gt;&lt;/li&gt;&lt;/ul&gt;"/>
 									</pnp:CanvasControlProperties>
 								</pnp:CanvasControl>
 								<pnp:CanvasControl WebPartType="Divider"

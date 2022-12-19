@@ -157,7 +157,7 @@ Try {
             }
             Catch [System.Management.Automation.RuntimeException] {
                 If((Get-PnPProperty -ClientObject (Get-PnPWeb) -Property WebTemplate) -eq 'GROUP'){
-                    Write-Log -Message "GROUP#0 Site, non terminating error, continuing."
+                    Write-Log -Level Warn -Message "Exception thrown in template and detected GROUP#0 Site, non terminating error, continuing..."
                 }
                 Else {
                     Throw
@@ -354,22 +354,26 @@ Try {
                 Invoke-Provision -count 0
 
                 Write-Log -Level Info -Message "Retrieving License List ID"
+                $RecordLicenseListID = $True
                 Try {
                     $licenseList = Get-PnPList -Identity "Licenses" -ThrowExceptionIfListNotFound
                 }
                 Catch {
-                    Write-Log "License List not ready yet, backing off for 5 seconds."
-                    Start-Sleep -Seconds 5
-                    $licenseList = Get-PnPList -Identity "Licenses" -ThrowExceptionIfListNotFound
+                    Write-Log -Level Warn -Message "License List not ready yet, backing off for 10 seconds."
+                    Start-Sleep -Seconds 10
+                    try {
+                        $licenseList = Get-PnPList -Identity "Licenses" -ThrowExceptionIfListNotFound
+                    }
+                    catch {
+                        Write-Log -Level Error -Message "License List not present. Skipping License List ID retrieval."
+                        $RecordLicenseListID = $False
+                    }
                 }
-                $licenseListId = $licenseList.ID
-                $licenseListId = $licenseListId.ToString()
-                Write-Log -Level Info -Message "License List ID retrieved: $licenseListId"
 
-                $filler = "Applying Site Security and Page changes separately..."
-                Write-Host $filler -ForegroundColor Yellow
-                Write-Log -Level Info -Message $filler
-                Start-Sleep -Seconds 2															
+                if( $RecordLicenseListID ) {
+                    $licenseListId = $( $licenseList.ID ).ToString()
+                    Write-Log -Level Info -Message "License List ID retrieved: $licenseListId"
+                }												
 
                 $filler = "Template Application complete!"
                 Write-Host $filler -ForeGroundColor Green
@@ -391,8 +395,11 @@ Try {
             Try {
 
                 Write-Log -Level Info -Message "Solutions Site URL = $SolutionsSiteUrl"
-                Write-Log -Level Info -Message "License List URL = $LicenseListUrl"
-                Write-Log -Level Info -Message "License List ID = $licenseListId"
+                if( $RecordLicenseListID ) {
+                    Write-Log -Level Info -Message "License List URL = $LicenseListUrl"
+                    Write-Log -Level Info -Message "License List ID = $licenseListId"
+                }
+
                 Write-Log -Level Info -Message "Uploading log file to $SolutionsSiteUrl/Shared%20Documents"
 
                 #Upload log file to Solutions Site
