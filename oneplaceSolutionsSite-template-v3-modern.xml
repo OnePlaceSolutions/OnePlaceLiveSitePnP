@@ -8,7 +8,7 @@
 		                          Scope="RootSite">
 			<pnp:WebSettings NoCrawl="false"
 			                 WelcomePage="SitePages/Home.aspx"
-			                 Title="OnePlace Admin Site"
+			                 Title="OnePlace Solutions Administration Site"
 			                 SiteLogo="{sitecollection}/SiteAssets/oneplacesolutions-logo.png"
 			                 CommentsOnSitePagesDisabled="false"
 			                 QuickLaunchEnabled="false"
@@ -37,7 +37,7 @@
 			<pnp:Navigation>
 				<pnp:GlobalNavigation NavigationType="Structural">
 					<pnp:StructuralNavigation RemoveExistingNodes="true">
-						<pnp:NavigationNode Title="OnePlace Admin Site"
+						<pnp:NavigationNode Title="OnePlace Solutions Administration Site"
 						                    Url="{site}"/>
 					</pnp:StructuralNavigation>
 				</pnp:GlobalNavigation>
@@ -569,7 +569,7 @@
 				                    Overwrite="true"
 				                    Layout="Home"
 				                    EnableComments="false"
-				                    Title="OnePlace Solutions Admin Site"
+				                    Title="OnePlace Solutions Administration Site"
 				                    PageName="Home.aspx">
 					<pnp:Header Type="Custom"
 					            ServerRelativeImageUrl=""
@@ -750,7 +750,7 @@
 								                   Column="1">
 									<pnp:CanvasControlProperties>
 										<pnp:CanvasControlProperty Key="Text"
-										                           Value="&lt;p&gt;Client Configuration Details:&lt;br&gt;&lt;/p&gt;&lt;ul&gt;&lt;li&gt;Admin Site URL: &lt;strong&gt;{hosturl}{sitecollection}&lt;/strong&gt;&lt;br&gt;&lt;/li&gt;&lt;/ul&gt;"/>
+										                           Value="&lt;p&gt;Client Configuration Details:&lt;br&gt;&lt;/p&gt;&lt;ul&gt;&lt;li&gt;Administration Site URL: &lt;strong&gt;{hosturl}{sitecollection}&lt;/strong&gt;&lt;br&gt;&lt;/li&gt;&lt;/ul&gt;"/>
 									</pnp:CanvasControlProperties>
 								</pnp:CanvasControl>
 								<pnp:CanvasControl WebPartType="Divider"
