@@ -43,7 +43,7 @@ A script to create the required Lists in a Site Collection for licensing and oth
 
 *All actions performed with the script will be logged to 'OPSScriptLog<Date>.txt' in your Documents folder (or possibly under the Administrator account's Documents if running PowerShell as an Administrator). When requesting assistance with this script please send this log file as an attachment. This directory can be changed in-script.*
 
-*The log file will be uploaded to the Documents folder in the Solutions Site at the end of deployment for your record keeping.*
+*The log file will be uploaded to the Documents folder in the Admin Site at the end of deployment for your record keeping.*
 
 If you do not want the script to create a Site Collection automatically for you, please create a Team/Group Site from your SharePoint Home as below or create a Team Site(no group) in the SharePoint Admin Center. Note it's URL, and select **Option 1** in the script when prompted.
 > ![](./README-Images/createSite.png)
@@ -68,7 +68,7 @@ If you are a Global Administrator and would like the script to create the initia
 
 3.  The PowerShell script will execute and begin logging actions to the noted log file path. You will be prompted to choose whether to deploy the template to an existing Site Collection, or create a new Site Collection and deploy the template to it automatically. 
 
-    If you have created a Group/Team Site, or the Solutions Site already exists and you wish to update it, or a problem was encountered during initial deployment, select **Option 1**. You will be prompted to enter the URL of the existing Solutions Site.
+    If you have created a Group/Team Site, or the Admin Site already exists and you wish to update it, or a problem was encountered during initial deployment, select **Option 1**. You will be prompted to enter the URL of the existing Admin Site.
 
     > ![](./README-Images/menu.png)
     
@@ -87,9 +87,9 @@ If you are a Global Administrator and would like the script to create the initia
 4.  Once the Site Collection URL has been entered (or the Site Collection has been created as part of Option 2) the script will start configuring the site for use.
 	> ![](./README-Images/siteconfigurationSPO.png)
 	
-5.  When configuration has completed, your Solutions Site URL will be displayed (which is the URL to the Site Collection). All script actions will be logged to the text file in the Documents Library on the Solutions Site.
+5.  When configuration has completed, your Admin Site URL will be displayed (which is the URL to the Site Collection). All script actions will be logged to the text file in the Documents Library on the Admin Site.
 
     > ![](./README-Images/configurationcompleteSPO.png)
-6.  Finally, press Enter to open your Solutions Site.\
+6.  Finally, press Enter to open your Admin Site.\
     The homepage contains some useful links for training and support resources. Scrolling down you can always find your Client Configuration Details, and if you have received a Legacy License Key you may also attach it here.
     > ![](./README-Images/solutionssiteSPO.png)

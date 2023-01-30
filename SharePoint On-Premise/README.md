@@ -64,17 +64,17 @@ A script to create the required Lists in a Site Collection for licensing and oth
 
     > ![](./README-Images/credentials.png)
 
-6.  The OnePlace Solutions site template will then be downloaded and the script will start configuring it for use:
+6.  The OnePlace Admin Site template will then be downloaded and the script will start configuring it for use:
 
 
     > ![](./README-Images/applychanges.png)
-7.  When configuration has completed, your Solutions Site URL, License List URL and License List ID will be displayed (these are also in the log file, and will be visible in the Solutions Site). You may also opt to automatically email these details now to OnePlace Solutions. These URLs will be kept on file for support purposes, and the License List ID will be required for your Production License.
+7.  When configuration has completed, your Admin Site URL, License List URL and License List ID will be displayed (these are also in the log file, and will be visible in the Admin Site). You may also opt to automatically email these details now to OnePlace Solutions. These URLs will be kept on file for support purposes, and the License List ID will be required for your Production License.
 
     > ![](./README-Images/applyingchangestosite.png)
-8.  Finally, press Enter to open your Solutions Site.
+8.  Finally, press Enter to open your Admin Site.
 
 	The homepage contains some useful links for training and support resources, and when you have a Production license an overview of your License usage. 
 	> ![](./README-Images/solutionssiteonPrem.png)
 	
-	Here you can always find your Client Configuration Details (The License List URL and Solutions Site URL), and your License List ID. If you did not opt to email these automatically in the previous step, please email the License List ID to 'success@oneplacesolutions.com' when procuring a Production License. If you have received a Production license or Time Expiry Key, you may attach it here.
+	Here you can always find your Client Configuration Details (The License List URL and Admin Site URL), and your License List ID. If you did not opt to email these automatically in the previous step, please email the License List ID to 'success@oneplacesolutions.com' when procuring a Production License. If you have received a Production license or Time Expiry Key, you may attach it here.
 
