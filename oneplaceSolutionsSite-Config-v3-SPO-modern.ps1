@@ -4,8 +4,8 @@
     .LINK (original)
         https://github.com/OnePlaceSolutions/OnePlaceLiveSitePnP
        
-    This script optionally creates a new Site collection ('Team Site (Modern)' by default, 'Team Site (Classic)' by option), and applies the configuration changes / PnP template for the OnePlace Solutions site.
-    All major actions are logged to 'OPSScriptLog.txt' in the user's or Administrators Documents folder, and it is uploaded to the Solutions Site at the end of provisioning.
+    This script optionally creates a new Site collection ('Team Site (Modern)' by default, 'Team Site (Classic)' by option), and applies the configuration changes / PnP template for the OnePlace Solutions Administration Site.
+    All major actions are logged to 'OPSScriptLog.txt' in the user's or Administrators Documents folder, and it is uploaded to the Administration Site at the end of provisioning.
 #>
 $ErrorActionPreference = 'Stop'
 $script:logFile = "OPSScriptLog$(Get-Date -Format "MMddyyyy").txt"
@@ -106,7 +106,7 @@ Write-Log -Level Info -Message "Start of script. Start of log."
 
 Clear-Host 
 Write-Host "`n--------------------------------------------------------------------------------`n" -ForegroundColor Red
-Write-Host 'Welcome to the Solutions Site Deployment Script for OnePlace Solutions' -ForegroundColor Green
+Write-Host 'Welcome to the Administration Site Deployment Script for OnePlace Solutions' -ForegroundColor Green
 Write-Host "`n--------------------------------------------------------------------------------`n" -ForegroundColor Red
 
 Start-Sleep -Seconds 2
@@ -141,7 +141,7 @@ Try {
                         Invoke-Provision -count $count
                     }
                     Else {
-                        $filler = "SharePoint Online is taking an unusual amount of time to create the site. Please check your SharePoint Admin Site in Office 365, and when the site is created please continue the script. Do not press Enter until you have confirmed the site has been completely created."
+                        $filler = "SharePoint Online is taking an unusual amount of time to create the site. Please check your SharePoint Administration Site in Office 365, and when the site is created please continue the script. Do not press Enter until you have confirmed the site has been completely created."
                         Write-Host $filler -ForegroundColor Red
                         Write-Log -Level Info -Message $filler
                         Write-Host "`n"
@@ -171,11 +171,11 @@ Try {
         function Deploy ($createSite) {
             Write-Log -Level Info -Message "Creating Site from scratch? $createSite"
             
-            #Stage 1a Creating a Solutions Site from scratch
+            #Stage 1a Creating a Administration Site from scratch
             If($createSite) {
                 $stage = "Stage 1/2 - Team Site (Modern) creation"
                 Write-Host "`n$stage`n" -ForegroundColor Yellow
-                Write-Progress -Activity "Solutions Site Deployment" -CurrentOperation $stage -PercentComplete (33)
+                Write-Progress -Activity "Administration Site Deployment" -CurrentOperation $stage -PercentComplete (33)
                 
                 $rootSharePoint = Read-Host "Please enter your SharePoint Online Root Site Collection URL, eg (without quotes) 'https://contoso.sharepoint.com'"
                 Write-Log -Level Info -Message "User entered Root Site Collection: $rootSharePoint"
@@ -202,7 +202,7 @@ Try {
                 Catch {
                     $exMessage = $($_.Exception.Message)
                     If ($exMessage -like "*(403)*") {
-                        Write-Log -level Error -Message "Error connecting to '$adminSharePoint'. Please ensure you have sufficient rights to create Site Collections in your Microsoft 365 Tenant. `nThis usually requires Global Administrative rights, or alternatively ask your SharePoint Administrator to perform the Solutions Site Setup."
+                        Write-Log -level Error -Message "Error connecting to '$adminSharePoint'. Please ensure you have sufficient rights to create Site Collections in your Microsoft 365 Tenant. `nThis usually requires Global Administrative rights, or alternatively ask your SharePoint Administrator to perform the Administration Site Setup."
                         Write-Host "`nPlease contact OnePlace Solutions Support if you are still encountering difficulties."
                     }
                     ElseIf ($exMessage -like "*'Connect-PnPOnline'*") {
@@ -222,7 +222,7 @@ Try {
                 Write-Log -Level Info -Message "Admin SharePoint set to $adminSharePoint"
                 Write-Log -Level Info -Message "Root SharePoint set to $rootSharePoint"
 
-                Write-Log -Level Info -Message "Solutions Site URL suffix set to $script:solutionsSite"
+                Write-Log -Level Info -Message "Administration Site URL suffix set to $script:solutionsSite"
 
                 $SolutionsSiteUrl = $rootSharePoint + '/sites/' + $script:solutionsSite
                 $LicenseListUrl = $SolutionsSiteUrl + '/lists/Licenses'
@@ -253,7 +253,7 @@ Try {
                     }
 
                     #Creating the site collection
-                    $filler = "Creating site collection with URL '$SolutionsSiteUrl' for the Solutions Site, and owner '$ownerEmail'. This may take a while, please do not close this window, but feel free to minimize the PowerShell window and check back in 10 minutes."
+                    $filler = "Creating site collection with URL '$SolutionsSiteUrl' for the Administration Site, and owner '$ownerEmail'. This may take a while, please do not close this window, but feel free to minimize the PowerShell window and check back in 10 minutes."
                     Write-Host $filler -ForegroundColor Yellow
                     Write-Log -Level Info -Message $filler
 
@@ -262,7 +262,7 @@ Try {
                     Write-Host $filler -ForegroundColor Yellow
                     Write-Log -Level Info -Message $filler
                 
-                    New-PnPTenantSite -Title 'OnePlace Solutions Admin Site' -Url $SolutionsSiteUrl -Template STS#3 -Owner $ownerEmail -Timezone 0 -StorageQuota 110 -Wait
+                    New-PnPTenantSite -Title 'OnePlace Solutions Administration Site' -Url $SolutionsSiteUrl -Template STS#3 -Owner $ownerEmail -Timezone 0 -StorageQuota 110 -Wait
 
                     $timeEndCreate = Get-Date
                     $timeToCreate = New-TimeSpan -Start $timeStartCreate -End $timeEndCreate
@@ -290,9 +290,9 @@ Try {
                 }
                 
             }
-            #Stage 1b Skipping Site Creation, identifying Solutions Site instead
+            #Stage 1b Skipping Site Creation, identifying Administration Site instead
             Else {
-                Write-Host "`nStage 1/2 - Identify Solutions Site`n" -ForegroundColor Yellow
+                Write-Host "`nStage 1/2 - Identify Administration Site`n" -ForegroundColor Yellow
                 
                 Do {
                     $validInput = $true
@@ -314,7 +314,7 @@ Try {
 
             #Stage 2 Applying the template
             Try {
-                Write-Host "`nStage 2/2 - Apply Solutions Site template`n" -ForegroundColor Yellow
+                Write-Host "`nStage 2/2 - Apply Administration Site template`n" -ForegroundColor Yellow
 
                 #Connecting to the site collection to apply the template
                 Write-Host "Please authenticate against the Site Collection"
@@ -331,7 +331,7 @@ Try {
                 #Check if resources already exist
                 If(-not (Test-Path $Script:templatePath)) {
                     Write-Log -Level Info -Message 'Local resources not present.'
-                    #Download OnePlace Solutions Site provisioning template
+                    #Download OnePlace Solutions Administration Site provisioning template
                     $WebClient = New-Object System.Net.WebClient
                     $filler = "Downloading provisioning xml template to: $Script:templatePath"
                     Write-Host $filler -ForegroundColor Yellow  
@@ -340,7 +340,7 @@ Try {
         
                     #Download OnePlace Solutions Company logo to be used as Site logo    
                     $WebClient.DownloadFile( $UrlSiteImage, $PathImage )
-                    Write-Log -Level Info -Message "Downloading OPS logo for Solutions Site"
+                    Write-Log -Level Info -Message "Downloading OPS logo for Administration Site"
                 }
                 Else {
                     Write-Log -Level Info -Message 'Local resources present, skipping download.' -Verbose
@@ -382,7 +382,7 @@ Try {
             Catch {
                 $exMessage = $($_.Exception.Message)
                 If ($exMessage -like "*(403)*") {
-                    Write-Log -Level Error -Message "Error connecting to '$adminSharePoint'. Please ensure you have sufficient rights to create Site Collections in your Microsoft 365 Tenant. `nThis usually requires Global Administrative rights, or alternatively ask your SharePoint Administrator to perform the Solutions Site Setup."
+                    Write-Log -Level Error -Message "Error connecting to '$adminSharePoint'. Please ensure you have sufficient rights to create Site Collections in your Microsoft 365 Tenant. `nThis usually requires Global Administrative rights, or alternatively ask your SharePoint Administrator to perform the Administration Site Setup."
                     Write-Host "`nPlease contact OnePlace Solutions Support if you are still encountering difficulties."
                 }
                 ElseIf ($exMessage -like "*'Connect-PnPOnline'*") {
@@ -394,7 +394,7 @@ Try {
 
             Try {
 
-                Write-Log -Level Info -Message "Solutions Site URL = $SolutionsSiteUrl"
+                Write-Log -Level Info -Message "Administration Site URL = $SolutionsSiteUrl"
                 if( $RecordLicenseListID ) {
                     Write-Log -Level Info -Message "License List URL = $LicenseListUrl"
                     Write-Log -Level Info -Message "License List ID = $licenseListId"
@@ -402,27 +402,27 @@ Try {
 
                 Write-Log -Level Info -Message "Uploading log file to $SolutionsSiteUrl/Shared%20Documents"
 
-                #Upload log file to Solutions Site
+                #Upload log file to Administration Site
 
                 Add-PnPfile -Path $script:LogPath -Folder "Shared Documents"
 
                 Write-Progress -Activity "Completed" -Completed
 
-                Write-Host "`nPlease record the OnePlace Solutions Site URL for usage in the OnePlaceMail Desktop and OnePlaceDocs clients. " -ForegroundColor Yellow
+                Write-Host "`nPlease record the OnePlace Solutions Administration Site URL for usage in the OnePlaceMail Desktop and OnePlaceDocs clients. " -ForegroundColor Yellow
                 Write-Host "`nThese have also been written to a log file at '$script:logPath', and '$SolutionsSiteUrl/Shared%20Documents/$script:logFile'." -ForegroundColor Yellow
                 Write-Host "`n-------------------`n" -ForegroundColor Red
                 
                 If($true -eq $legacyLicensing) {
-                    $importants = "Solutions Site URL = $SolutionsSiteUrl`nLicense List URL   = $LicenseListUrl`nLicense List ID    = $licenseListId"
+                    $importants = "Administration Site URL = $SolutionsSiteUrl`nLicense List URL   = $LicenseListUrl`nLicense List ID    = $licenseListId"
                 }
                 Else {
-                    $importants = "Solutions Site URL = $SolutionsSiteUrl"
+                    $importants = "Administration Site URL = $SolutionsSiteUrl"
                 }
                 Write-Host $importants
 
                 Write-Host "`n-------------------`n" -ForegroundColor Red
                 
-                Write-Host "Opening Solutions Site at $SolutionsSiteUrl..." -ForegroundColor Yellow
+                Write-Host "Opening Administration Site at $SolutionsSiteUrl..." -ForegroundColor Yellow
                 Pause
 
                 #cleaning up the Navigation nodes, doing this late in case there's an issue
@@ -450,11 +450,11 @@ Try {
         function showMenu { 
             Clear-Host 
             Write-Host "`n--------------------------------------------------------------------------------`n" -ForegroundColor Red
-            Write-Host 'Welcome to the Solutions Site Deployment Script for OnePlace Solutions' -ForegroundColor Green
+            Write-Host 'Welcome to the Administration Site Deployment Script for OnePlace Solutions' -ForegroundColor Green
             Write-Host "`n--------------------------------------------------------------------------------`n" -ForegroundColor Red
             Write-Host "Site Deployment:" -ForegroundColor Yellow
-            Write-Host "1: Deploy the Solutions Site template to an existing Group or Modern Team Site Collection at '/sites/oneplacesolutions'"
-            Write-Host "2: Create a new Modern Team Site Collection at '/sites/oneplacesolutions' automatically and deploy the Solutions Site template"
+            Write-Host "1: Deploy the Administration Site template to an existing Group or Modern Team Site Collection at '/sites/oneplacesolutions'"
+            Write-Host "2: Create a new Modern Team Site Collection at '/sites/oneplacesolutions' automatically and deploy the Administration Site template"
             Write-Host "`nPnP Pre-Requisite Installation:" -ForegroundColor Yellow
             Write-Host "3: Install Current PnP.PowerShell Cmdlets for current user"
             Write-Host "`nAdditional Configuration:" -ForegroundColor Yellow
