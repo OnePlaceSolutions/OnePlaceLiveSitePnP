@@ -13,11 +13,11 @@ A script to create the required Lists in a Site Collection for licensing and oth
 
 1.  The following SharePoint environments: SharePoint Online
 
-2.  [The latest PnP.PowerShell](https://pnp.github.io/powershell/articles/installation.html) installed on the machine you are running the script from. You can run the below command in PowerShell (as Administrator) to install it, or select Option 4 in the script to install it for your current user. 
+2.  [PnP.PowerShell](https://pnp.github.io/powershell/articles/installation.html) installed on the machine you are running the script from. You can run the below command in PowerShell (as Administrator) to install it, or select Option 4 in the script to install it for your current user. 
 
     Install new PnP.PowerShell Cmdlets:
     ```
-    Install-Module -Name "PnP.PowerShell"
+    Install-Module -Name "PnP.PowerShell" -RequiredVersion 1.12.0
     ```
     Note that you will need to ensure you have uninstalled any previous 'Classic' PnP Cmdlets prior to installing this. If you have installed the cmdlets previously using an MSI file these need to be uninstalled from Control Panel, but if you have installed the cmdlets previously using PowerShell Get you can uninstall them with this command (as Administrator):
 
